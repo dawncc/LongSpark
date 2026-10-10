@@ -1,0 +1,2 @@
+# Preserve verbatim diagnostic logs.
+*.log -whitespace

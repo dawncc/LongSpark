@@ -1,0 +1,38 @@
+{
+  "patch_id": "longspark-native-v2-custom-class-v1",
+  "upstream_tag": "v0.30.0",
+  "upstream_url": "https://github.com/vllm-project/vllm/tree/v0.30.0",
+  "supported_versions": [
+    "0.30.0",
+    "0.30.0+cu129"
+  ],
+  "patch_file": "vllm-0.30.0-native-v2-custom-class.patch",
+  "files": [
+    {
+      "path": "vllm/config/vllm.py",
+      "before_sha256": "956b812e5a719bcbfa3a3958801361b38b9c928c96b8c073311bbb96376dfb7a",
+      "after_sha256": "b68454ac8da1e04181f8177537f44a84b1498ca639f24813f2eb0ff3eb9da268"
+    },
+    {
+      "path": "vllm/v1/worker/gpu/spec_decode/__init__.py",
+      "before_sha256": "1f1f84bfe6f4f5af3a7e21a7a8716ecf7b9013da1d03327668a3ee36afc24c32",
+      "after_sha256": "8ce5102ced13d3bc74ab08743ecbf1959ba368673366ed43954c37425a626716"
+    },
+    {
+      "path": "vllm/v1/worker/gpu/spec_decode/speculator.py",
+      "before_sha256": "3a1ab15bf8b20918852eb835fe9755046e99dcbac6ba6ca3d414949fc8bc695a",
+      "after_sha256": "c54e0d6ab6af8e765374bd15373bb44132ce6773a352c5eb830be57192d92ab5"
+    },
+    {
+      "path": "vllm/v1/worker/gpu/model_runner.py",
+      "before_sha256": "174c93db921c23cf0396eee4764be25b2bd2d4b6a06e9fa41ce3598b884ce8ce",
+      "after_sha256": "38111d7a02c124142b567961ea9eb0f0231fd8050e9c601487dc0f7749f46e66"
+    },
+    {
+      "path": "vllm/v1/worker/gpu/spec_decode/eagle/eagle3_utils.py",
+      "before_sha256": "201ee875fcc3d076a8fc1f3876dcbf85736b221a368555243a8987ff26a1674e",
+      "after_sha256": "769944057f8f76f3677cf688317c4c844823508210e2aa4e3957cbc0ad08cbde"
+    }
+  ],
+  "patch_sha256": "f4756d7c8a31c84feb8f01f541f3e8ecaa0a59f2de2daad385fae4b1a3dc8c96"
+}

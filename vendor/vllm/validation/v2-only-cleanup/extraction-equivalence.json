@@ -1,0 +1,105 @@
+{
+  "extracted_symbols": [
+    {
+      "symbol": "_normalized",
+      "before_path": "vendor/vllm/longspark_vllm/drafter.py",
+      "after_path": "vendor/vllm/longspark_vllm/native_v2/target_modules.py",
+      "ast_identical": true,
+      "ast_sha256": "d79abc807847b661a068fa19daa4a3892ef6d4eb311954e4f80fec7b30ab93e9"
+    },
+    {
+      "symbol": "_RMSNorm",
+      "before_path": "vendor/vllm/longspark_vllm/drafter.py",
+      "after_path": "vendor/vllm/longspark_vllm/native_v2/target_modules.py",
+      "ast_identical": true,
+      "ast_sha256": "1b69ac69dce46a0dcf20c12892e5273510fe0037ae5f7c20630e950b6c35c52b"
+    },
+    {
+      "symbol": "_target_modules",
+      "before_path": "vendor/vllm/longspark_vllm/drafter.py",
+      "after_path": "vendor/vllm/longspark_vllm/native_v2/target_modules.py",
+      "ast_identical": true,
+      "ast_sha256": "0ceed033cfdd19dd152cad13cf9023ef7a4baeaaa997a0bf3c8b2c36a80f7841"
+    },
+    {
+      "symbol": "load_inputs",
+      "before_path": "vendor/vllm/scripts/evaluate_vllm_gsm8k.py",
+      "after_path": "vendor/vllm/longspark_vllm/gsm8k.py",
+      "ast_identical": true,
+      "ast_sha256": "f6ed363eca70170d257da5ec43fc4ea16dc47445ff0f1caa3f7c43f6b18591df"
+    },
+    {
+      "symbol": "resolve_eos",
+      "before_path": "vendor/vllm/scripts/evaluate_vllm_gsm8k.py",
+      "after_path": "vendor/vllm/longspark_vllm/gsm8k.py",
+      "ast_identical": true,
+      "ast_sha256": "9f0572a857ffaa4f14d8ce10d514c964faac72eda7d2c3948a062d3751bf0e6b"
+    },
+    {
+      "symbol": "compare_outputs",
+      "before_path": "vendor/vllm/scripts/evaluate_vllm_gsm8k.py",
+      "after_path": "vendor/vllm/longspark_vllm/gsm8k.py",
+      "ast_identical": true,
+      "ast_sha256": "cf65f7c724b56e19147633df2ea64c33e63c7fd7944676e18209eb5a086717c2"
+    }
+  ],
+  "native_state_only_import_changed": true,
+  "removed": [
+    "vendor/vllm/longspark_vllm/benchmark.py",
+    "vendor/vllm/longspark_vllm/cli.py",
+    "vendor/vllm/longspark_vllm/decoding.py",
+    "vendor/vllm/longspark_vllm/drafter.py",
+    "vendor/vllm/longspark_vllm/drafter_graph.py",
+    "vendor/vllm/longspark_vllm/graph_audit.py",
+    "vendor/vllm/longspark_vllm/target.py",
+    "vendor/vllm/scripts/benchmark_sglang_comparison.py",
+    "vendor/vllm/scripts/benchmark_vllm.py",
+    "vendor/vllm/scripts/evaluate_sglang_gsm8k.py",
+    "vendor/vllm/scripts/evaluate_vllm.py",
+    "vendor/vllm/scripts/evaluate_vllm_gsm8k.py",
+    "vendor/vllm/scripts/run_sglang_gsm8k_v2.sh",
+    "vendor/vllm/tests/test_graph_audit.py",
+    "vendor/vllm/tests/test_sglang_gsm8k_runner.py",
+    "vendor/vllm/tests/test_vllm_benchmark.py",
+    "vendor/vllm/tests/test_vllm_cli.py",
+    "vendor/vllm/tests/test_vllm_decoding.py",
+    "vendor/vllm/tests/test_vllm_drafter.py",
+    "vendor/vllm/tests/test_vllm_drafter_graph.py",
+    "vendor/vllm/tests/test_vllm_gsm8k_runner.py",
+    "vendor/vllm/tests/test_vllm_target_gpu.py",
+    "vendor/vllm/tests/test_vllm_target_graph_gpu.py"
+  ],
+  "unchanged_native_sources": [
+    {
+      "path": "vendor/vllm/longspark_vllm/native_v2/speculator.py",
+      "sha256": "449b39dcb09dbe29e5346c58fba3fa720c0f0249e2cbeb46c103b96227ec77ac"
+    },
+    {
+      "path": "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py",
+      "sha256": "6ccbca9c9325b8f2a25a9f377ebd31e410b54d500fc29904d0fa57e7f2fba4d5"
+    },
+    {
+      "path": "vendor/vllm/longspark_vllm/native_v2/startup.py",
+      "sha256": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a"
+    },
+    {
+      "path": "vendor/vllm/longspark_vllm/native_v2/diagnostics.py",
+      "sha256": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510"
+    },
+    {
+      "path": "vendor/vllm/longspark_vllm/native_v2/__init__.py",
+      "sha256": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79"
+    },
+    {
+      "path": "vendor/vllm/longspark_vllm/native_v2/inputs.py",
+      "sha256": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be"
+    }
+  ],
+  "comparison_archive": "/tmp/longspark-vllm-final.tar.gz",
+  "archive_sha256": "7afce625bdbccf44192913b1119321ca87f9f0e917992fb668b1d9d6ad6517ce",
+  "renamed_tests": {
+    "test_vllm_native_state.py": "test_native_v2_state.py",
+    "test_vllm_native_inputs.py": "test_native_v2_inputs.py",
+    "test_vllm_gsm8k.py": "test_gsm8k.py"
+  }
+}

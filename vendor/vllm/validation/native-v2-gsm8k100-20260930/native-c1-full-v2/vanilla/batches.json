@@ -1,0 +1,1032 @@
+[
+  {
+    "phase": "warmup",
+    "batch_index": 0,
+    "wall_seconds": 1.6425347439944744,
+    "source_ids": [
+      "gsm8k-test-0000"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 115
+  },
+  {
+    "phase": "warmup",
+    "batch_index": 1,
+    "wall_seconds": 1.285356618463993,
+    "source_ids": [
+      "gsm8k-test-0001"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 93
+  },
+  {
+    "phase": "warmup",
+    "batch_index": 2,
+    "wall_seconds": 2.6639924347400665,
+    "source_ids": [
+      "gsm8k-test-0002"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 193
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 0,
+    "wall_seconds": 1.5788091495633125,
+    "source_ids": [
+      "gsm8k-test-0000"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 115
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 1,
+    "wall_seconds": 1.2856383956968784,
+    "source_ids": [
+      "gsm8k-test-0001"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 93
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 2,
+    "wall_seconds": 2.6638862900435925,
+    "source_ids": [
+      "gsm8k-test-0002"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 193
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 3,
+    "wall_seconds": 1.6437333300709724,
+    "source_ids": [
+      "gsm8k-test-0003"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 119
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 4,
+    "wall_seconds": 2.064480733126402,
+    "source_ids": [
+      "gsm8k-test-0004"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 149
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 5,
+    "wall_seconds": 2.622688166797161,
+    "source_ids": [
+      "gsm8k-test-0005"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 190
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 6,
+    "wall_seconds": 3.020264398306608,
+    "source_ids": [
+      "gsm8k-test-0006"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 219
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 7,
+    "wall_seconds": 4.437528531998396,
+    "source_ids": [
+      "gsm8k-test-0007"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 321
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 8,
+    "wall_seconds": 5.515829015523195,
+    "source_ids": [
+      "gsm8k-test-0008"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 399
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 9,
+    "wall_seconds": 2.8173902332782745,
+    "source_ids": [
+      "gsm8k-test-0009"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 204
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 10,
+    "wall_seconds": 2.9526866674423218,
+    "source_ids": [
+      "gsm8k-test-0010"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 214
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 11,
+    "wall_seconds": 2.87060721591115,
+    "source_ids": [
+      "gsm8k-test-0011"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 208
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 12,
+    "wall_seconds": 3.9390425123274326,
+    "source_ids": [
+      "gsm8k-test-0012"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 285
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 13,
+    "wall_seconds": 5.312465887516737,
+    "source_ids": [
+      "gsm8k-test-0013"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 385
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 14,
+    "wall_seconds": 3.50455554574728,
+    "source_ids": [
+      "gsm8k-test-0014"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 254
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 15,
+    "wall_seconds": 2.7257787473499775,
+    "source_ids": [
+      "gsm8k-test-0015"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 197
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 16,
+    "wall_seconds": 1.7684488706290722,
+    "source_ids": [
+      "gsm8k-test-0016"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 128
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 17,
+    "wall_seconds": 3.2299096398055553,
+    "source_ids": [
+      "gsm8k-test-0017"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 234
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 18,
+    "wall_seconds": 1.383424911648035,
+    "source_ids": [
+      "gsm8k-test-0018"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 100
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 19,
+    "wall_seconds": 3.945842269808054,
+    "source_ids": [
+      "gsm8k-test-0019"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 286
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 20,
+    "wall_seconds": 2.885009117424488,
+    "source_ids": [
+      "gsm8k-test-0020"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 209
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 21,
+    "wall_seconds": 4.205516420304775,
+    "source_ids": [
+      "gsm8k-test-0021"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 305
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 22,
+    "wall_seconds": 3.0081020556390285,
+    "source_ids": [
+      "gsm8k-test-0022"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 218
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 23,
+    "wall_seconds": 1.1351308897137642,
+    "source_ids": [
+      "gsm8k-test-0023"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 82
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 24,
+    "wall_seconds": 1.959678489714861,
+    "source_ids": [
+      "gsm8k-test-0024"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 142
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 25,
+    "wall_seconds": 3.828863274306059,
+    "source_ids": [
+      "gsm8k-test-0025"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 277
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 26,
+    "wall_seconds": 3.262633692473173,
+    "source_ids": [
+      "gsm8k-test-0026"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 236
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 27,
+    "wall_seconds": 2.167856138199568,
+    "source_ids": [
+      "gsm8k-test-0027"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 157
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 28,
+    "wall_seconds": 2.733983527868986,
+    "source_ids": [
+      "gsm8k-test-0028"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 198
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 29,
+    "wall_seconds": 3.069035731256008,
+    "source_ids": [
+      "gsm8k-test-0029"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 222
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 30,
+    "wall_seconds": 2.90982872992754,
+    "source_ids": [
+      "gsm8k-test-0030"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 211
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 31,
+    "wall_seconds": 4.125885289162397,
+    "source_ids": [
+      "gsm8k-test-0031"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 299
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 32,
+    "wall_seconds": 2.15204806253314,
+    "source_ids": [
+      "gsm8k-test-0032"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 156
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 33,
+    "wall_seconds": 2.976782813668251,
+    "source_ids": [
+      "gsm8k-test-0033"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 216
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 34,
+    "wall_seconds": 2.2617662362754345,
+    "source_ids": [
+      "gsm8k-test-0034"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 164
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 35,
+    "wall_seconds": 2.4279374666512012,
+    "source_ids": [
+      "gsm8k-test-0035"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 176
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 36,
+    "wall_seconds": 2.0026101656258106,
+    "source_ids": [
+      "gsm8k-test-0036"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 145
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 37,
+    "wall_seconds": 5.907995376735926,
+    "source_ids": [
+      "gsm8k-test-0037"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 428
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 38,
+    "wall_seconds": 4.496085073798895,
+    "source_ids": [
+      "gsm8k-test-0038"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 326
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 39,
+    "wall_seconds": 5.250643379986286,
+    "source_ids": [
+      "gsm8k-test-0039"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 380
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 40,
+    "wall_seconds": 3.1021577678620815,
+    "source_ids": [
+      "gsm8k-test-0040"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 225
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 41,
+    "wall_seconds": 3.6627034433186054,
+    "source_ids": [
+      "gsm8k-test-0041"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 265
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 42,
+    "wall_seconds": 1.3763053342700005,
+    "source_ids": [
+      "gsm8k-test-0042"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 99
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 43,
+    "wall_seconds": 3.3938226737082005,
+    "source_ids": [
+      "gsm8k-test-0043"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 246
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 44,
+    "wall_seconds": 3.7452060095965862,
+    "source_ids": [
+      "gsm8k-test-0044"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 271
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 45,
+    "wall_seconds": 3.92561574280262,
+    "source_ids": [
+      "gsm8k-test-0045"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 284
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 46,
+    "wall_seconds": 3.4284521751105785,
+    "source_ids": [
+      "gsm8k-test-0046"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 248
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 47,
+    "wall_seconds": 4.854685038328171,
+    "source_ids": [
+      "gsm8k-test-0047"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 352
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 48,
+    "wall_seconds": 1.8492327854037285,
+    "source_ids": [
+      "gsm8k-test-0048"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 134
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 49,
+    "wall_seconds": 2.509475752711296,
+    "source_ids": [
+      "gsm8k-test-0049"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 182
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 50,
+    "wall_seconds": 2.2474119067192078,
+    "source_ids": [
+      "gsm8k-test-0050"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 163
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 51,
+    "wall_seconds": 2.6087835989892483,
+    "source_ids": [
+      "gsm8k-test-0051"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 189
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 52,
+    "wall_seconds": 3.9596880339086056,
+    "source_ids": [
+      "gsm8k-test-0052"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 287
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 53,
+    "wall_seconds": 4.7788677252829075,
+    "source_ids": [
+      "gsm8k-test-0053"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 346
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 54,
+    "wall_seconds": 3.8658111430704594,
+    "source_ids": [
+      "gsm8k-test-0054"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 280
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 55,
+    "wall_seconds": 1.4092433862388134,
+    "source_ids": [
+      "gsm8k-test-0055"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 102
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 56,
+    "wall_seconds": 1.4499255679547787,
+    "source_ids": [
+      "gsm8k-test-0056"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 105
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 57,
+    "wall_seconds": 3.714470036327839,
+    "source_ids": [
+      "gsm8k-test-0057"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 269
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 58,
+    "wall_seconds": 3.6588297933340073,
+    "source_ids": [
+      "gsm8k-test-0058"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 265
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 59,
+    "wall_seconds": 1.5734593160450459,
+    "source_ids": [
+      "gsm8k-test-0059"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 114
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 60,
+    "wall_seconds": 2.712797962129116,
+    "source_ids": [
+      "gsm8k-test-0060"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 197
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 61,
+    "wall_seconds": 1.8640727177262306,
+    "source_ids": [
+      "gsm8k-test-0061"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 135
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 62,
+    "wall_seconds": 3.9890239909291267,
+    "source_ids": [
+      "gsm8k-test-0062"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 289
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 63,
+    "wall_seconds": 3.382699601352215,
+    "source_ids": [
+      "gsm8k-test-0063"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 245
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 64,
+    "wall_seconds": 2.5286763794720173,
+    "source_ids": [
+      "gsm8k-test-0064"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 183
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 65,
+    "wall_seconds": 1.4905603490769863,
+    "source_ids": [
+      "gsm8k-test-0065"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 108
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 66,
+    "wall_seconds": 2.015711549669504,
+    "source_ids": [
+      "gsm8k-test-0066"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 146
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 67,
+    "wall_seconds": 2.536110445857048,
+    "source_ids": [
+      "gsm8k-test-0067"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 184
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 68,
+    "wall_seconds": 3.0708751045167446,
+    "source_ids": [
+      "gsm8k-test-0068"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 223
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 69,
+    "wall_seconds": 3.074703961610794,
+    "source_ids": [
+      "gsm8k-test-0069"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 223
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 70,
+    "wall_seconds": 2.853153608739376,
+    "source_ids": [
+      "gsm8k-test-0070"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 207
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 71,
+    "wall_seconds": 1.3535847179591656,
+    "source_ids": [
+      "gsm8k-test-0071"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 98
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 72,
+    "wall_seconds": 2.370990179479122,
+    "source_ids": [
+      "gsm8k-test-0072"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 172
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 73,
+    "wall_seconds": 2.8374912701547146,
+    "source_ids": [
+      "gsm8k-test-0073"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 206
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 74,
+    "wall_seconds": 2.6118372306227684,
+    "source_ids": [
+      "gsm8k-test-0074"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 189
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 75,
+    "wall_seconds": 3.8184579871594906,
+    "source_ids": [
+      "gsm8k-test-0075"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 277
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 76,
+    "wall_seconds": 4.846040431410074,
+    "source_ids": [
+      "gsm8k-test-0076"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 351
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 77,
+    "wall_seconds": 3.2961307913064957,
+    "source_ids": [
+      "gsm8k-test-0077"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 239
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 78,
+    "wall_seconds": 4.147881548851728,
+    "source_ids": [
+      "gsm8k-test-0078"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 301
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 79,
+    "wall_seconds": 1.4784922078251839,
+    "source_ids": [
+      "gsm8k-test-0079"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 107
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 80,
+    "wall_seconds": 2.355192504823208,
+    "source_ids": [
+      "gsm8k-test-0080"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 171
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 81,
+    "wall_seconds": 2.1403087116777897,
+    "source_ids": [
+      "gsm8k-test-0081"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 155
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 82,
+    "wall_seconds": 1.9154157936573029,
+    "source_ids": [
+      "gsm8k-test-0082"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 139
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 83,
+    "wall_seconds": 1.5996466912329197,
+    "source_ids": [
+      "gsm8k-test-0083"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 116
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 84,
+    "wall_seconds": 2.7939797677099705,
+    "source_ids": [
+      "gsm8k-test-0084"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 203
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 85,
+    "wall_seconds": 1.9521632082760334,
+    "source_ids": [
+      "gsm8k-test-0085"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 141
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 86,
+    "wall_seconds": 2.3929000422358513,
+    "source_ids": [
+      "gsm8k-test-0086"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 173
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 87,
+    "wall_seconds": 5.093814514577389,
+    "source_ids": [
+      "gsm8k-test-0087"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 369
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 88,
+    "wall_seconds": 2.094910003244877,
+    "source_ids": [
+      "gsm8k-test-0088"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 152
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 89,
+    "wall_seconds": 1.9316235780715942,
+    "source_ids": [
+      "gsm8k-test-0089"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 140
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 90,
+    "wall_seconds": 2.778427630662918,
+    "source_ids": [
+      "gsm8k-test-0090"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 201
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 91,
+    "wall_seconds": 3.099934596568346,
+    "source_ids": [
+      "gsm8k-test-0091"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 225
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 92,
+    "wall_seconds": 4.354249510914087,
+    "source_ids": [
+      "gsm8k-test-0092"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 316
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 93,
+    "wall_seconds": 3.3839784264564514,
+    "source_ids": [
+      "gsm8k-test-0093"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 245
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 94,
+    "wall_seconds": 3.9809530936181545,
+    "source_ids": [
+      "gsm8k-test-0094"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 289
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 95,
+    "wall_seconds": 3.1689566671848297,
+    "source_ids": [
+      "gsm8k-test-0095"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 230
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 96,
+    "wall_seconds": 1.2029256038367748,
+    "source_ids": [
+      "gsm8k-test-0096"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 87
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 97,
+    "wall_seconds": 2.921171348541975,
+    "source_ids": [
+      "gsm8k-test-0097"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 212
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 98,
+    "wall_seconds": 4.128143072128296,
+    "source_ids": [
+      "gsm8k-test-0098"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 299
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 99,
+    "wall_seconds": 1.8008748404681683,
+    "source_ids": [
+      "gsm8k-test-0099"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 130
+  }
+]

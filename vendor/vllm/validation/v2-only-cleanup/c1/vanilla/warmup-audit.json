@@ -1,0 +1,48 @@
+[
+  {
+    "label": "warmup",
+    "before": {
+      "runner_class": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+      "use_v2_model_runner": true,
+      "async_scheduling": true,
+      "target": {
+        "manager_class": "vllm.v1.worker.gpu.cudagraph_utils.ModelCudaGraphManager",
+        "captures": 1,
+        "captured_shapes": [
+          "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=1, num_reqs=1, uniform_token_count=1, max_query_len=None, num_active_loras=0, num_ubatches=1)"
+        ]
+      },
+      "speculator_class": null,
+      "speculator": null
+    },
+    "after": {
+      "runner_class": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+      "use_v2_model_runner": true,
+      "async_scheduling": true,
+      "target": {
+        "manager_class": "vllm.v1.worker.gpu.cudagraph_utils.ModelCudaGraphManager",
+        "captures": 1,
+        "captured_shapes": [
+          "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=1, num_reqs=1, uniform_token_count=1, max_query_len=None, num_active_loras=0, num_ubatches=1)"
+        ]
+      },
+      "speculator_class": null,
+      "speculator": null
+    },
+    "target": {
+      "replays": 401,
+      "replay_shapes": {
+        "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=1, num_reqs=1, uniform_token_count=1, max_query_len=None, num_active_loras=0, num_ubatches=1)": 401
+      },
+      "dispatches": {
+        "other:NONE": 3,
+        "uniform_decode:FULL": 401
+      },
+      "max_dispatched_requests": 1,
+      "max_decode_requests": 1,
+      "captures_delta": 0,
+      "manager_replaced": false
+    },
+    "speculator_delta": null
+  }
+]

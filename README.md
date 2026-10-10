@@ -114,6 +114,14 @@ Each script covers Qwen3-4B, 8B, and 14B, and compares LongSpark with autoregres
 ## Documentation
 
 - [Usage guide](docs/HOW_TO_USE.md): running and reading evaluations.
+- [vLLM 0.30.0 integration](vendor/vllm/README.md): the
+  [native ModelRunner V2 LongSpark speculator](vendor/vllm/longspark_vllm/native_v2/README.md)
+  follows DSpark's engine lifecycle, with native scheduling, target execution,
+  GPU rejection and CUDA graphs. Its versioned patch, launcher and tests live under
+  `vendor/vllm/`. Run
+  `python vendor/vllm/scripts/evaluate_native_v2_gsm8k.py --help` for native options.
+  See the [GSM8K first-100 validation](vendor/vllm/validation/native-v2-gsm8k100-20260930/README.md)
+  for token parity, acceptance length, throughput and actual graph replay evidence.
 - [Artifacts](https://huggingface.co/collections/Hehy/longspark): model weights and the CodeSpan dataset.
 
 ## Acknowledgments

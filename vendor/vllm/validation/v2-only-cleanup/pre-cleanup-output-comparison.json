@@ -1,0 +1,50 @@
+{
+  "c1": {
+    "vanilla": {
+      "exact_token_matches": 3,
+      "compared": 3,
+      "source_ids": [
+        "gsm8k-test-0000",
+        "gsm8k-test-0001",
+        "gsm8k-test-0002"
+      ],
+      "historical_record_path": "vendor/vllm/validation/native-v2-gsm8k100-20260930/native-c1-full-v2/vanilla/records.jsonl",
+      "historical_record_sha256": "49a0606685654baefed6d251ccf2df3fbc379d0b7e4f922a166cbafe98f183ce"
+    },
+    "longspark": {
+      "exact_token_matches": 3,
+      "compared": 3,
+      "source_ids": [
+        "gsm8k-test-0000",
+        "gsm8k-test-0001",
+        "gsm8k-test-0002"
+      ],
+      "historical_record_path": "vendor/vllm/validation/native-v2-gsm8k100-20260930/native-c1-full-v2/longspark/records.jsonl",
+      "historical_record_sha256": "16f33ec1599a1462ad1d3a37ead58655568f286e87af08efbef733fe30ac167c"
+    }
+  },
+  "c2": {
+    "vanilla": {
+      "exact_token_matches": 3,
+      "compared": 3,
+      "source_ids": [
+        "gsm8k-test-0000",
+        "gsm8k-test-0001",
+        "gsm8k-test-0002"
+      ],
+      "historical_record_path": "vendor/vllm/validation/native-v2-gsm8k100-20260930/smoke-c2-chunk64-v1/vanilla/records.jsonl",
+      "historical_record_sha256": "a11eb9d255cff83c76d2083dcf6b1ce39d7e45df0858c6e5d5e3f9c6acbc4740"
+    },
+    "longspark": {
+      "exact_token_matches": 3,
+      "compared": 3,
+      "source_ids": [
+        "gsm8k-test-0000",
+        "gsm8k-test-0001",
+        "gsm8k-test-0002"
+      ],
+      "historical_record_path": "vendor/vllm/validation/native-v2-gsm8k100-20260930/fused-c2-chunk64-regression/longspark/records.jsonl",
+      "historical_record_sha256": "dfd4bca534c73bfd930fdf019ccbab7f241d9cf523c38795231b4558c45b174d"
+    }
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "backend": "vllm_native_v2",
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "requests": 6,
+  "integration_source_hashes": {
+    "vendor/specforge/modeling/draft/draftfreekv.py": "4f7166dd276bec0e726644153dd55157616f14deab615bac9328717f6085a755",
+    "vendor/specforge/modeling/draft/draftfreekv_validation.py": "11b80a84b25c7a6820bc5e23b8f4d577e37bbd209559f4e77d1ca56b1fdb891d",
+    "vendor/specforge/modeling/draft/global16_raw256.py": "b881bb90b2ab32e8194446b4c32bd1c301893307bfaabb2f0f9c523b73593409",
+    "vendor/specforge/modeling/draft/global16_raw256_training.py": "e61ca2b4a9434c76b3da1bd83e01b91eec6d34575d8d01399f3272228b71f62d",
+    "vendor/vllm/longspark_vllm/gsm8k.py": "a6835966cde4a6d43bedc003c4da45ceabd14daeb56e5bed307059139e7e4289",
+    "vendor/vllm/longspark_vllm/native_v2/__init__.py": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79",
+    "vendor/vllm/longspark_vllm/native_v2/diagnostics.py": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510",
+    "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "6ccbca9c9325b8f2a25a9f377ebd31e410b54d500fc29904d0fa57e7f2fba4d5",
+    "vendor/vllm/longspark_vllm/native_v2/inputs.py": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be",
+    "vendor/vllm/longspark_vllm/native_v2/speculator.py": "449b39dcb09dbe29e5346c58fba3fa720c0f0249e2cbeb46c103b96227ec77ac",
+    "vendor/vllm/longspark_vllm/native_v2/startup.py": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a",
+    "vendor/vllm/longspark_vllm/native_v2/state.py": "4659867c258fee7945a921440eb3970671831b3c328c55facf3ca0b4a478a863",
+    "vendor/vllm/longspark_vllm/native_v2/target_modules.py": "ae5b688af3c6862f3f36d9fa4746ea7ba8dfdabd5f477d9364b403d0dae6508e",
+    "vendor/vllm/patches/native-v2-custom-class.manifest.json": "1ad2c1aa4b284ca5e17a47a85120606246ee2835c3f810e99e443d0b8c878ac7",
+    "vendor/vllm/scripts/evaluate_native_v2_gsm8k.py": "12794543801f9537d81f3d2308c7d2590d7249ad6809de9e5c27c9281d5dc6a0"
+  },
+  "greedy_parity_passed": true,
+  "parity": {
+    "passed": true,
+    "matches": 3,
+    "comparisons": 3,
+    "checks": [
+      {
+        "source_id": "gsm8k-test-0000",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 115,
+        "longspark_tokens": 115
+      },
+      {
+        "source_id": "gsm8k-test-0001",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 93,
+        "longspark_tokens": 93
+      },
+      {
+        "source_id": "gsm8k-test-0002",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 193,
+        "longspark_tokens": 193
+      }
+    ]
+  },
+  "correctness_status": "passed",
+  "scoring": {
+    "scoring_policy": "Use only the first nonempty line after the last #### marker. The whole line must be a signed base-10 integer or decimal, optionally with correctly grouped thousands commas and one leading dollar symbol. Compare exact Decimal values; missing/invalid final answers count as incorrect.",
+    "total": 6,
+    "correct": 6,
+    "incorrect": 0,
+    "unparsed": 0,
+    "accuracy": 1.0,
+    "parsed_accuracy": 1.0,
+    "parse_status_counts": {
+      "parsed": 6
+    },
+    "eos_count": 6,
+    "truncated_count": 0,
+    "token_cap_count": 0,
+    "outputs_with_tokens_after_eos": 0,
+    "output_tokens": 802,
+    "mean_output_tokens": 133.66666666666666,
+    "by_method": {
+      "longspark": {
+        "total": 3,
+        "correct": 3,
+        "incorrect": 0,
+        "unparsed": 0,
+        "accuracy": 1.0,
+        "parsed_accuracy": 1.0,
+        "parse_status_counts": {
+          "parsed": 3
+        },
+        "eos_count": 3,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 401,
+        "mean_output_tokens": 133.66666666666666
+      },
+      "vanilla": {
+        "total": 3,
+        "correct": 3,
+        "incorrect": 0,
+        "unparsed": 0,
+        "accuracy": 1.0,
+        "parsed_accuracy": 1.0,
+        "parse_status_counts": {
+          "parsed": 3
+        },
+        "eos_count": 3,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 401,
+        "mean_output_tokens": 133.66666666666666
+      }
+    }
+  },
+  "performance": {
+    "vanilla": {
+      "requests": 3,
+      "output_tokens": 401,
+      "decode_tokens": 398,
+      "service_seconds": 5.494170133024454,
+      "decode_seconds": 5.45894581079483,
+      "aggregate_service_tps": 72.98645478589427,
+      "aggregate_decode_tps": 72.90784957289229,
+      "verification_rounds": 0,
+      "proposed_tokens": 0,
+      "accepted_draft_tokens_raw": 0,
+      "accepted_draft_tokens_emitted": 0,
+      "mean_accepted_draft_tokens": null,
+      "tau": null,
+      "tau_raw": null,
+      "acceptance_rate": null,
+      "acceptance_rate_raw": null,
+      "effective_advance": null,
+      "generate_wall_seconds": 5.522061504423618,
+      "generate_wall_tps": 72.61780762107892,
+      "max_submitted_concurrency": 1
+    },
+    "longspark": {
+      "requests": 3,
+      "output_tokens": 401,
+      "decode_tokens": 398,
+      "service_seconds": 1.325134377926588,
+      "decode_seconds": 1.2805180624127388,
+      "aggregate_service_tps": 302.6108194607681,
+      "aggregate_decode_tps": 310.81170323368383,
+      "verification_rounds": 75,
+      "proposed_tokens": 525,
+      "accepted_draft_tokens_raw": 324,
+      "accepted_draft_tokens_emitted": 324,
+      "mean_accepted_draft_tokens": 4.32,
+      "tau": 5.32,
+      "tau_raw": 5.32,
+      "acceptance_rate": 0.6171428571428571,
+      "acceptance_rate_raw": 0.6171428571428571,
+      "effective_advance": 5.306666666666667,
+      "generate_wall_seconds": 1.3596630282700062,
+      "generate_wall_tps": 294.9260159778119,
+      "max_submitted_concurrency": 1
+    }
+  },
+  "aggregate_service_speedup": 4.146123008008497,
+  "definitions": {
+    "tau": "1 + emitted accepted draft tokens / verified steps",
+    "tau_raw": "1 + native pre-stop accepted draft tokens / verified steps",
+    "service_tps": "sum(output_tokens) / sum(last_token_ts - scheduled_ts)",
+    "decode_tps": "sum(output_tokens - 1) / sum(last_token_ts - first_token_ts)",
+    "wall_tps": "sum(output_tokens) / sum(generate batch wall time)"
+  }
+}

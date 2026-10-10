@@ -1,0 +1,615 @@
+INFO 09-30 10:22:40 [api_utils.py:286] non-default args: {'dtype': 'bfloat16', 'max_model_len': 4096, 'enable_prefix_caching': False, 'kv_cache_memory_bytes': 2147483648, 'max_num_batched_tokens': 512, 'max_num_seqs': 1, 'enable_chunked_prefill': True, 'cudagraph_metrics': True, 'compilation_config': {'mode': None, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': [], 'ir_enable_torch_wrap': None, 'splitting_ops': None, 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': None, 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': None, 'pass_config': {}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': None, 'static_all_moe_layers': []}, 'attention_config': AttentionConfig(backend=<AttentionBackendEnum.FLASH_ATTN: 'vllm.v1.attention.backends.flash_attn.FlashAttentionBackend'>, minimax_m3_msa_decode_backend='triton', backend_per_kind={}, flash_attn_version=None, flash_attn_max_num_splits_for_cuda_graph=32, tq_max_kv_splits_for_cuda_graph=32, use_trtllm_attention=None, disable_flashinfer_q_quantization=False, mla_prefill_backend=None, use_prefill_query_quantization=False, indexer_kv_dtype='auto', hisparse_config=None, use_non_causal=False, sparse_mla_force_mqa=False, flex_attn_block_m=None, flex_attn_block_n=None, flex_attn_q_block_size=None, flex_attn_kv_block_size=None), 'worker_extension_cls': 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics', 'async_scheduling': True, 'model': '/data/lpf/models/Qwen3-4B'}
+INFO 09-30 10:22:40 [model.py:692] Resolved architecture: Qwen3ForCausalLM
+INFO 09-30 10:22:40 [model.py:2030] Using max model len 4096
+INFO 09-30 10:22:40 [scheduler.py:288] Chunked prefill is enabled with max_num_batched_tokens=512.
+INFO 09-30 10:22:40 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(EngineCore pid=2561016) INFO 09-30 10:22:43 [core.py:123] Initializing a V1 LLM engine (v0.30.0) with config: model='/data/lpf/models/Qwen3-4B', speculative_config=None, tokenizer='/data/lpf/models/Qwen3-4B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=True, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/data/lpf/models/Qwen3-4B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [512], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 2, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=2561016) INFO 09-30 10:22:44 [worker_base.py:306] Injected <class 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics'> into <class 'vllm.v1.worker.gpu_worker.Worker'> for extended collective_rpc calls ['native_v2_audit_end', 'native_v2_audit_snapshot', 'native_v2_audit_start', 'native_v2_warm_prefill_shapes']
+[W930 10:22:44.563920252 Context.cpp:597] Warning: torch.backends.cuda.preferred_blas_library is an experimental feature. If you see any error or unexpected behavior when this flag is set please file an issue on GitHub. (function operator())
+(EngineCore pid=2561016) INFO 09-30 10:22:44 [parallel_state.py:1827] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_fe2bf6d472b642dd900228970a7c3d4b backend=nccl
+(EngineCore pid=2561016) INFO 09-30 10:22:44 [parallel_state.py:2267] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=2561016) INFO 09-30 10:22:44 [gpu_worker.py:441] Using V2 Model Runner
+(EngineCore pid=2561016) INFO 09-30 10:22:45 [model_runner.py:403] Loading model from scratch...
+(EngineCore pid=2561016) INFO 09-30 10:22:45 [cuda.py:478] Using AttentionBackendEnum.FLASH_ATTN backend.
+(EngineCore pid=2561016) INFO 09-30 10:22:45 [flash_attn.py:1116] Using FlashAttention version 3
+(EngineCore pid=2561016) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(EngineCore pid=2561016) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(EngineCore pid=2561016) INFO 09-30 10:22:46 [weight_utils.py:895] Filesystem type for checkpoints: FUSE.ALIYUN-ALINAS-EFC. Checkpoint size: 7.49 GiB. Available RAM: 1044.25 GiB.
+(EngineCore pid=2561016) INFO 09-30 10:22:46 [weight_utils.py:918] Auto-prefetch is disabled because the filesystem (FUSE.ALIYUN-ALINAS-EFC) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+(EngineCore pid=2561016) 
+Loading safetensors checkpoint shards:   0% Completed | 0/3 [00:00<?, ?it/s]
+(EngineCore pid=2561016) 
+Loading safetensors checkpoint shards:  33% Completed | 1/3 [00:00<00:01,  1.65it/s]
+(EngineCore pid=2561016) 
+Loading safetensors checkpoint shards:  67% Completed | 2/3 [00:01<00:00,  1.57it/s]
+(EngineCore pid=2561016) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  2.55it/s]
+(EngineCore pid=2561016) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  2.20it/s]
+(EngineCore pid=2561016) 
+(EngineCore pid=2561016) INFO 09-30 10:22:48 [default_loader.py:430] Loading weights took 1.37 seconds
+(EngineCore pid=2561016) INFO 09-30 10:22:48 [model_runner.py:439] Model loading took 7.56 GiB memory and 3.138591 seconds
+(EngineCore pid=2561016) INFO 09-30 10:22:48 [topk_topp_sampler.py:62] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=2561016) INFO 09-30 10:22:48 [utils.py:320] Using LBNHC KV cache layout.
+(EngineCore pid=2561016) /data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/torch/_dynamo/variables/functions.py:2590: UserWarning: Dynamo detected a call to a `functools.lru_cache`-wrapped function at 'batch_invariant.py:289'. Dynamo ignores the cache wrapper and directly traces the wrapped function. Silent incorrectness is only a *potential* risk, not something we have observed. Enable TORCH_LOGS=+dynamo for a DEBUG stack trace.
+(EngineCore pid=2561016) 
+(EngineCore pid=2561016) This call originates from:
+(EngineCore pid=2561016)   File "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/determinism/batch_invariant.py", line 289, in matmul_persistent
+(EngineCore pid=2561016)     NUM_SMS = num_compute_units(a.device.index)
+(EngineCore pid=2561016)               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=2561016) 
+(EngineCore pid=2561016)   torch._dynamo.utils.warn_once(msg)
+(EngineCore pid=2561016) INFO 09-30 10:22:59 [backends.py:1094] Using cache directory: /root/.cache/vllm/torch_compile_cache/4b3140aefb/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=2561016) INFO 09-30 10:22:59 [backends.py:1155] Dynamo bytecode transform time: 10.71 s
+(EngineCore pid=2561016) INFO 09-30 10:23:01 [backends.py:292] Directly load the compiled graph(s) for compile range (1, 512) from the cache, took 0.868 s
+(EngineCore pid=2561016) INFO 09-30 10:23:01 [monitor.py:53] torch.compile and initial profiling/warmup run together took 13.02 s in total
+(EngineCore pid=2561016) INFO 09-30 10:23:02 [gpu_worker.py:559] Initial free memory 139.3 GiB, reserved 2.0 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.
+(EngineCore pid=2561016) INFO 09-30 10:23:02 [kv_cache_utils.py:2395] GPU KV cache size: 14,560 tokens, Maximum concurrency for 4,096 tokens per request: 3.55x
+(EngineCore pid=2561016) INFO 09-30 10:23:02 [kernel_warmup.py:172] JIT kernel warmup starting.
+(EngineCore pid=2561016) INFO 09-30 10:23:02 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=2561016) 
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 2/2 [00:00<00:00, 29.38it/s]
+(EngineCore pid=2561016) 
+Capturing CUDA graphs (FULL):   0%|          | 0/1 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 1/1 [00:00<00:00, 41.76it/s]
+(EngineCore pid=2561016) INFO 09-30 10:23:03 [model_runner.py:1077] Graph capturing finished in 1 secs, took 0.02 GiB
+(EngineCore pid=2561016) INFO 09-30 10:23:04 [jit_monitor.py:85] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=2561016) INFO 09-30 10:23:05 [torch_utils.py:287] Reducing Torch threads from 96 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=2561016) INFO 09-30 10:23:05 [core.py:372] init engine (profile, create kv cache, warmup model) took 16.50 s (compilation: 13.02 s)
+(EngineCore pid=2561016) INFO 09-30 10:23:05 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+INFO 09-30 10:23:05 [hf.py:642] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+vanilla: prefill state shape warmup through width 190
+vanilla/warmup: 1/3 gsm8k-test-0000 tokens=115 correct=True service=1.582s
+vanilla/warmup: 2/3 gsm8k-test-0001 tokens=93 correct=True service=1.272s
+vanilla/warmup: 3/3 gsm8k-test-0002 tokens=193 correct=True service=2.651s
+vanilla/measurement: 1/100 gsm8k-test-0000 tokens=115 correct=True service=1.578s
+vanilla/measurement: 2/100 gsm8k-test-0001 tokens=93 correct=True service=1.272s
+INFO 09-30 10:23:15 [loggers.py:315] Engine 000: Avg prompt throughput: 63.2 tokens/s, Avg generation throughput: 68.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.7%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:23:15 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:23:15 [cuda_graph.py:123] 
+INFO 09-30 10:23:15 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:23:15 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:23:15 [cuda_graph.py:123] 
+INFO 09-30 10:23:15 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:23:15 [cuda_graph.py:123] 
+INFO 09-30 10:23:15 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:23:15 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:23:15 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 722   |
+INFO 09-30 10:23:15 [cuda_graph.py:123] | 127             | 127           | 0            | NONE         | 2     |
+INFO 09-30 10:23:15 [cuda_graph.py:123] | 88              | 88            | 0            | NONE         | 2     |
+INFO 09-30 10:23:15 [cuda_graph.py:123] | 119             | 119           | 0            | NONE         | 2     |
+INFO 09-30 10:23:15 [cuda_graph.py:123] 
+vanilla/measurement: 3/100 gsm8k-test-0002 tokens=193 correct=True service=2.650s
+vanilla/measurement: 4/100 gsm8k-test-0003 tokens=119 correct=True service=1.630s
+vanilla/measurement: 5/100 gsm8k-test-0004 tokens=149 correct=True service=2.051s
+vanilla/measurement: 6/100 gsm8k-test-0005 tokens=190 correct=True service=2.609s
+INFO 09-30 10:23:25 [loggers.py:315] Engine 000: Avg prompt throughput: 49.1 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.1%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:23:25 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:23:25 [cuda_graph.py:123] 
+INFO 09-30 10:23:25 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:23:25 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:23:25 [cuda_graph.py:123] 
+INFO 09-30 10:23:25 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:23:25 [cuda_graph.py:123] 
+INFO 09-30 10:23:25 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:23:25 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:23:25 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:23:25 [cuda_graph.py:123] | 97              | 97            | 0            | NONE         | 1     |
+INFO 09-30 10:23:25 [cuda_graph.py:123] | 173             | 173           | 0            | NONE         | 1     |
+INFO 09-30 10:23:25 [cuda_graph.py:123] | 118             | 118           | 0            | NONE         | 1     |
+INFO 09-30 10:23:25 [cuda_graph.py:123] | 104             | 104           | 0            | NONE         | 1     |
+INFO 09-30 10:23:25 [cuda_graph.py:123] 
+vanilla/measurement: 7/100 gsm8k-test-0006 tokens=219 correct=True service=3.007s
+vanilla/measurement: 8/100 gsm8k-test-0007 tokens=321 correct=True service=4.424s
+INFO 09-30 10:23:35 [loggers.py:315] Engine 000: Avg prompt throughput: 29.8 tokens/s, Avg generation throughput: 72.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 3.7%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:23:35 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:23:35 [cuda_graph.py:123] 
+INFO 09-30 10:23:35 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:23:35 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:23:35 [cuda_graph.py:123] 
+INFO 09-30 10:23:35 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:23:35 [cuda_graph.py:123] 
+INFO 09-30 10:23:35 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:23:35 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:23:35 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 724   |
+INFO 09-30 10:23:35 [cuda_graph.py:123] | 132             | 132           | 0            | NONE         | 1     |
+INFO 09-30 10:23:35 [cuda_graph.py:123] | 166             | 166           | 0            | NONE         | 1     |
+INFO 09-30 10:23:35 [cuda_graph.py:123] 
+vanilla/measurement: 9/100 gsm8k-test-0008 tokens=399 correct=True service=5.502s
+vanilla/measurement: 10/100 gsm8k-test-0009 tokens=204 correct=True service=2.804s
+vanilla/measurement: 11/100 gsm8k-test-0010 tokens=214 correct=True service=2.939s
+vanilla/measurement: 12/100 gsm8k-test-0011 tokens=208 correct=True service=2.857s
+INFO 09-30 10:23:45 [loggers.py:315] Engine 000: Avg prompt throughput: 50.0 tokens/s, Avg generation throughput: 72.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.4%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:23:45 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:23:45 [cuda_graph.py:123] 
+INFO 09-30 10:23:45 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:23:45 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:23:45 [cuda_graph.py:123] 
+INFO 09-30 10:23:45 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:23:45 [cuda_graph.py:123] 
+INFO 09-30 10:23:45 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:23:45 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:23:45 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 724   |
+INFO 09-30 10:23:45 [cuda_graph.py:123] | 122             | 122           | 0            | NONE         | 2     |
+INFO 09-30 10:23:45 [cuda_graph.py:123] | 127             | 127           | 0            | NONE         | 1     |
+INFO 09-30 10:23:45 [cuda_graph.py:123] | 129             | 129           | 0            | NONE         | 1     |
+INFO 09-30 10:23:45 [cuda_graph.py:123] 
+vanilla/measurement: 13/100 gsm8k-test-0012 tokens=285 correct=False service=3.926s
+vanilla/measurement: 14/100 gsm8k-test-0013 tokens=385 correct=True service=5.299s
+INFO 09-30 10:23:55 [loggers.py:315] Engine 000: Avg prompt throughput: 23.4 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.7%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:23:55 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:23:55 [cuda_graph.py:123] 
+INFO 09-30 10:23:55 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:23:55 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:23:55 [cuda_graph.py:123] 
+INFO 09-30 10:23:55 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:23:55 [cuda_graph.py:123] 
+INFO 09-30 10:23:55 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:23:55 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:23:55 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:23:55 [cuda_graph.py:123] | 120             | 120           | 0            | NONE         | 1     |
+INFO 09-30 10:23:55 [cuda_graph.py:123] | 114             | 114           | 0            | NONE         | 1     |
+INFO 09-30 10:23:55 [cuda_graph.py:123] 
+vanilla/measurement: 15/100 gsm8k-test-0014 tokens=254 correct=True service=3.491s
+vanilla/measurement: 16/100 gsm8k-test-0015 tokens=197 correct=True service=2.712s
+vanilla/measurement: 17/100 gsm8k-test-0016 tokens=128 correct=True service=1.755s
+vanilla/measurement: 18/100 gsm8k-test-0017 tokens=234 correct=True service=3.216s
+INFO 09-30 10:24:05 [loggers.py:315] Engine 000: Avg prompt throughput: 48.2 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.9%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:24:05 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:24:05 [cuda_graph.py:123] 
+INFO 09-30 10:24:05 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:24:05 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:24:05 [cuda_graph.py:123] 
+INFO 09-30 10:24:05 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:24:05 [cuda_graph.py:123] 
+INFO 09-30 10:24:05 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:24:05 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:24:05 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 724   |
+INFO 09-30 10:24:05 [cuda_graph.py:123] | 156             | 156           | 0            | NONE         | 1     |
+INFO 09-30 10:24:05 [cuda_graph.py:123] | 115             | 115           | 0            | NONE         | 1     |
+INFO 09-30 10:24:05 [cuda_graph.py:123] | 120             | 120           | 0            | NONE         | 1     |
+INFO 09-30 10:24:05 [cuda_graph.py:123] | 91              | 91            | 0            | NONE         | 1     |
+INFO 09-30 10:24:05 [cuda_graph.py:123] 
+vanilla/measurement: 19/100 gsm8k-test-0018 tokens=100 correct=True service=1.370s
+vanilla/measurement: 20/100 gsm8k-test-0019 tokens=286 correct=True service=3.932s
+vanilla/measurement: 21/100 gsm8k-test-0020 tokens=209 correct=True service=2.871s
+INFO 09-30 10:24:15 [loggers.py:315] Engine 000: Avg prompt throughput: 36.0 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.0%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:24:15 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:24:15 [cuda_graph.py:123] 
+INFO 09-30 10:24:15 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:24:15 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:24:15 [cuda_graph.py:123] 
+INFO 09-30 10:24:15 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:24:15 [cuda_graph.py:123] 
+INFO 09-30 10:24:15 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:24:15 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:24:15 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:24:15 [cuda_graph.py:123] | 127             | 127           | 0            | NONE         | 1     |
+INFO 09-30 10:24:15 [cuda_graph.py:123] | 125             | 125           | 0            | NONE         | 1     |
+INFO 09-30 10:24:15 [cuda_graph.py:123] | 108             | 108           | 0            | NONE         | 1     |
+INFO 09-30 10:24:15 [cuda_graph.py:123] 
+vanilla/measurement: 22/100 gsm8k-test-0021 tokens=305 correct=False service=4.192s
+vanilla/measurement: 23/100 gsm8k-test-0022 tokens=218 correct=True service=2.994s
+vanilla/measurement: 24/100 gsm8k-test-0023 tokens=82 correct=True service=1.122s
+vanilla/measurement: 25/100 gsm8k-test-0024 tokens=142 correct=True service=1.946s
+INFO 09-30 10:24:25 [loggers.py:315] Engine 000: Avg prompt throughput: 45.0 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.0%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:24:25 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:24:25 [cuda_graph.py:123] 
+INFO 09-30 10:24:25 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:24:25 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:24:25 [cuda_graph.py:123] 
+INFO 09-30 10:24:25 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:24:25 [cuda_graph.py:123] 
+INFO 09-30 10:24:25 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:24:25 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:24:25 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 724   |
+INFO 09-30 10:24:25 [cuda_graph.py:123] | 117             | 117           | 0            | NONE         | 1     |
+INFO 09-30 10:24:25 [cuda_graph.py:123] | 102             | 102           | 0            | NONE         | 1     |
+INFO 09-30 10:24:25 [cuda_graph.py:123] | 101             | 101           | 0            | NONE         | 1     |
+INFO 09-30 10:24:25 [cuda_graph.py:123] | 130             | 130           | 0            | NONE         | 1     |
+INFO 09-30 10:24:25 [cuda_graph.py:123] 
+vanilla/measurement: 26/100 gsm8k-test-0025 tokens=277 correct=True service=3.815s
+vanilla/measurement: 27/100 gsm8k-test-0026 tokens=236 correct=True service=3.249s
+vanilla/measurement: 28/100 gsm8k-test-0027 tokens=157 correct=True service=2.154s
+vanilla/measurement: 29/100 gsm8k-test-0028 tokens=198 correct=True service=2.720s
+INFO 09-30 10:24:35 [loggers.py:315] Engine 000: Avg prompt throughput: 49.4 tokens/s, Avg generation throughput: 72.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.0%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:24:35 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:24:35 [cuda_graph.py:123] 
+INFO 09-30 10:24:35 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:24:35 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:24:35 [cuda_graph.py:123] 
+INFO 09-30 10:24:35 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:24:35 [cuda_graph.py:123] 
+INFO 09-30 10:24:35 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:24:35 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:24:35 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:24:35 [cuda_graph.py:123] | 131             | 131           | 0            | NONE         | 2     |
+INFO 09-30 10:24:35 [cuda_graph.py:123] | 121             | 121           | 0            | NONE         | 1     |
+INFO 09-30 10:24:35 [cuda_graph.py:123] | 112             | 112           | 0            | NONE         | 1     |
+INFO 09-30 10:24:35 [cuda_graph.py:123] 
+vanilla/measurement: 30/100 gsm8k-test-0029 tokens=222 correct=True service=3.056s
+vanilla/measurement: 31/100 gsm8k-test-0030 tokens=211 correct=True service=2.896s
+INFO 09-30 10:24:45 [loggers.py:315] Engine 000: Avg prompt throughput: 22.6 tokens/s, Avg generation throughput: 72.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 3.0%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:24:45 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:24:45 [cuda_graph.py:123] 
+INFO 09-30 10:24:45 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:24:45 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:24:45 [cuda_graph.py:123] 
+INFO 09-30 10:24:45 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:24:45 [cuda_graph.py:123] 
+INFO 09-30 10:24:45 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:24:45 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:24:45 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 726   |
+INFO 09-30 10:24:45 [cuda_graph.py:123] | 101             | 101           | 0            | NONE         | 1     |
+INFO 09-30 10:24:45 [cuda_graph.py:123] | 125             | 125           | 0            | NONE         | 1     |
+INFO 09-30 10:24:45 [cuda_graph.py:123] 
+vanilla/measurement: 32/100 gsm8k-test-0031 tokens=299 correct=True service=4.112s
+vanilla/measurement: 33/100 gsm8k-test-0032 tokens=156 correct=True service=2.139s
+vanilla/measurement: 34/100 gsm8k-test-0033 tokens=216 correct=True service=2.963s
+vanilla/measurement: 35/100 gsm8k-test-0034 tokens=164 correct=True service=2.248s
+vanilla/measurement: 36/100 gsm8k-test-0035 tokens=176 correct=True service=2.415s
+INFO 09-30 10:24:55 [loggers.py:315] Engine 000: Avg prompt throughput: 51.8 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.9%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:24:55 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:24:55 [cuda_graph.py:123] 
+INFO 09-30 10:24:55 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:24:55 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:24:55 [cuda_graph.py:123] 
+INFO 09-30 10:24:55 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:24:55 [cuda_graph.py:123] 
+INFO 09-30 10:24:55 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:24:55 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:24:55 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:24:55 [cuda_graph.py:123] | 103             | 103           | 0            | NONE         | 2     |
+INFO 09-30 10:24:55 [cuda_graph.py:123] | 93              | 93            | 0            | NONE         | 1     |
+INFO 09-30 10:24:55 [cuda_graph.py:123] | 114             | 114           | 0            | NONE         | 1     |
+INFO 09-30 10:24:55 [cuda_graph.py:123] | 106             | 106           | 0            | NONE         | 1     |
+INFO 09-30 10:24:55 [cuda_graph.py:123] 
+vanilla/measurement: 37/100 gsm8k-test-0036 tokens=145 correct=True service=1.989s
+vanilla/measurement: 38/100 gsm8k-test-0037 tokens=428 correct=True service=5.895s
+INFO 09-30 10:25:05 [loggers.py:315] Engine 000: Avg prompt throughput: 23.1 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.9%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:25:05 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:25:05 [cuda_graph.py:123] 
+INFO 09-30 10:25:05 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:25:05 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:25:05 [cuda_graph.py:123] 
+INFO 09-30 10:25:05 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:25:05 [cuda_graph.py:123] 
+INFO 09-30 10:25:05 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:25:05 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:25:05 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 726   |
+INFO 09-30 10:25:05 [cuda_graph.py:123] | 125             | 125           | 0            | NONE         | 1     |
+INFO 09-30 10:25:05 [cuda_graph.py:123] | 106             | 106           | 0            | NONE         | 1     |
+INFO 09-30 10:25:05 [cuda_graph.py:123] 
+vanilla/measurement: 39/100 gsm8k-test-0038 tokens=326 correct=True service=4.483s
+vanilla/measurement: 40/100 gsm8k-test-0039 tokens=380 correct=True service=5.237s
+INFO 09-30 10:25:15 [loggers.py:315] Engine 000: Avg prompt throughput: 24.1 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.0%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:25:15 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:25:15 [cuda_graph.py:123] 
+INFO 09-30 10:25:15 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:25:15 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:25:15 [cuda_graph.py:123] 
+INFO 09-30 10:25:15 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:25:15 [cuda_graph.py:123] 
+INFO 09-30 10:25:15 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:25:15 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:25:15 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:25:15 [cuda_graph.py:123] | 135             | 135           | 0            | NONE         | 1     |
+INFO 09-30 10:25:15 [cuda_graph.py:123] | 106             | 106           | 0            | NONE         | 1     |
+INFO 09-30 10:25:15 [cuda_graph.py:123] 
+vanilla/measurement: 41/100 gsm8k-test-0040 tokens=225 correct=True service=3.089s
+vanilla/measurement: 42/100 gsm8k-test-0041 tokens=265 correct=True service=3.649s
+vanilla/measurement: 43/100 gsm8k-test-0042 tokens=99 correct=True service=1.363s
+vanilla/measurement: 44/100 gsm8k-test-0043 tokens=246 correct=True service=3.380s
+INFO 09-30 10:25:25 [loggers.py:315] Engine 000: Avg prompt throughput: 59.6 tokens/s, Avg generation throughput: 72.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.4%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:25:25 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:25:25 [cuda_graph.py:123] 
+INFO 09-30 10:25:25 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:25:25 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:25:25 [cuda_graph.py:123] 
+INFO 09-30 10:25:25 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:25:25 [cuda_graph.py:123] 
+INFO 09-30 10:25:25 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:25:25 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:25:25 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 723   |
+INFO 09-30 10:25:25 [cuda_graph.py:123] | 190             | 190           | 0            | NONE         | 1     |
+INFO 09-30 10:25:25 [cuda_graph.py:123] | 144             | 144           | 0            | NONE         | 1     |
+INFO 09-30 10:25:25 [cuda_graph.py:123] | 123             | 123           | 0            | NONE         | 1     |
+INFO 09-30 10:25:25 [cuda_graph.py:123] | 139             | 139           | 0            | NONE         | 1     |
+INFO 09-30 10:25:25 [cuda_graph.py:123] 
+vanilla/measurement: 45/100 gsm8k-test-0044 tokens=271 correct=True service=3.732s
+vanilla/measurement: 46/100 gsm8k-test-0045 tokens=284 correct=True service=3.912s
+INFO 09-30 10:25:35 [loggers.py:315] Engine 000: Avg prompt throughput: 31.2 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.8%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:25:35 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:25:35 [cuda_graph.py:123] 
+INFO 09-30 10:25:35 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:25:35 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:25:35 [cuda_graph.py:123] 
+INFO 09-30 10:25:35 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:25:35 [cuda_graph.py:123] 
+INFO 09-30 10:25:35 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:25:35 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:25:35 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:25:35 [cuda_graph.py:123] | 156             | 156           | 0            | NONE         | 2     |
+INFO 09-30 10:25:35 [cuda_graph.py:123] 
+vanilla/measurement: 47/100 gsm8k-test-0046 tokens=248 correct=True service=3.415s
+vanilla/measurement: 48/100 gsm8k-test-0047 tokens=352 correct=True service=4.841s
+vanilla/measurement: 49/100 gsm8k-test-0048 tokens=134 correct=True service=1.836s
+vanilla/measurement: 50/100 gsm8k-test-0049 tokens=182 correct=True service=2.496s
+INFO 09-30 10:25:45 [loggers.py:315] Engine 000: Avg prompt throughput: 41.5 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.1%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:25:45 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:25:45 [cuda_graph.py:123] 
+INFO 09-30 10:25:45 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:25:45 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:25:45 [cuda_graph.py:123] 
+INFO 09-30 10:25:45 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:25:45 [cuda_graph.py:123] 
+INFO 09-30 10:25:45 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:25:45 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:25:45 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:25:45 [cuda_graph.py:123] | 99              | 99            | 0            | NONE         | 2     |
+INFO 09-30 10:25:45 [cuda_graph.py:123] | 112             | 112           | 0            | NONE         | 1     |
+INFO 09-30 10:25:45 [cuda_graph.py:123] | 105             | 105           | 0            | NONE         | 1     |
+INFO 09-30 10:25:45 [cuda_graph.py:123] 
+vanilla/measurement: 51/100 gsm8k-test-0050 tokens=163 correct=True service=2.234s
+vanilla/measurement: 52/100 gsm8k-test-0051 tokens=189 correct=True service=2.596s
+vanilla/measurement: 53/100 gsm8k-test-0052 tokens=287 correct=True service=3.946s
+INFO 09-30 10:25:55 [loggers.py:315] Engine 000: Avg prompt throughput: 39.7 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.1%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:25:55 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:25:55 [cuda_graph.py:123] 
+INFO 09-30 10:25:55 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:25:55 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:25:55 [cuda_graph.py:123] 
+INFO 09-30 10:25:55 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:25:55 [cuda_graph.py:123] 
+INFO 09-30 10:25:55 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:25:55 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:25:55 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:25:55 [cuda_graph.py:123] | 111             | 111           | 0            | NONE         | 1     |
+INFO 09-30 10:25:55 [cuda_graph.py:123] | 124             | 124           | 0            | NONE         | 1     |
+INFO 09-30 10:25:55 [cuda_graph.py:123] | 162             | 162           | 0            | NONE         | 1     |
+INFO 09-30 10:25:55 [cuda_graph.py:123] 
+vanilla/measurement: 54/100 gsm8k-test-0053 tokens=346 correct=True service=4.765s
+vanilla/measurement: 55/100 gsm8k-test-0054 tokens=280 correct=True service=3.852s
+vanilla/measurement: 56/100 gsm8k-test-0055 tokens=102 correct=True service=1.396s
+vanilla/measurement: 57/100 gsm8k-test-0056 tokens=105 correct=True service=1.436s
+INFO 09-30 10:26:05 [loggers.py:315] Engine 000: Avg prompt throughput: 50.2 tokens/s, Avg generation throughput: 72.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.2%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:26:05 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:26:05 [cuda_graph.py:123] 
+INFO 09-30 10:26:05 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:26:05 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:26:05 [cuda_graph.py:123] 
+INFO 09-30 10:26:05 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:26:05 [cuda_graph.py:123] 
+INFO 09-30 10:26:05 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:26:05 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:26:05 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 724   |
+INFO 09-30 10:26:05 [cuda_graph.py:123] | 144             | 144           | 0            | NONE         | 1     |
+INFO 09-30 10:26:05 [cuda_graph.py:123] | 112             | 112           | 0            | NONE         | 1     |
+INFO 09-30 10:26:05 [cuda_graph.py:123] | 107             | 107           | 0            | NONE         | 1     |
+INFO 09-30 10:26:05 [cuda_graph.py:123] | 139             | 139           | 0            | NONE         | 1     |
+INFO 09-30 10:26:05 [cuda_graph.py:123] 
+vanilla/measurement: 58/100 gsm8k-test-0057 tokens=269 correct=True service=3.701s
+vanilla/measurement: 59/100 gsm8k-test-0058 tokens=265 correct=True service=3.645s
+vanilla/measurement: 60/100 gsm8k-test-0059 tokens=114 correct=True service=1.560s
+INFO 09-30 10:26:15 [loggers.py:315] Engine 000: Avg prompt throughput: 34.0 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.4%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:26:15 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:26:15 [cuda_graph.py:123] 
+INFO 09-30 10:26:15 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:26:15 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:26:15 [cuda_graph.py:123] 
+INFO 09-30 10:26:15 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:26:15 [cuda_graph.py:123] 
+INFO 09-30 10:26:15 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:26:15 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:26:15 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 726   |
+INFO 09-30 10:26:15 [cuda_graph.py:123] | 146             | 146           | 0            | NONE         | 1     |
+INFO 09-30 10:26:15 [cuda_graph.py:123] | 94              | 94            | 0            | NONE         | 1     |
+INFO 09-30 10:26:15 [cuda_graph.py:123] | 100             | 100           | 0            | NONE         | 1     |
+INFO 09-30 10:26:15 [cuda_graph.py:123] 
+vanilla/measurement: 61/100 gsm8k-test-0060 tokens=197 correct=True service=2.699s
+vanilla/measurement: 62/100 gsm8k-test-0061 tokens=135 correct=True service=1.851s
+vanilla/measurement: 63/100 gsm8k-test-0062 tokens=289 correct=False service=3.976s
+INFO 09-30 10:26:25 [loggers.py:315] Engine 000: Avg prompt throughput: 38.5 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.4%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:26:25 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:26:25 [cuda_graph.py:123] 
+INFO 09-30 10:26:25 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:26:25 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:26:25 [cuda_graph.py:123] 
+INFO 09-30 10:26:25 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:26:25 [cuda_graph.py:123] 
+INFO 09-30 10:26:25 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:26:25 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:26:25 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:26:25 [cuda_graph.py:123] | 124             | 124           | 0            | NONE         | 1     |
+INFO 09-30 10:26:25 [cuda_graph.py:123] | 130             | 130           | 0            | NONE         | 1     |
+INFO 09-30 10:26:25 [cuda_graph.py:123] | 131             | 131           | 0            | NONE         | 1     |
+INFO 09-30 10:26:25 [cuda_graph.py:123] 
+vanilla/measurement: 64/100 gsm8k-test-0063 tokens=245 correct=True service=3.369s
+vanilla/measurement: 65/100 gsm8k-test-0064 tokens=183 correct=True service=2.515s
+vanilla/measurement: 66/100 gsm8k-test-0065 tokens=108 correct=True service=1.477s
+vanilla/measurement: 67/100 gsm8k-test-0066 tokens=146 correct=True service=2.002s
+vanilla/measurement: 68/100 gsm8k-test-0067 tokens=184 correct=True service=2.523s
+INFO 09-30 10:26:35 [loggers.py:315] Engine 000: Avg prompt throughput: 59.8 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.2%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:26:35 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:26:35 [cuda_graph.py:123] 
+INFO 09-30 10:26:35 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:26:35 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:26:35 [cuda_graph.py:123] 
+INFO 09-30 10:26:35 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:26:35 [cuda_graph.py:123] 
+INFO 09-30 10:26:35 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:26:35 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:26:35 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:26:35 [cuda_graph.py:123] | 155             | 155           | 0            | NONE         | 1     |
+INFO 09-30 10:26:35 [cuda_graph.py:123] | 109             | 109           | 0            | NONE         | 1     |
+INFO 09-30 10:26:35 [cuda_graph.py:123] | 120             | 120           | 0            | NONE         | 1     |
+INFO 09-30 10:26:35 [cuda_graph.py:123] | 116             | 116           | 0            | NONE         | 1     |
+INFO 09-30 10:26:35 [cuda_graph.py:123] | 99              | 99            | 0            | NONE         | 1     |
+INFO 09-30 10:26:35 [cuda_graph.py:123] 
+vanilla/measurement: 69/100 gsm8k-test-0068 tokens=223 correct=True service=3.057s
+vanilla/measurement: 70/100 gsm8k-test-0069 tokens=223 correct=True service=3.061s
+vanilla/measurement: 71/100 gsm8k-test-0070 tokens=207 correct=True service=2.840s
+vanilla/measurement: 72/100 gsm8k-test-0071 tokens=98 correct=True service=1.340s
+INFO 09-30 10:26:45 [loggers.py:315] Engine 000: Avg prompt throughput: 44.6 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.1%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:26:45 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:26:45 [cuda_graph.py:123] 
+INFO 09-30 10:26:45 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:26:45 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:26:45 [cuda_graph.py:123] 
+INFO 09-30 10:26:45 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:26:45 [cuda_graph.py:123] 
+INFO 09-30 10:26:45 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:26:45 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:26:45 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 726   |
+INFO 09-30 10:26:45 [cuda_graph.py:123] | 114             | 114           | 0            | NONE         | 1     |
+INFO 09-30 10:26:45 [cuda_graph.py:123] | 115             | 115           | 0            | NONE         | 1     |
+INFO 09-30 10:26:45 [cuda_graph.py:123] | 106             | 106           | 0            | NONE         | 1     |
+INFO 09-30 10:26:45 [cuda_graph.py:123] | 112             | 112           | 0            | NONE         | 1     |
+INFO 09-30 10:26:45 [cuda_graph.py:123] 
+vanilla/measurement: 73/100 gsm8k-test-0072 tokens=172 correct=True service=2.357s
+vanilla/measurement: 74/100 gsm8k-test-0073 tokens=206 correct=True service=2.824s
+vanilla/measurement: 75/100 gsm8k-test-0074 tokens=189 correct=True service=2.598s
+INFO 09-30 10:26:55 [loggers.py:315] Engine 000: Avg prompt throughput: 42.3 tokens/s, Avg generation throughput: 72.6 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.3%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:26:55 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:26:55 [cuda_graph.py:123] 
+INFO 09-30 10:26:55 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:26:55 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:26:55 [cuda_graph.py:123] 
+INFO 09-30 10:26:55 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:26:55 [cuda_graph.py:123] 
+INFO 09-30 10:26:55 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:26:55 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:26:55 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 726   |
+INFO 09-30 10:26:55 [cuda_graph.py:123] | 107             | 107           | 0            | NONE         | 1     |
+INFO 09-30 10:26:55 [cuda_graph.py:123] | 188             | 188           | 0            | NONE         | 1     |
+INFO 09-30 10:26:55 [cuda_graph.py:123] | 128             | 128           | 0            | NONE         | 1     |
+INFO 09-30 10:26:55 [cuda_graph.py:123] 
+vanilla/measurement: 76/100 gsm8k-test-0075 tokens=277 correct=True service=3.805s
+vanilla/measurement: 77/100 gsm8k-test-0076 tokens=351 correct=True service=4.833s
+vanilla/measurement: 78/100 gsm8k-test-0077 tokens=239 correct=True service=3.283s
+INFO 09-30 10:27:05 [loggers.py:315] Engine 000: Avg prompt throughput: 36.1 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.2%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:27:05 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:27:05 [cuda_graph.py:123] 
+INFO 09-30 10:27:05 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:27:05 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:27:05 [cuda_graph.py:123] 
+INFO 09-30 10:27:05 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:27:05 [cuda_graph.py:123] 
+INFO 09-30 10:27:05 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:27:05 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:27:05 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:27:05 [cuda_graph.py:123] | 149             | 149           | 0            | NONE         | 1     |
+INFO 09-30 10:27:05 [cuda_graph.py:123] | 107             | 107           | 0            | NONE         | 1     |
+INFO 09-30 10:27:05 [cuda_graph.py:123] | 105             | 105           | 0            | NONE         | 1     |
+INFO 09-30 10:27:05 [cuda_graph.py:123] 
+vanilla/measurement: 79/100 gsm8k-test-0078 tokens=301 correct=True service=4.134s
+vanilla/measurement: 80/100 gsm8k-test-0079 tokens=107 correct=True service=1.465s
+vanilla/measurement: 81/100 gsm8k-test-0080 tokens=171 correct=True service=2.342s
+vanilla/measurement: 82/100 gsm8k-test-0081 tokens=155 correct=True service=2.126s
+INFO 09-30 10:27:15 [loggers.py:315] Engine 000: Avg prompt throughput: 42.0 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.0%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:27:15 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:27:15 [cuda_graph.py:123] 
+INFO 09-30 10:27:15 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:27:15 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:27:15 [cuda_graph.py:123] 
+INFO 09-30 10:27:15 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:27:15 [cuda_graph.py:123] 
+INFO 09-30 10:27:15 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:27:15 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:27:15 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 726   |
+INFO 09-30 10:27:15 [cuda_graph.py:123] | 110             | 110           | 0            | NONE         | 1     |
+INFO 09-30 10:27:15 [cuda_graph.py:123] | 97              | 97            | 0            | NONE         | 1     |
+INFO 09-30 10:27:15 [cuda_graph.py:123] | 121             | 121           | 0            | NONE         | 1     |
+INFO 09-30 10:27:15 [cuda_graph.py:123] | 92              | 92            | 0            | NONE         | 1     |
+INFO 09-30 10:27:15 [cuda_graph.py:123] 
+vanilla/measurement: 83/100 gsm8k-test-0082 tokens=139 correct=True service=1.903s
+vanilla/measurement: 84/100 gsm8k-test-0083 tokens=116 correct=True service=1.586s
+vanilla/measurement: 85/100 gsm8k-test-0084 tokens=203 correct=True service=2.781s
+vanilla/measurement: 86/100 gsm8k-test-0085 tokens=141 correct=True service=1.939s
+vanilla/measurement: 87/100 gsm8k-test-0086 tokens=173 correct=True service=2.379s
+INFO 09-30 10:27:25 [loggers.py:315] Engine 000: Avg prompt throughput: 61.6 tokens/s, Avg generation throughput: 72.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.0%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:27:25 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:27:25 [cuda_graph.py:123] 
+INFO 09-30 10:27:25 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:27:25 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:27:25 [cuda_graph.py:123] 
+INFO 09-30 10:27:25 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:27:25 [cuda_graph.py:123] 
+INFO 09-30 10:27:25 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:27:25 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:27:25 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 724   |
+INFO 09-30 10:27:25 [cuda_graph.py:123] | 94              | 94            | 0            | NONE         | 1     |
+INFO 09-30 10:27:25 [cuda_graph.py:123] | 86              | 86            | 0            | NONE         | 1     |
+INFO 09-30 10:27:25 [cuda_graph.py:123] | 145             | 145           | 0            | NONE         | 1     |
+INFO 09-30 10:27:25 [cuda_graph.py:123] | 150             | 150           | 0            | NONE         | 1     |
+INFO 09-30 10:27:25 [cuda_graph.py:123] | 141             | 141           | 0            | NONE         | 1     |
+INFO 09-30 10:27:25 [cuda_graph.py:123] 
+vanilla/measurement: 88/100 gsm8k-test-0087 tokens=369 correct=True service=5.081s
+vanilla/measurement: 89/100 gsm8k-test-0088 tokens=152 correct=True service=2.081s
+vanilla/measurement: 90/100 gsm8k-test-0089 tokens=140 correct=False service=1.918s
+INFO 09-30 10:27:35 [loggers.py:315] Engine 000: Avg prompt throughput: 36.2 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.5%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:27:35 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:27:35 [cuda_graph.py:123] 
+INFO 09-30 10:27:35 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:27:35 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:27:35 [cuda_graph.py:123] 
+INFO 09-30 10:27:35 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:27:35 [cuda_graph.py:123] 
+INFO 09-30 10:27:35 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:27:35 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:27:35 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 726   |
+INFO 09-30 10:27:35 [cuda_graph.py:123] | 102             | 102           | 0            | NONE         | 1     |
+INFO 09-30 10:27:35 [cuda_graph.py:123] | 112             | 112           | 0            | NONE         | 1     |
+INFO 09-30 10:27:35 [cuda_graph.py:123] | 148             | 148           | 0            | NONE         | 1     |
+INFO 09-30 10:27:35 [cuda_graph.py:123] 
+vanilla/measurement: 91/100 gsm8k-test-0090 tokens=201 correct=True service=2.765s
+vanilla/measurement: 92/100 gsm8k-test-0091 tokens=225 correct=True service=3.086s
+vanilla/measurement: 93/100 gsm8k-test-0092 tokens=316 correct=True service=4.341s
+INFO 09-30 10:27:45 [loggers.py:315] Engine 000: Avg prompt throughput: 35.7 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.4%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:27:45 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:27:45 [cuda_graph.py:123] 
+INFO 09-30 10:27:45 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:27:45 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:27:45 [cuda_graph.py:123] 
+INFO 09-30 10:27:45 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:27:45 [cuda_graph.py:123] 
+INFO 09-30 10:27:45 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:27:45 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:27:45 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 725   |
+INFO 09-30 10:27:45 [cuda_graph.py:123] | 98              | 98            | 0            | NONE         | 1     |
+INFO 09-30 10:27:45 [cuda_graph.py:123] | 113             | 113           | 0            | NONE         | 1     |
+INFO 09-30 10:27:45 [cuda_graph.py:123] | 146             | 146           | 0            | NONE         | 1     |
+INFO 09-30 10:27:45 [cuda_graph.py:123] 
+vanilla/measurement: 94/100 gsm8k-test-0093 tokens=245 correct=True service=3.371s
+vanilla/measurement: 95/100 gsm8k-test-0094 tokens=289 correct=True service=3.967s
+vanilla/measurement: 96/100 gsm8k-test-0095 tokens=230 correct=True service=3.156s
+INFO 09-30 10:27:55 [loggers.py:315] Engine 000: Avg prompt throughput: 31.1 tokens/s, Avg generation throughput: 72.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.8%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:27:55 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:27:55 [cuda_graph.py:123] 
+INFO 09-30 10:27:55 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:27:55 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:27:55 [cuda_graph.py:123] 
+INFO 09-30 10:27:55 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:27:55 [cuda_graph.py:123] 
+INFO 09-30 10:27:55 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:27:55 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:27:55 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 726   |
+INFO 09-30 10:27:55 [cuda_graph.py:123] | 113             | 113           | 0            | NONE         | 1     |
+INFO 09-30 10:27:55 [cuda_graph.py:123] | 104             | 104           | 0            | NONE         | 1     |
+INFO 09-30 10:27:55 [cuda_graph.py:123] | 94              | 94            | 0            | NONE         | 1     |
+INFO 09-30 10:27:55 [cuda_graph.py:123] 
+vanilla/measurement: 97/100 gsm8k-test-0096 tokens=87 correct=True service=1.189s
+vanilla/measurement: 98/100 gsm8k-test-0097 tokens=212 correct=True service=2.908s
+vanilla/measurement: 99/100 gsm8k-test-0098 tokens=299 correct=True service=4.115s
+vanilla/measurement: 100/100 gsm8k-test-0099 tokens=130 correct=True service=1.788s
+INFO 09-30 10:28:05 [core_client.py:744] [shutdown] MPClient: start timeout=default
+INFO 09-30 10:28:05 [core_client.py:746] [shutdown] MPClient: stopping engine manager
+INFO 09-30 10:28:05 [utils.py:632] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=2561016) INFO 09-30 10:28:05 [core.py:1342] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=2561016) INFO 09-30 10:28:05 [core.py:1493] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=2561016) INFO 09-30 10:28:05 [core.py:1524] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=2561016) INFO 09-30 10:28:05 [core.py:1355] [shutdown] EngineCore: exiting busy loop
+INFO 09-30 10:28:06 [core_client.py:748] [shutdown] MPClient: engine manager stopped
+INFO 09-30 10:28:06 [core_client.py:749] [shutdown] MPClient: cleaning up background resources
+INFO 09-30 10:28:06 [core_client.py:751] [shutdown] MPClient: complete

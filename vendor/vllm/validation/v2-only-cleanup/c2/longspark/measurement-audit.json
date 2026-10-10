@@ -1,0 +1,157 @@
+[
+  {
+    "label": "measurement",
+    "before": {
+      "runner_class": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+      "use_v2_model_runner": true,
+      "async_scheduling": true,
+      "target": {
+        "manager_class": "vllm.v1.worker.gpu.cudagraph_utils.ModelCudaGraphManager",
+        "captures": 2,
+        "captured_shapes": [
+          "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=16, num_reqs=2, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)",
+          "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=8, num_reqs=1, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)"
+        ]
+      },
+      "speculator_class": "longspark_vllm.native_v2.speculator.LongSparkSpeculator",
+      "speculator": {
+        "implementation": "longspark_native_model_runner_v2",
+        "captures": 2,
+        "replays": 72,
+        "fallbacks": 0,
+        "prefill_calls": 7,
+        "decode_calls": 71,
+        "dummy_calls": 1,
+        "startup_complete": true,
+        "startup_eager_calls": 6,
+        "context_gather": "triton_decode_reference_prefill",
+        "fused_gather_calls": 71,
+        "reference_gather_calls": 7,
+        "cuda_graph_manager": "vllm.v1.worker.gpu.cudagraph_utils.CudaGraphManager",
+        "selected_target_layers": [
+          0,
+          9,
+          18,
+          26,
+          35
+        ],
+        "draft_tokens": 7,
+        "target_forward_owned_by": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+        "graph_batch_sizes": [
+          1,
+          2
+        ],
+        "graph_batch_coverage": [
+          1,
+          2
+        ],
+        "prefill_workspace_budget": {
+          "bytes": 64034340,
+          "max_batch": 2,
+          "padded_width": 63,
+          "gather_bytes": 5270040,
+          "update_bytes": 30479908,
+          "update_terms": {
+            "input_and_clean_kv": 5160960,
+            "attention_scores": 5160960,
+            "global_outputs": 15728640,
+            "scalar_statistics": 327680,
+            "raw_ring": 3870720,
+            "boundary_hidden": 204800,
+            "indices_masks": 26148
+          },
+          "allocator_library_margin_bytes": 33554432,
+          "policy": "bf16_rectangular_gather_and_fp32_global16_update_v1"
+        },
+        "profile_budget_checks": 1,
+        "post_capture_budget_checks": 1
+      }
+    },
+    "after": {
+      "runner_class": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+      "use_v2_model_runner": true,
+      "async_scheduling": true,
+      "target": {
+        "manager_class": "vllm.v1.worker.gpu.cudagraph_utils.ModelCudaGraphManager",
+        "captures": 2,
+        "captured_shapes": [
+          "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=16, num_reqs=2, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)",
+          "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=8, num_reqs=1, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)"
+        ]
+      },
+      "speculator_class": "longspark_vllm.native_v2.speculator.LongSparkSpeculator",
+      "speculator": {
+        "implementation": "longspark_native_model_runner_v2",
+        "captures": 2,
+        "replays": 144,
+        "fallbacks": 0,
+        "prefill_calls": 13,
+        "decode_calls": 137,
+        "dummy_calls": 1,
+        "startup_complete": true,
+        "startup_eager_calls": 6,
+        "context_gather": "triton_decode_reference_prefill",
+        "fused_gather_calls": 137,
+        "reference_gather_calls": 13,
+        "cuda_graph_manager": "vllm.v1.worker.gpu.cudagraph_utils.CudaGraphManager",
+        "selected_target_layers": [
+          0,
+          9,
+          18,
+          26,
+          35
+        ],
+        "draft_tokens": 7,
+        "target_forward_owned_by": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+        "graph_batch_sizes": [
+          1,
+          2
+        ],
+        "graph_batch_coverage": [
+          1,
+          2
+        ],
+        "prefill_workspace_budget": {
+          "bytes": 64034340,
+          "max_batch": 2,
+          "padded_width": 63,
+          "gather_bytes": 5270040,
+          "update_bytes": 30479908,
+          "update_terms": {
+            "input_and_clean_kv": 5160960,
+            "attention_scores": 5160960,
+            "global_outputs": 15728640,
+            "scalar_statistics": 327680,
+            "raw_ring": 3870720,
+            "boundary_hidden": 204800,
+            "indices_masks": 26148
+          },
+          "allocator_library_margin_bytes": 33554432,
+          "policy": "bf16_rectangular_gather_and_fp32_global16_update_v1"
+        },
+        "profile_budget_checks": 1,
+        "post_capture_budget_checks": 1
+      }
+    },
+    "target": {
+      "replays": 66,
+      "replay_shapes": {
+        "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=16, num_reqs=2, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)": 18,
+        "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=8, num_reqs=1, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)": 48
+      },
+      "dispatches": {
+        "other:NONE": 6,
+        "uniform_decode:FULL": 66
+      },
+      "max_dispatched_requests": 2,
+      "max_decode_requests": 2,
+      "captures_delta": 0,
+      "manager_replaced": false
+    },
+    "speculator_delta": {
+      "captures": 0,
+      "replays": 72,
+      "fallbacks": 0
+    }
+  }
+]

@@ -1,0 +1,208 @@
+--- a/vllm/config/vllm.py
++++ b/vllm/config/vllm.py
+@@ -1420,6 +1420,7 @@
+                     and self.speculative_config.method not in get_args(NgramGPUTypes)
+                     and self.speculative_config.method != "draft_model"
+                     and self.speculative_config.method != "dspark"
++                    and not self._uses_v2_custom_speculator()
+                 ):
+                     raise ValueError(
+                         "Currently, async scheduling is only supported "
+@@ -1453,6 +1454,7 @@
+                 and self.speculative_config.method not in get_args(NgramGPUTypes)
+                 and self.speculative_config.method != "draft_model"
+                 and self.speculative_config.method != "dspark"
++                and not self._uses_v2_custom_speculator()
+             ):
+                 logger.warning_once(
+                     "Async scheduling not supported with %s-based "
+@@ -2812,6 +2814,15 @@
+ 
+         mm_config.validate_mm_processor_device(self.ec_transfer_config)
+ 
++    def _uses_v2_custom_speculator(self) -> bool:
++        # Explicit opt-in preserves the legacy V1 custom-proposer contract.
++        return (
++            self.speculative_config is not None
++            and self.speculative_config.method == "custom_class"
++            and isinstance(self.additional_config, dict)
++            and self.additional_config.get("native_v2_custom_class") is True
++        )
++
+     def _get_v2_model_runner_unsupported_features(self) -> list[str]:
+         """Collect features not yet supported by the V2 model runner."""
+         unsupported: list[str] = []
+@@ -2845,9 +2856,17 @@
+                 "suffix",
+                 "medusa",
+                 "mlp_speculator",
+-                "custom_class",
++            ) or (
++                speculative_config.method == "custom_class"
++                and not self._uses_v2_custom_speculator()
+             ):
+                 unsupported.append(f"speculative method '{speculative_config.method}'")
++
++            if (
++                self._uses_v2_custom_speculator()
++                and self.parallel_config.pipeline_parallel_size > 1
++            ):
++                unsupported.append("pipeline parallelism with a custom V2 speculator")
+ 
+             # V2 EagleSpeculator does not support parallel_drafting (for P-Eagle).
+             # DFlash and DSpark use parallel drafting natively in V2 via their
+@@ -2855,6 +2874,7 @@
+             if (
+                 speculative_config.parallel_drafting
+                 and speculative_config.method not in ("dflash", "dspark")
++                and not self._uses_v2_custom_speculator()
+             ):
+                 unsupported.append("parallel drafting for EAGLE speculative decoding")
+ 
+@@ -2886,6 +2906,9 @@
+         # PCP runtime support is implemented only by the V2 model runner.
+         if self.parallel_config.prefill_context_parallel_size > 1:
+             unsupported.append("prefill context parallel")
++
++        if self._uses_v2_custom_speculator():
++            unsupported.append("custom native V2 speculative decoding")
+ 
+         # DSpark is implemented only by the V2 GPU model runner.
+         if self.speculative_config:
+--- a/vllm/v1/worker/gpu/spec_decode/__init__.py
++++ b/vllm/v1/worker/gpu/spec_decode/__init__.py
+@@ -1,5 +1,7 @@
+ # SPDX-License-Identifier: Apache-2.0
+ # SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++import importlib
++
+ import torch
+ 
+ from vllm.config import VllmConfig
+@@ -8,7 +10,30 @@
+ def init_speculator(vllm_config: VllmConfig, device: torch.device):
+     speculative_config = vllm_config.speculative_config
+     assert speculative_config is not None
+-    if speculative_config.method == "extract_hidden_states":
++    if speculative_config.method == "custom_class":
++        from vllm.v1.worker.gpu.spec_decode.speculator import DraftModelSpeculator
++
++        if not vllm_config._uses_v2_custom_speculator():
++            raise ValueError(
++                "A V2 custom speculator requires "
++                "additional_config['native_v2_custom_class']=True."
++            )
++        path = speculative_config.model
++        if not isinstance(path, str) or not speculative_config._is_custom_proposer_path(
++            path
++        ):
++            raise ValueError("A custom V2 speculator requires a dotted class path.")
++        module_name, class_name = path.rsplit(".", 1)
++        speculator_cls = getattr(importlib.import_module(module_name), class_name)
++        if not isinstance(speculator_cls, type) or not issubclass(
++            speculator_cls, DraftModelSpeculator
++        ):
++            raise TypeError(
++                f"{path} must subclass the V2 DraftModelSpeculator; "
++                "the V1 custom proposer interface is not compatible."
++            )
++        return speculator_cls(vllm_config, device)
++    elif speculative_config.method == "extract_hidden_states":
+         from vllm.v1.worker.gpu.spec_decode.extract_hidden_states import (
+             ExtractHiddenStatesSpeculator,
+         )
+--- a/vllm/v1/worker/gpu/spec_decode/speculator.py
++++ b/vllm/v1/worker/gpu/spec_decode/speculator.py
+@@ -58,6 +58,16 @@
+ 
+ 
+ class BaseSpeculator(ABC):
++    def get_aux_hidden_state_layers(self) -> tuple[int, ...] | None:
++        """Explicit target capture indices, or None for the built-in policy.
++
++        Indices use SupportsEagle3 capture-after semantics (decoder layer i
++        is index i + 1). Return () to require no auxiliary states. The final
++        normalized hidden state is already a separate argument to propose().
++        This hook runs before the target is loaded and must not use CUDA.
++        """
++        return None
++
+     @abstractmethod
+     def init_cudagraph_manager(self, cudagraph_mode: CUDAGraphMode) -> None:
+         pass
+--- a/vllm/v1/worker/gpu/model_runner.py
++++ b/vllm/v1/worker/gpu/model_runner.py
+@@ -273,6 +273,7 @@
+         # Speculative decoding.
+         self.speculator = None
+         self.use_aux_hidden_state_outputs = False
++        self._speculator_aux_hidden_state_layers = None
+         self.num_speculative_steps = vllm_config.num_speculative_tokens
+         if self.speculative_config is not None:
+             if self.is_last_pp_rank:
+@@ -286,6 +287,12 @@
+             ):
+                 # Drafting may require auxiliary hidden states from target model outputs
+                 self.use_aux_hidden_state_outputs = True
++
++            if self.speculator is not None:
++                aux_layers = self.speculator.get_aux_hidden_state_layers()
++                if aux_layers is not None:
++                    self._speculator_aux_hidden_state_layers = aux_layers
++                    self.use_aux_hidden_state_outputs = bool(aux_layers)
+ 
+         # Draft tokens propagation - for spec-dec + struct outputs.
+         self.draft_tokens_handler = DraftTokensHandler(self.device)
+@@ -408,7 +415,11 @@
+ 
+             if self.use_aux_hidden_state_outputs:
+                 assert self.speculative_config is not None
+-                set_eagle3_aux_hidden_state_layers(self.model, self.speculative_config)
++                set_eagle3_aux_hidden_state_layers(
++                    self.model,
++                    self.speculative_config,
++                    aux_layers=self._speculator_aux_hidden_state_layers,
++                )
+                 if self.use_pp:
+                     assert self.speculative_config.method is not None
+                     verify_supports_aux_hidden_states_over_pp(
+--- a/vllm/v1/worker/gpu/spec_decode/eagle/eagle3_utils.py
++++ b/vllm/v1/worker/gpu/spec_decode/eagle/eagle3_utils.py
+@@ -15,6 +15,8 @@
+ def set_eagle3_aux_hidden_state_layers(
+     model: nn.Module,
+     spec_config: SpeculativeConfig,
++    *,
++    aux_layers: tuple[int, ...] | None = None,
+ ) -> None:
+     if not supports_eagle3(model):
+         raise RuntimeError("Model does not support EAGLE3 interface")
+@@ -22,12 +24,23 @@
+         raise RuntimeError("Expected model instance for EAGLE3 configuration")
+     eagle3_model = cast(SupportsEagle3, model)
+ 
+-    aux_layers = get_eagle3_aux_layers_from_config(spec_config)
+-    if aux_layers:
+-        logger.info("Using Eagle3 auxiliary layers from config: %s", aux_layers)
++    if aux_layers is None:
++        aux_layers = get_eagle3_aux_layers_from_config(spec_config)
++        if aux_layers:
++            logger.info("Using Eagle3 auxiliary layers from config: %s", aux_layers)
++        else:
++            aux_layers = eagle3_model.get_eagle3_default_aux_hidden_state_layers()
++            logger.info("Using Eagle3 auxiliary layers from model: %s", aux_layers)
+     else:
+-        aux_layers = eagle3_model.get_eagle3_default_aux_hidden_state_layers()
+-        logger.info("Using Eagle3 auxiliary layers from model: %s", aux_layers)
++        if (
++            not isinstance(aux_layers, tuple)
++            or any(type(layer) is not int or layer < 0 for layer in aux_layers)
++            or len(set(aux_layers)) != len(aux_layers)
++        ):
++            raise ValueError(
++                "Explicit auxiliary layers must be unique nonnegative integers."
++            )
++        logger.info("Using speculator-declared auxiliary layers: %s", aux_layers)
+     eagle3_model.set_aux_hidden_state_layers(aux_layers)
+     reserve_aux_intermediate_tensor_slots(model)
+ 

@@ -1,0 +1,27 @@
+{
+  "status": "completed",
+  "schema_version": 1,
+  "methods": {
+    "vanilla": "completed",
+    "longspark": "completed"
+  },
+  "integration_source_hashes": {
+    "vendor/specforge/modeling/draft/draftfreekv.py": "4f7166dd276bec0e726644153dd55157616f14deab615bac9328717f6085a755",
+    "vendor/specforge/modeling/draft/draftfreekv_validation.py": "11b80a84b25c7a6820bc5e23b8f4d577e37bbd209559f4e77d1ca56b1fdb891d",
+    "vendor/specforge/modeling/draft/global16_raw256.py": "b881bb90b2ab32e8194446b4c32bd1c301893307bfaabb2f0f9c523b73593409",
+    "vendor/specforge/modeling/draft/global16_raw256_training.py": "e61ca2b4a9434c76b3da1bd83e01b91eec6d34575d8d01399f3272228b71f62d",
+    "vendor/vllm/longspark_vllm/drafter.py": "89d6a2c44a4becdf70b2e9a4fe4ed97bb6e396d34b04e66a641aa7c1db57545e",
+    "vendor/vllm/longspark_vllm/gsm8k.py": "8053be671fde87e9affddf3aa65d8075b693ea32f02c94fb40eb830fbf6d1b83",
+    "vendor/vllm/longspark_vllm/native_v2/__init__.py": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79",
+    "vendor/vllm/longspark_vllm/native_v2/diagnostics.py": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510",
+    "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "6ccbca9c9325b8f2a25a9f377ebd31e410b54d500fc29904d0fa57e7f2fba4d5",
+    "vendor/vllm/longspark_vllm/native_v2/inputs.py": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be",
+    "vendor/vllm/longspark_vllm/native_v2/speculator.py": "449b39dcb09dbe29e5346c58fba3fa720c0f0249e2cbeb46c103b96227ec77ac",
+    "vendor/vllm/longspark_vllm/native_v2/startup.py": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a",
+    "vendor/vllm/longspark_vllm/native_v2/state.py": "6acccbb4c8ae33932ed55b42abe364b2b0dbda56be70980fada1230b3cc3ff1a",
+    "vendor/vllm/patches/native-v2-custom-class.manifest.json": "1ad2c1aa4b284ca5e17a47a85120606246ee2835c3f810e99e443d0b8c878ac7",
+    "vendor/vllm/scripts/evaluate_native_v2_gsm8k.py": "a8f700bbf85bb114c2041b3b48ea48d4420fd1ba91c59e116521b35379c19e1e",
+    "vendor/vllm/scripts/evaluate_vllm_gsm8k.py": "290ce09c9d999eff0742bf61d687578a04f6ec69ed304fb86ddaeb834ff3ae4c"
+  },
+  "greedy_parity_passed": true
+}

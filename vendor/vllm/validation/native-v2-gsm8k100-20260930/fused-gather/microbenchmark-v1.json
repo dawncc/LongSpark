@@ -1,0 +1,34 @@
+{
+  "device": "NVIDIA L20X",
+  "scope": "standalone gather microbenchmark; not end-to-end decoding",
+  "results": [
+    {
+      "batch": 1,
+      "width": 1,
+      "reference_ms": 0.7000933326780796,
+      "fused_ms": 0.044333226650953295,
+      "speedup": 15.791616933053204
+    },
+    {
+      "batch": 1,
+      "width": 8,
+      "reference_ms": 0.7525333282994289,
+      "fused_ms": 0.04466071070602098,
+      "speedup": 16.850007901866537
+    },
+    {
+      "batch": 2,
+      "width": 1,
+      "reference_ms": 0.7278883118255466,
+      "fused_ms": 0.045510845335642085,
+      "speedup": 15.993733064226268
+    },
+    {
+      "batch": 2,
+      "width": 8,
+      "reference_ms": 0.713077960061092,
+      "fused_ms": 0.045484021237051045,
+      "speedup": 15.67754874496942
+    }
+  ]
+}

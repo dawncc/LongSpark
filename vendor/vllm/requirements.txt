@@ -1,0 +1,5 @@
+# Isolated from the SGLang/CUDA 12.8 environment in requirements.txt.
+# Latest stable vLLM release verified on 2026-09-30.
+vllm==0.30.0
+transformers==5.12.1
+safetensors==0.8.0

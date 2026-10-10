@@ -1,0 +1,61 @@
+{
+  "scoring": {
+    "scoring_policy": "Use only the first nonempty line after the last #### marker. The whole line must be a signed base-10 integer or decimal, optionally with correctly grouped thousands commas and one leading dollar symbol. Compare exact Decimal values; missing/invalid final answers count as incorrect.",
+    "total": 3,
+    "correct": 3,
+    "incorrect": 0,
+    "unparsed": 0,
+    "accuracy": 1.0,
+    "parsed_accuracy": 1.0,
+    "parse_status_counts": {
+      "parsed": 3
+    },
+    "eos_count": 3,
+    "truncated_count": 0,
+    "token_cap_count": 0,
+    "outputs_with_tokens_after_eos": 0,
+    "output_tokens": 401,
+    "mean_output_tokens": 133.66666666666666,
+    "by_method": {
+      "longspark": {
+        "total": 3,
+        "correct": 3,
+        "incorrect": 0,
+        "unparsed": 0,
+        "accuracy": 1.0,
+        "parsed_accuracy": 1.0,
+        "parse_status_counts": {
+          "parsed": 3
+        },
+        "eos_count": 3,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 401,
+        "mean_output_tokens": 133.66666666666666
+      }
+    }
+  },
+  "performance": {
+    "requests": 3,
+    "output_tokens": 401,
+    "decode_tokens": 398,
+    "service_seconds": 1.325134377926588,
+    "decode_seconds": 1.2805180624127388,
+    "aggregate_service_tps": 302.6108194607681,
+    "aggregate_decode_tps": 310.81170323368383,
+    "verification_rounds": 75,
+    "proposed_tokens": 525,
+    "accepted_draft_tokens_raw": 324,
+    "accepted_draft_tokens_emitted": 324,
+    "mean_accepted_draft_tokens": 4.32,
+    "tau": 5.32,
+    "tau_raw": 5.32,
+    "acceptance_rate": 0.6171428571428571,
+    "acceptance_rate_raw": 0.6171428571428571,
+    "effective_advance": 5.306666666666667,
+    "generate_wall_seconds": 1.3596630282700062,
+    "generate_wall_tps": 294.9260159778119,
+    "max_submitted_concurrency": 1
+  }
+}

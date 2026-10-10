@@ -1,0 +1,44 @@
+[
+  {
+    "phase": "warmup",
+    "batch_index": 0,
+    "wall_seconds": 1.809461023658514,
+    "source_ids": [
+      "gsm8k-test-0000",
+      "gsm8k-test-0001"
+    ],
+    "submitted_concurrently": 2,
+    "output_tokens": 220
+  },
+  {
+    "phase": "warmup",
+    "batch_index": 1,
+    "wall_seconds": 3.018689937889576,
+    "source_ids": [
+      "gsm8k-test-0002"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 218
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 0,
+    "wall_seconds": 1.7472602054476738,
+    "source_ids": [
+      "gsm8k-test-0000",
+      "gsm8k-test-0001"
+    ],
+    "submitted_concurrently": 2,
+    "output_tokens": 220
+  },
+  {
+    "phase": "measurement",
+    "batch_index": 1,
+    "wall_seconds": 3.0195714235305786,
+    "source_ids": [
+      "gsm8k-test-0002"
+    ],
+    "submitted_concurrently": 1,
+    "output_tokens": 218
+  }
+]

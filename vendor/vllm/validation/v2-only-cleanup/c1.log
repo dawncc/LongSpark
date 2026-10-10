@@ -1,0 +1,347 @@
+INFO 09-30 10:51:29 [api_utils.py:286] non-default args: {'dtype': 'bfloat16', 'max_model_len': 4096, 'enable_prefix_caching': False, 'kv_cache_memory_bytes': 2147483648, 'max_num_batched_tokens': 512, 'max_num_seqs': 1, 'enable_chunked_prefill': True, 'cudagraph_metrics': True, 'compilation_config': {'mode': None, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': [], 'ir_enable_torch_wrap': None, 'splitting_ops': None, 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': None, 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': None, 'pass_config': {}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': None, 'static_all_moe_layers': []}, 'attention_config': AttentionConfig(backend=<AttentionBackendEnum.FLASH_ATTN: 'vllm.v1.attention.backends.flash_attn.FlashAttentionBackend'>, minimax_m3_msa_decode_backend='triton', backend_per_kind={}, flash_attn_version=None, flash_attn_max_num_splits_for_cuda_graph=32, tq_max_kv_splits_for_cuda_graph=32, use_trtllm_attention=None, disable_flashinfer_q_quantization=False, mla_prefill_backend=None, use_prefill_query_quantization=False, indexer_kv_dtype='auto', hisparse_config=None, use_non_causal=False, sparse_mla_force_mqa=False, flex_attn_block_m=None, flex_attn_block_n=None, flex_attn_q_block_size=None, flex_attn_kv_block_size=None), 'worker_extension_cls': 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics', 'async_scheduling': True, 'model': '/data/lpf/models/Qwen3-4B'}
+INFO 09-30 10:51:29 [model.py:692] Resolved architecture: Qwen3ForCausalLM
+INFO 09-30 10:51:29 [model.py:2030] Using max model len 4096
+INFO 09-30 10:51:29 [scheduler.py:288] Chunked prefill is enabled with max_num_batched_tokens=512.
+INFO 09-30 10:51:29 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(EngineCore pid=2568095) INFO 09-30 10:51:32 [core.py:123] Initializing a V1 LLM engine (v0.30.0) with config: model='/data/lpf/models/Qwen3-4B', speculative_config=None, tokenizer='/data/lpf/models/Qwen3-4B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=True, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/data/lpf/models/Qwen3-4B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [512], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 2, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=2568095) INFO 09-30 10:51:33 [worker_base.py:306] Injected <class 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics'> into <class 'vllm.v1.worker.gpu_worker.Worker'> for extended collective_rpc calls ['native_v2_audit_end', 'native_v2_audit_snapshot', 'native_v2_audit_start', 'native_v2_warm_prefill_shapes']
+[W930 10:51:34.992966388 Context.cpp:597] Warning: torch.backends.cuda.preferred_blas_library is an experimental feature. If you see any error or unexpected behavior when this flag is set please file an issue on GitHub. (function operator())
+(EngineCore pid=2568095) INFO 09-30 10:51:34 [parallel_state.py:1827] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_93d24c13df494855af77071b74a47798 backend=nccl
+(EngineCore pid=2568095) INFO 09-30 10:51:34 [parallel_state.py:2267] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=2568095) INFO 09-30 10:51:34 [gpu_worker.py:441] Using V2 Model Runner
+(EngineCore pid=2568095) INFO 09-30 10:51:35 [model_runner.py:403] Loading model from scratch...
+(EngineCore pid=2568095) INFO 09-30 10:51:35 [cuda.py:478] Using AttentionBackendEnum.FLASH_ATTN backend.
+(EngineCore pid=2568095) INFO 09-30 10:51:35 [flash_attn.py:1116] Using FlashAttention version 3
+(EngineCore pid=2568095) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(EngineCore pid=2568095) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(EngineCore pid=2568095) INFO 09-30 10:51:37 [weight_utils.py:895] Filesystem type for checkpoints: FUSE.ALIYUN-ALINAS-EFC. Checkpoint size: 7.49 GiB. Available RAM: 1043.69 GiB.
+(EngineCore pid=2568095) INFO 09-30 10:51:37 [weight_utils.py:918] Auto-prefetch is disabled because the filesystem (FUSE.ALIYUN-ALINAS-EFC) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+(EngineCore pid=2568095) 
+Loading safetensors checkpoint shards:   0% Completed | 0/3 [00:00<?, ?it/s]
+(EngineCore pid=2568095) 
+Loading safetensors checkpoint shards:  33% Completed | 1/3 [00:00<00:01,  1.40it/s]
+(EngineCore pid=2568095) 
+Loading safetensors checkpoint shards:  67% Completed | 2/3 [00:01<00:00,  1.26it/s]
+(EngineCore pid=2568095) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  2.04it/s]
+(EngineCore pid=2568095) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  1.77it/s]
+(EngineCore pid=2568095) 
+(EngineCore pid=2568095) INFO 09-30 10:51:39 [default_loader.py:430] Loading weights took 1.70 seconds
+(EngineCore pid=2568095) INFO 09-30 10:51:39 [model_runner.py:439] Model loading took 7.56 GiB memory and 4.616425 seconds
+(EngineCore pid=2568095) INFO 09-30 10:51:39 [topk_topp_sampler.py:62] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=2568095) INFO 09-30 10:51:39 [utils.py:320] Using LBNHC KV cache layout.
+(EngineCore pid=2568095) /data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/torch/_dynamo/variables/functions.py:2590: UserWarning: Dynamo detected a call to a `functools.lru_cache`-wrapped function at 'batch_invariant.py:289'. Dynamo ignores the cache wrapper and directly traces the wrapped function. Silent incorrectness is only a *potential* risk, not something we have observed. Enable TORCH_LOGS=+dynamo for a DEBUG stack trace.
+(EngineCore pid=2568095) 
+(EngineCore pid=2568095) This call originates from:
+(EngineCore pid=2568095)   File "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/determinism/batch_invariant.py", line 289, in matmul_persistent
+(EngineCore pid=2568095)     NUM_SMS = num_compute_units(a.device.index)
+(EngineCore pid=2568095)               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=2568095) 
+(EngineCore pid=2568095)   torch._dynamo.utils.warn_once(msg)
+(EngineCore pid=2568095) INFO 09-30 10:51:51 [backends.py:1094] Using cache directory: /root/.cache/vllm/torch_compile_cache/4b3140aefb/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=2568095) INFO 09-30 10:51:51 [backends.py:1155] Dynamo bytecode transform time: 11.94 s
+(EngineCore pid=2568095) INFO 09-30 10:51:52 [backends.py:292] Directly load the compiled graph(s) for compile range (1, 512) from the cache, took 0.847 s
+(EngineCore pid=2568095) INFO 09-30 10:51:53 [monitor.py:53] torch.compile and initial profiling/warmup run together took 13.85 s in total
+(EngineCore pid=2568095) INFO 09-30 10:51:53 [gpu_worker.py:559] Initial free memory 139.3 GiB, reserved 2.0 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.
+(EngineCore pid=2568095) INFO 09-30 10:51:53 [kv_cache_utils.py:2395] GPU KV cache size: 14,560 tokens, Maximum concurrency for 4,096 tokens per request: 3.55x
+(EngineCore pid=2568095) INFO 09-30 10:51:53 [kernel_warmup.py:172] JIT kernel warmup starting.
+(EngineCore pid=2568095) INFO 09-30 10:51:53 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=2568095) 
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/2 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 2/2 [00:00<00:00, 30.26it/s]
+(EngineCore pid=2568095) 
+Capturing CUDA graphs (FULL):   0%|          | 0/1 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 1/1 [00:00<00:00, 41.95it/s]
+(EngineCore pid=2568095) INFO 09-30 10:51:55 [model_runner.py:1077] Graph capturing finished in 1 secs, took 0.02 GiB
+(EngineCore pid=2568095) INFO 09-30 10:51:57 [jit_monitor.py:85] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=2568095) INFO 09-30 10:51:57 [torch_utils.py:287] Reducing Torch threads from 96 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=2568095) INFO 09-30 10:51:57 [core.py:372] init engine (profile, create kv cache, warmup model) took 18.08 s (compilation: 13.85 s)
+(EngineCore pid=2568095) INFO 09-30 10:51:57 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+INFO 09-30 10:51:58 [hf.py:642] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+vanilla: prefill state shape warmup through width 127
+vanilla/warmup: 1/3 gsm8k-test-0000 tokens=115 correct=True service=1.578s
+vanilla/warmup: 2/3 gsm8k-test-0001 tokens=93 correct=True service=1.271s
+vanilla/warmup: 3/3 gsm8k-test-0002 tokens=193 correct=True service=2.647s
+vanilla/measurement: 1/3 gsm8k-test-0000 tokens=115 correct=True service=1.576s
+vanilla/measurement: 2/3 gsm8k-test-0001 tokens=93 correct=True service=1.271s
+INFO 09-30 10:52:08 [loggers.py:315] Engine 000: Avg prompt throughput: 63.3 tokens/s, Avg generation throughput: 68.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.7%, Prefix cache hit rate: 0.0%
+INFO 09-30 10:52:08 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 09-30 10:52:08 [cuda_graph.py:123] 
+INFO 09-30 10:52:08 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 09-30 10:52:08 [cuda_graph.py:123] - Capture sizes: [1, 2]
+INFO 09-30 10:52:08 [cuda_graph.py:123] 
+INFO 09-30 10:52:08 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 09-30 10:52:08 [cuda_graph.py:123] 
+INFO 09-30 10:52:08 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 09-30 10:52:08 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 09-30 10:52:08 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 724   |
+INFO 09-30 10:52:08 [cuda_graph.py:123] | 127             | 127           | 0            | NONE         | 2     |
+INFO 09-30 10:52:08 [cuda_graph.py:123] | 88              | 88            | 0            | NONE         | 2     |
+INFO 09-30 10:52:08 [cuda_graph.py:123] | 119             | 119           | 0            | NONE         | 2     |
+INFO 09-30 10:52:08 [cuda_graph.py:123] 
+vanilla/measurement: 3/3 gsm8k-test-0002 tokens=193 correct=True service=2.647s
+INFO 09-30 10:52:09 [core_client.py:744] [shutdown] MPClient: start timeout=default
+INFO 09-30 10:52:09 [core_client.py:746] [shutdown] MPClient: stopping engine manager
+INFO 09-30 10:52:09 [utils.py:632] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=2568095) INFO 09-30 10:52:09 [core.py:1342] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=2568095) INFO 09-30 10:52:09 [core.py:1493] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=2568095) INFO 09-30 10:52:09 [core.py:1524] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=2568095) INFO 09-30 10:52:09 [core.py:1355] [shutdown] EngineCore: exiting busy loop
+INFO 09-30 10:52:10 [core_client.py:748] [shutdown] MPClient: engine manager stopped
+INFO 09-30 10:52:10 [core_client.py:749] [shutdown] MPClient: cleaning up background resources
+INFO 09-30 10:52:10 [core_client.py:751] [shutdown] MPClient: complete
+INFO 09-30 10:52:31 [api_utils.py:286] non-default args: {'dtype': 'bfloat16', 'max_model_len': 4096, 'enable_prefix_caching': False, 'kv_cache_memory_bytes': 2147483648, 'max_num_batched_tokens': 512, 'max_num_seqs': 1, 'enable_chunked_prefill': True, 'speculative_config': {'method': 'custom_class', 'model': 'longspark_vllm.native_v2.speculator.LongSparkSpeculator', 'num_speculative_tokens': 7, 'draft_sample_method': 'greedy'}, 'per_request_spec_decode_metrics': 'detailed', 'cudagraph_metrics': True, 'compilation_config': {'mode': None, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': [], 'ir_enable_torch_wrap': None, 'splitting_ops': None, 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': None, 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': None, 'pass_config': {}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': None, 'static_all_moe_layers': []}, 'attention_config': AttentionConfig(backend=<AttentionBackendEnum.FLASH_ATTN: 'vllm.v1.attention.backends.flash_attn.FlashAttentionBackend'>, minimax_m3_msa_decode_backend='triton', backend_per_kind={}, flash_attn_version=None, flash_attn_max_num_splits_for_cuda_graph=32, tq_max_kv_splits_for_cuda_graph=32, use_trtllm_attention=None, disable_flashinfer_q_quantization=False, mla_prefill_backend=None, use_prefill_query_quantization=False, indexer_kv_dtype='auto', hisparse_config=None, use_non_causal=False, sparse_mla_force_mqa=False, flex_attn_block_m=None, flex_attn_block_n=None, flex_attn_q_block_size=None, flex_attn_kv_block_size=None), 'worker_extension_cls': 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics', 'additional_config': {'native_v2_custom_class': True, 'longspark': {'draft_model': '/data/chenchen/codex/LongSpark/models/4B/longspark'}}, 'async_scheduling': True, 'model': '/data/lpf/models/Qwen3-4B'}
+INFO 09-30 10:52:31 [model.py:692] Resolved architecture: Qwen3ForCausalLM
+INFO 09-30 10:52:31 [model.py:2030] Using max model len 4096
+WARNING 09-30 10:52:31 [speculative.py:1213] Using a custom class-based proposer backend. This is an experimental feature and the proposer interface is subject to breaking changes in future vLLM releases.
+INFO 09-30 10:52:31 [scheduler.py:288] Chunked prefill is enabled with max_num_batched_tokens=512.
+INFO 09-30 10:52:31 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+WARNING 09-30 10:52:31 [vllm.py:2137] max_num_scheduled_tokens is set to 512 based on the speculative decoding settings. This may lead to suboptimal performance. Consider increasing max_num_batched_tokens to accommodate the additional draft token slots, or decrease num_speculative_tokens.
+(EngineCore pid=2568604) INFO 09-30 10:52:33 [core.py:123] Initializing a V1 LLM engine (v0.30.0) with config: model='/data/lpf/models/Qwen3-4B', speculative_config=SpeculativeConfig(method='custom_class', model=None, num_spec_tokens=7), tokenizer='/data/lpf/models/Qwen3-4B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='detailed', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=True, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/data/lpf/models/Qwen3-4B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [512], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 16, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=2568604) INFO 09-30 10:52:35 [worker_base.py:306] Injected <class 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics'> into <class 'vllm.v1.worker.gpu_worker.Worker'> for extended collective_rpc calls ['native_v2_audit_end', 'native_v2_audit_snapshot', 'native_v2_audit_start', 'native_v2_warm_prefill_shapes']
+[W930 10:52:35.252321869 Context.cpp:597] Warning: torch.backends.cuda.preferred_blas_library is an experimental feature. If you see any error or unexpected behavior when this flag is set please file an issue on GitHub. (function operator())
+(EngineCore pid=2568604) INFO 09-30 10:52:35 [parallel_state.py:1827] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_9f527a3773264bd196c4c09e8e87d5df backend=nccl
+(EngineCore pid=2568604) INFO 09-30 10:52:35 [parallel_state.py:2267] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=2568604) INFO 09-30 10:52:35 [gpu_worker.py:441] Using V2 Model Runner
+(EngineCore pid=2568604) INFO 09-30 10:52:36 [model_runner.py:403] Loading model from scratch...
+(EngineCore pid=2568604) INFO 09-30 10:52:36 [cuda.py:478] Using AttentionBackendEnum.FLASH_ATTN backend.
+(EngineCore pid=2568604) INFO 09-30 10:52:36 [flash_attn.py:1116] Using FlashAttention version 3
+(EngineCore pid=2568604) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(EngineCore pid=2568604) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(EngineCore pid=2568604) INFO 09-30 10:52:37 [weight_utils.py:895] Filesystem type for checkpoints: FUSE.ALIYUN-ALINAS-EFC. Checkpoint size: 7.49 GiB. Available RAM: 1044.82 GiB.
+(EngineCore pid=2568604) INFO 09-30 10:52:37 [weight_utils.py:918] Auto-prefetch is disabled because the filesystem (FUSE.ALIYUN-ALINAS-EFC) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+(EngineCore pid=2568604) 
+Loading safetensors checkpoint shards:   0% Completed | 0/3 [00:00<?, ?it/s]
+(EngineCore pid=2568604) 
+Loading safetensors checkpoint shards:  33% Completed | 1/3 [00:00<00:01,  1.43it/s]
+(EngineCore pid=2568604) 
+Loading safetensors checkpoint shards:  67% Completed | 2/3 [00:01<00:00,  1.28it/s]
+(EngineCore pid=2568604) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  2.07it/s]
+(EngineCore pid=2568604) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  1.80it/s]
+(EngineCore pid=2568604) 
+(EngineCore pid=2568604) INFO 09-30 10:52:39 [default_loader.py:430] Loading weights took 1.67 seconds
+(EngineCore pid=2568604) INFO 09-30 10:52:39 [eagle3_utils.py:43] Using speculator-declared auxiliary layers: (1, 10, 19, 27)
+(EngineCore pid=2568604) 
+Loading weights:   0%|          | 0/65 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 65/65 [00:00<00:00, 14801.55it/s]
+(EngineCore pid=2568604) INFO 09-30 10:52:40 [model_runner.py:439] Model loading took 8.78 GiB memory and 4.209067 seconds
+(EngineCore pid=2568604) INFO 09-30 10:52:40 [topk_topp_sampler.py:62] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=2568604) INFO 09-30 10:52:40 [utils.py:320] Using LBNHC KV cache layout.
+(EngineCore pid=2568604) /data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/torch/_dynamo/variables/functions.py:2590: UserWarning: Dynamo detected a call to a `functools.lru_cache`-wrapped function at 'batch_invariant.py:289'. Dynamo ignores the cache wrapper and directly traces the wrapped function. Silent incorrectness is only a *potential* risk, not something we have observed. Enable TORCH_LOGS=+dynamo for a DEBUG stack trace.
+(EngineCore pid=2568604) 
+(EngineCore pid=2568604) This call originates from:
+(EngineCore pid=2568604)   File "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/determinism/batch_invariant.py", line 289, in matmul_persistent
+(EngineCore pid=2568604)     NUM_SMS = num_compute_units(a.device.index)
+(EngineCore pid=2568604)               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=2568604) 
+(EngineCore pid=2568604)   torch._dynamo.utils.warn_once(msg)
+(EngineCore pid=2568604) INFO 09-30 10:52:51 [backends.py:1094] Using cache directory: /root/.cache/vllm/torch_compile_cache/f1d0d89497/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=2568604) INFO 09-30 10:52:51 [backends.py:1155] Dynamo bytecode transform time: 10.87 s
+(EngineCore pid=2568604) INFO 09-30 10:52:52 [backends.py:292] Directly load the compiled graph(s) for compile range (1, 512) from the cache, took 0.846 s
+(EngineCore pid=2568604) INFO 09-30 10:52:53 [monitor.py:53] torch.compile and initial profiling/warmup run together took 12.77 s in total
+(EngineCore pid=2568604) INFO 09-30 10:52:53 [gpu_worker.py:559] Initial free memory 139.3 GiB, reserved 2.0 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.
+(EngineCore pid=2568604) INFO 09-30 10:52:53 [kv_cache_utils.py:2395] GPU KV cache size: 14,560 tokens, Maximum concurrency for 4,096 tokens per request: 3.55x
+(EngineCore pid=2568604) INFO 09-30 10:52:53 [kernel_warmup.py:172] JIT kernel warmup starting.
+(EngineCore pid=2568604) INFO 09-30 10:52:53 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=2568604) 
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/5 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  80%|████████  | 4/5 [00:00<00:00, 29.72it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 5/5 [00:00<00:00, 29.85it/s]
+(EngineCore pid=2568604) 
+Capturing CUDA graphs (FULL):   0%|          | 0/1 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 1/1 [00:00<00:00, 40.88it/s]
+(EngineCore pid=2568604) 
+Capturing native LongSpark CUDA graphs (FULL):   0%|          | 0/1 [00:00<?, ?it/s]
+Capturing native LongSpark CUDA graphs (FULL): 100%|██████████| 1/1 [00:00<00:00, 22.32it/s]
+(EngineCore pid=2568604) INFO 09-30 10:52:55 [model_runner.py:1077] Graph capturing finished in 1 secs, took 0.16 GiB
+(EngineCore pid=2568604) INFO 09-30 10:52:56 [jit_monitor.py:85] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=2568604) INFO 09-30 10:52:56 [torch_utils.py:287] Reducing Torch threads from 96 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=2568604) INFO 09-30 10:52:56 [core.py:372] init engine (profile, create kv cache, warmup model) took 16.32 s (compilation: 12.77 s)
+(EngineCore pid=2568604) INFO 09-30 10:52:56 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+INFO 09-30 10:52:57 [hf.py:642] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+longspark: prefill state shape warmup through width 127
+(EngineCore pid=2568604) WARNING 09-30 10:52:57 [jit_monitor.py:141] Triton kernel JIT compilation during inference: bmm_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=2568604) WARNING 09-30 10:52:57 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _compute_local_logits_stats_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=2568604) WARNING 09-30 10:52:57 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _rejection_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=2568604) WARNING 09-30 10:52:57 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _resample_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+longspark/warmup: 1/3 gsm8k-test-0000 tokens=115 correct=True service=0.449s
+longspark/warmup: 2/3 gsm8k-test-0001 tokens=93 correct=True service=0.304s
+longspark/warmup: 3/3 gsm8k-test-0002 tokens=193 correct=True service=0.579s
+longspark/measurement: 1/3 gsm8k-test-0000 tokens=115 correct=True service=0.442s
+longspark/measurement: 2/3 gsm8k-test-0001 tokens=93 correct=True service=0.304s
+longspark/measurement: 3/3 gsm8k-test-0002 tokens=193 correct=True service=0.578s
+INFO 09-30 10:53:00 [core_client.py:744] [shutdown] MPClient: start timeout=default
+INFO 09-30 10:53:00 [core_client.py:746] [shutdown] MPClient: stopping engine manager
+INFO 09-30 10:53:00 [utils.py:632] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=2568604) INFO 09-30 10:53:00 [core.py:1342] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=2568604) INFO 09-30 10:53:00 [core.py:1493] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=2568604) INFO 09-30 10:53:00 [core.py:1524] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=2568604) INFO 09-30 10:53:00 [core.py:1355] [shutdown] EngineCore: exiting busy loop
+INFO 09-30 10:53:01 [core_client.py:748] [shutdown] MPClient: engine manager stopped
+INFO 09-30 10:53:01 [core_client.py:749] [shutdown] MPClient: cleaning up background resources
+INFO 09-30 10:53:01 [core_client.py:751] [shutdown] MPClient: complete
+{
+  "schema_version": 1,
+  "status": "completed",
+  "backend": "vllm_native_v2",
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "requests": 6,
+  "integration_source_hashes": {
+    "vendor/specforge/modeling/draft/draftfreekv.py": "4f7166dd276bec0e726644153dd55157616f14deab615bac9328717f6085a755",
+    "vendor/specforge/modeling/draft/draftfreekv_validation.py": "11b80a84b25c7a6820bc5e23b8f4d577e37bbd209559f4e77d1ca56b1fdb891d",
+    "vendor/specforge/modeling/draft/global16_raw256.py": "b881bb90b2ab32e8194446b4c32bd1c301893307bfaabb2f0f9c523b73593409",
+    "vendor/specforge/modeling/draft/global16_raw256_training.py": "e61ca2b4a9434c76b3da1bd83e01b91eec6d34575d8d01399f3272228b71f62d",
+    "vendor/vllm/longspark_vllm/gsm8k.py": "a6835966cde4a6d43bedc003c4da45ceabd14daeb56e5bed307059139e7e4289",
+    "vendor/vllm/longspark_vllm/native_v2/__init__.py": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79",
+    "vendor/vllm/longspark_vllm/native_v2/diagnostics.py": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510",
+    "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "6ccbca9c9325b8f2a25a9f377ebd31e410b54d500fc29904d0fa57e7f2fba4d5",
+    "vendor/vllm/longspark_vllm/native_v2/inputs.py": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be",
+    "vendor/vllm/longspark_vllm/native_v2/speculator.py": "449b39dcb09dbe29e5346c58fba3fa720c0f0249e2cbeb46c103b96227ec77ac",
+    "vendor/vllm/longspark_vllm/native_v2/startup.py": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a",
+    "vendor/vllm/longspark_vllm/native_v2/state.py": "4659867c258fee7945a921440eb3970671831b3c328c55facf3ca0b4a478a863",
+    "vendor/vllm/longspark_vllm/native_v2/target_modules.py": "ae5b688af3c6862f3f36d9fa4746ea7ba8dfdabd5f477d9364b403d0dae6508e",
+    "vendor/vllm/patches/native-v2-custom-class.manifest.json": "1ad2c1aa4b284ca5e17a47a85120606246ee2835c3f810e99e443d0b8c878ac7",
+    "vendor/vllm/scripts/evaluate_native_v2_gsm8k.py": "12794543801f9537d81f3d2308c7d2590d7249ad6809de9e5c27c9281d5dc6a0"
+  },
+  "greedy_parity_passed": true,
+  "parity": {
+    "passed": true,
+    "matches": 3,
+    "comparisons": 3,
+    "checks": [
+      {
+        "source_id": "gsm8k-test-0000",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 115,
+        "longspark_tokens": 115
+      },
+      {
+        "source_id": "gsm8k-test-0001",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 93,
+        "longspark_tokens": 93
+      },
+      {
+        "source_id": "gsm8k-test-0002",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 193,
+        "longspark_tokens": 193
+      }
+    ]
+  },
+  "correctness_status": "passed",
+  "scoring": {
+    "scoring_policy": "Use only the first nonempty line after the last #### marker. The whole line must be a signed base-10 integer or decimal, optionally with correctly grouped thousands commas and one leading dollar symbol. Compare exact Decimal values; missing/invalid final answers count as incorrect.",
+    "total": 6,
+    "correct": 6,
+    "incorrect": 0,
+    "unparsed": 0,
+    "accuracy": 1.0,
+    "parsed_accuracy": 1.0,
+    "parse_status_counts": {
+      "parsed": 6
+    },
+    "eos_count": 6,
+    "truncated_count": 0,
+    "token_cap_count": 0,
+    "outputs_with_tokens_after_eos": 0,
+    "output_tokens": 802,
+    "mean_output_tokens": 133.66666666666666,
+    "by_method": {
+      "longspark": {
+        "total": 3,
+        "correct": 3,
+        "incorrect": 0,
+        "unparsed": 0,
+        "accuracy": 1.0,
+        "parsed_accuracy": 1.0,
+        "parse_status_counts": {
+          "parsed": 3
+        },
+        "eos_count": 3,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 401,
+        "mean_output_tokens": 133.66666666666666
+      },
+      "vanilla": {
+        "total": 3,
+        "correct": 3,
+        "incorrect": 0,
+        "unparsed": 0,
+        "accuracy": 1.0,
+        "parsed_accuracy": 1.0,
+        "parse_status_counts": {
+          "parsed": 3
+        },
+        "eos_count": 3,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 401,
+        "mean_output_tokens": 133.66666666666666
+      }
+    }
+  },
+  "performance": {
+    "vanilla": {
+      "requests": 3,
+      "output_tokens": 401,
+      "decode_tokens": 398,
+      "service_seconds": 5.494170133024454,
+      "decode_seconds": 5.45894581079483,
+      "aggregate_service_tps": 72.98645478589427,
+      "aggregate_decode_tps": 72.90784957289229,
+      "verification_rounds": 0,
+      "proposed_tokens": 0,
+      "accepted_draft_tokens_raw": 0,
+      "accepted_draft_tokens_emitted": 0,
+      "mean_accepted_draft_tokens": null,
+      "tau": null,
+      "tau_raw": null,
+      "acceptance_rate": null,
+      "acceptance_rate_raw": null,
+      "effective_advance": null,
+      "generate_wall_seconds": 5.522061504423618,
+      "generate_wall_tps": 72.61780762107892,
+      "max_submitted_concurrency": 1
+    },
+    "longspark": {
+      "requests": 3,
+      "output_tokens": 401,
+      "decode_tokens": 398,
+      "service_seconds": 1.325134377926588,
+      "decode_seconds": 1.2805180624127388,
+      "aggregate_service_tps": 302.6108194607681,
+      "aggregate_decode_tps": 310.81170323368383,
+      "verification_rounds": 75,
+      "proposed_tokens": 525,
+      "accepted_draft_tokens_raw": 324,
+      "accepted_draft_tokens_emitted": 324,
+      "mean_accepted_draft_tokens": 4.32,
+      "tau": 5.32,
+      "tau_raw": 5.32,
+      "acceptance_rate": 0.6171428571428571,
+      "acceptance_rate_raw": 0.6171428571428571,
+      "effective_advance": 5.306666666666667,
+      "generate_wall_seconds": 1.3596630282700062,
+      "generate_wall_tps": 294.9260159778119,
+      "max_submitted_concurrency": 1
+    }
+  },
+  "aggregate_service_speedup": 4.146123008008497,
+  "definitions": {
+    "tau": "1 + emitted accepted draft tokens / verified steps",
+    "tau_raw": "1 + native pre-stop accepted draft tokens / verified steps",
+    "service_tps": "sum(output_tokens) / sum(last_token_ts - scheduled_ts)",
+    "decode_tps": "sum(output_tokens - 1) / sum(last_token_ts - first_token_ts)",
+    "wall_tps": "sum(output_tokens) / sum(generate batch wall time)"
+  }
+}

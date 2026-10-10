@@ -1,0 +1,10 @@
+{
+  "dataset": "openai/grade-school-math",
+  "split": "test",
+  "revision": "3101c7d5072418e28b9008a6636bde82a006892c",
+  "source_url": "https://raw.githubusercontent.com/openai/grade-school-math/3101c7d5072418e28b9008a6636bde82a006892c/grade_school_math/data/test.jsonl",
+  "source_sha256": "3730d312f6e3440559ace48831e51066acaca737f6eabec99bccb9e4b3c39d14",
+  "source_rows": 1319,
+  "selection": "first 100 rows in source order, no shuffle",
+  "limit": 100
+}
