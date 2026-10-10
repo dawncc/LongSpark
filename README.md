@@ -120,8 +120,10 @@ Each script covers Qwen3-4B, 8B, and 14B, and compares LongSpark with autoregres
   GPU rejection and CUDA graphs. Its versioned patch, launcher and tests live under
   `vendor/vllm/`. Run
   `python vendor/vllm/scripts/evaluate_native_v2_gsm8k.py --help` for native options.
-  See the [GSM8K first-100 validation](vendor/vllm/validation/native-v2-gsm8k100-20260930/README.md)
-  for token parity, acceptance length, throughput and actual graph replay evidence.
+  See the [performance and GSM8K first-100 validation](vendor/vllm/validation/perf-api-20261010/README.md)
+  for token parity, acceptance length, throughput and actual graph replay evidence,
+  and the [native HTTP API guide](vendor/vllm/SERVING.md) for OpenAI-compatible
+  chat, text completion, streaming and concurrent requests.
 - [Artifacts](https://huggingface.co/collections/Hehy/longspark): model weights and the CodeSpan dataset.
 
 ## Acknowledgments

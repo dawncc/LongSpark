@@ -150,6 +150,16 @@ assert os.environ['VLLM_USE_V2_MODEL_RUNNER'] == 'unchanged'
         self.assertNotIn("per_request_spec_decode_metrics", ar)
         self.assertFalse((self.root / "output").exists())
 
+    def test_reference_comparison_disables_both_optimizations_without_changing_ar(self):
+        fused = self.plan()
+        reference = self.plan("--native-optimizations", "reference")
+        self.assertEqual(fused["llm_options"]["vanilla"], reference["llm_options"]["vanilla"])
+        self.assertEqual(fused["integration_source_hashes"], reference["integration_source_hashes"])
+        for plan, enabled in ((fused, True), (reference, False)):
+            options = plan["llm_options"]["longspark"]["additional_config"]["longspark"]
+            self.assertIs(options["use_fused_state_commit"], enabled)
+            self.assertIs(options["use_direct_gather"], enabled)
+
     def test_emitted_metrics_clip_eos_inside_final_accepted_span(self):
         # First ordinary token + (2 accepted and bonus) + 2 final accepted tokens.
         result = runner.acceptance_metrics(raw_metrics([2, 6]), 6, method="longspark")

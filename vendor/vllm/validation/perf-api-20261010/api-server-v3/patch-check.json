@@ -1,0 +1,17 @@
+{
+  "patch_id": "longspark-native-v2-custom-class-v1",
+  "version": "0.30.0+cu129",
+  "root": "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages",
+  "action": "check",
+  "state": "patched",
+  "backup": "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/.longspark-native-v2-patch/longspark-native-v2-custom-class-v1",
+  "files": {
+    "vllm/config/vllm.py": "patched",
+    "vllm/v1/worker/gpu/spec_decode/__init__.py": "patched",
+    "vllm/v1/worker/gpu/spec_decode/speculator.py": "patched",
+    "vllm/v1/worker/gpu/model_runner.py": "patched",
+    "vllm/v1/worker/gpu/spec_decode/eagle/eagle3_utils.py": "patched"
+  },
+  "patch_sha256": "f4756d7c8a31c84feb8f01f541f3e8ecaa0a59f2de2daad385fae4b1a3dc8c96",
+  "changed": false
+}

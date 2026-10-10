@@ -1,0 +1,99 @@
+{
+  "status": "completed",
+  "method": "vanilla",
+  "llm_options": {
+    "model": "/data/lpf/models/Qwen3-4B",
+    "dtype": "bfloat16",
+    "tensor_parallel_size": 1,
+    "max_model_len": 4096,
+    "max_num_seqs": 1,
+    "max_num_batched_tokens": 512,
+    "kv_cache_memory_bytes": 2147483648,
+    "enforce_eager": false,
+    "enable_prefix_caching": false,
+    "enable_chunked_prefill": true,
+    "async_scheduling": true,
+    "disable_log_stats": false,
+    "seed": 0,
+    "generation_config": "auto",
+    "trust_remote_code": false,
+    "attention_config": {
+      "backend": "FLASH_ATTN"
+    },
+    "cudagraph_metrics": true,
+    "worker_extension_cls": "longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics",
+    "compilation_config": {
+      "cudagraph_mode": "FULL_AND_PIECEWISE"
+    }
+  },
+  "integration_source_hashes": {
+    "vendor/specforge/modeling/draft/draftfreekv.py": "4f7166dd276bec0e726644153dd55157616f14deab615bac9328717f6085a755",
+    "vendor/specforge/modeling/draft/draftfreekv_validation.py": "11b80a84b25c7a6820bc5e23b8f4d577e37bbd209559f4e77d1ca56b1fdb891d",
+    "vendor/specforge/modeling/draft/global16_raw256.py": "b881bb90b2ab32e8194446b4c32bd1c301893307bfaabb2f0f9c523b73593409",
+    "vendor/specforge/modeling/draft/global16_raw256_training.py": "e61ca2b4a9434c76b3da1bd83e01b91eec6d34575d8d01399f3272228b71f62d",
+    "vendor/vllm/longspark_vllm/gsm8k.py": "a6835966cde4a6d43bedc003c4da45ceabd14daeb56e5bed307059139e7e4289",
+    "vendor/vllm/longspark_vllm/native_v2/__init__.py": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79",
+    "vendor/vllm/longspark_vllm/native_v2/commit_kernel.py": "0952a61412b90b31a613aebb86a880262e6901b00a5533345c7994c449dba29b",
+    "vendor/vllm/longspark_vllm/native_v2/diagnostics.py": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510",
+    "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "064db516ea2623e81dd8735384ba24a90ecae2ac6b53b4594ca13e702da56761",
+    "vendor/vllm/longspark_vllm/native_v2/inputs.py": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be",
+    "vendor/vllm/longspark_vllm/native_v2/speculator.py": "6a201bab082895b2b6c7b88cf47c2821eef42155a27b8dcd1659df04dc1f90d1",
+    "vendor/vllm/longspark_vllm/native_v2/startup.py": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a",
+    "vendor/vllm/longspark_vllm/native_v2/state.py": "9b8093777f6c2491d77f0450669a64f139a26235dfe27ead274c46319237ef3a",
+    "vendor/vllm/longspark_vllm/native_v2/target_modules.py": "ae5b688af3c6862f3f36d9fa4746ea7ba8dfdabd5f477d9364b403d0dae6508e",
+    "vendor/vllm/patches/native-v2-custom-class.manifest.json": "1ad2c1aa4b284ca5e17a47a85120606246ee2835c3f810e99e443d0b8c878ac7",
+    "vendor/vllm/scripts/evaluate_native_v2_gsm8k.py": "5a9b47a1a8f175a418c546be22bdaff1c8d50042216598c7790dc524506796df"
+  },
+  "integration_sources_verified_before_load": true,
+  "eos": {
+    "effective_token_ids": [
+      151643,
+      151645
+    ],
+    "selected_source": "generation_config.json:eos_token_id",
+    "sources": {
+      "generation_config.json:eos_token_id": [
+        151643,
+        151645
+      ],
+      "config.json:eos_token_id": [
+        151645
+      ],
+      "tokenizer:eos_token_id": [
+        151645
+      ],
+      "tokenizer:eos_token_ids": [
+        151645
+      ]
+    },
+    "generation_config_present": true
+  },
+  "environment": {
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "executable": "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/bin/python",
+    "vllm": "0.30.0+cu129",
+    "torch": "2.13.0+cu129",
+    "pid": 3259949,
+    "cuda_visible_devices": "0",
+    "vllm_use_v2_model_runner": "1",
+    "vllm_use_flashinfer_sampler": "0",
+    "vllm_batch_invariant": "1"
+  },
+  "after_load": [
+    {
+      "runner_class": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+      "use_v2_model_runner": true,
+      "async_scheduling": true,
+      "target": {
+        "manager_class": "vllm.v1.worker.gpu.cudagraph_utils.ModelCudaGraphManager",
+        "captures": 1,
+        "captured_shapes": [
+          "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=1, num_reqs=1, uniform_token_count=1, max_query_len=None, num_active_loras=0, num_ubatches=1)"
+        ]
+      },
+      "speculator_class": null,
+      "speculator": null
+    }
+  ],
+  "measured_requests": 100
+}

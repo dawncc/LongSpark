@@ -1,0 +1,42 @@
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}],"prompt_token_ids":[151644,872,198,50,3948,279,2701,6888,3491,3019,553,3019,13,4615,1590,1555,1969,387,3040,50257,11,264,3550,11,323,279,24064,4226,13,3155,537,2182,8153,11,11874,9492,11,476,73192,36566,389,279,1590,1555,624,2461,3110,510,820,220,19,17,271,32,62619,4990,220,17,48839,315,6303,23788,323,4279,429,1753,4158,23788,13,220,2585,1657,48839,304,2790,1558,432,1896,30,151645,198,151644,77091,198,151667,271,151668,271],"prompt_text":null}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"We"},"logprobs":null,"finish_reason":null,"token_ids":[1654]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" are told that a robe takes "},"logprobs":null,"finish_reason":null,"token_ids":[525,3229,429,264,62619,4990,220]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"2 bolts of blue fiber"},"logprobs":null,"finish_reason":null,"token_ids":[17,48839,315,6303,23788]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" and half that much"},"logprobs":null,"finish_reason":null,"token_ids":[323,4279,429,1753]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" white fiber"},"logprobs":null,"finish_reason":null,"token_ids":[4158,23788]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":".\n\nFirst, calculate"},"logprobs":null,"finish_reason":null,"token_ids":[382,5338,11,11047]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" the amount of white fiber:\n$$\n"},"logprobs":null,"finish_reason":null,"token_ids":[279,3311,315,4158,23788,510,14085,198]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"\\text"},"logprobs":null,"finish_reason":null,"token_ids":[59,1318]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"{White fiber} = \\frac{"},"logprobs":null,"finish_reason":null,"token_ids":[90,14075,23788,92,284,1124,37018,90]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"1}{2} \\times 2"},"logprobs":null,"finish_reason":null,"token_ids":[16,15170,17,92,1124,15136,220,17]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" = 1 \\text{ bolt"},"logprobs":null,"finish_reason":null,"token_ids":[284,220,16,1124,1318,90,31842]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"}\n$$\n\nNow, add the blue"},"logprobs":null,"finish_reason":null,"token_ids":[532,14085,271,7039,11,912,279,6303]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" and white fiber"},"logprobs":null,"finish_reason":null,"token_ids":[323,4158,23788]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" together:\n$$\n\\text{Total"},"logprobs":null,"finish_reason":null,"token_ids":[3786,510,14085,198,59,1318,90,7595]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" bolts} = 2 + 1"},"logprobs":null,"finish_reason":null,"token_ids":[48839,92,284,220,17,488,220,16]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" = 3\n$$\n\n####"},"logprobs":null,"finish_reason":null,"token_ids":[284,220,18,198,14085,271,820]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" "},"logprobs":null,"finish_reason":null,"token_ids":[220]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"3"},"logprobs":null,"finish_reason":"stop","stop_reason":null,"token_ids":[18,151645]}]}
+
+data: {"id":"chatcmpl-85c5f963dd1da4bc","object":"chat.completion.chunk","created":1791600570,"model":"longspark-qwen3-4b","choices":[],"usage":{"prompt_tokens":88,"total_tokens":181,"completion_tokens":93},"system_fingerprint":"vllm-0.30.0-nohash"}
+
+data: [DONE]
+

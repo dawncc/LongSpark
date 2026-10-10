@@ -1,0 +1,242 @@
+{
+  "passed": true,
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "unique_examples": 3,
+  "successful_generations": 17,
+  "correct_generations": 17,
+  "baseline_exact_token_parity": true,
+  "json_sse_chat_completion_exact_parity": true,
+  "concurrent_requests": 4,
+  "max_client_overlap": 4,
+  "max_observed_server_running": 4.0,
+  "concurrency_note": "Client overlap is proven; short-lived server metrics may lag. Use native worker max_decode_batch_size audit to prove GPU batching.",
+  "rejection_cases": [
+    {
+      "case": "reject-completion-temperature",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires temperature=0.0.",
+          "type": "invalid_request_error",
+          "param": "temperature",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-completion-top_p",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires top_p=1.0.",
+          "type": "invalid_request_error",
+          "param": "top_p",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-completion-repetition_penalty",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires repetition_penalty=1.0.",
+          "type": "invalid_request_error",
+          "param": "repetition_penalty",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-completion-n",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires n=1.",
+          "type": "invalid_request_error",
+          "param": "n",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-temperature",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires temperature=0.0.",
+          "type": "invalid_request_error",
+          "param": "temperature",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-top_p",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires top_p=1.0.",
+          "type": "invalid_request_error",
+          "param": "top_p",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-repetition_penalty",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires repetition_penalty=1.0.",
+          "type": "invalid_request_error",
+          "param": "repetition_penalty",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-n",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires n=1.",
+          "type": "invalid_request_error",
+          "param": "n",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    }
+  ],
+  "acceptance": {
+    "available": true,
+    "verification_rounds": 425.0,
+    "proposed_tokens": 2975.0,
+    "accepted_tokens": 1798.0,
+    "accepted_per_round": 4.2305882352941175,
+    "tau": 5.2305882352941175,
+    "acceptance_rate": 0.6043697478991596,
+    "definition": "Server-global raw counter delta for this entire validation run; final EOS clipping is not applied"
+  },
+  "records": [
+    {
+      "case": "completion-json-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.5195107161998749,
+      "client_output_tps": 221.36213251038168
+    },
+    {
+      "case": "completion-sse-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.438245989382267,
+      "client_output_tps": 262.4097031945441
+    },
+    {
+      "case": "chat-json-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.44117435067892075,
+      "client_output_tps": 260.6679192093265
+    },
+    {
+      "case": "chat-sse-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.43841230496764183,
+      "client_output_tps": 262.3101557527859
+    },
+    {
+      "case": "completion-json-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.3016420565545559,
+      "client_output_tps": 308.3124450955987
+    },
+    {
+      "case": "completion-sse-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.3008262515068054,
+      "client_output_tps": 309.1485518107987
+    },
+    {
+      "case": "chat-json-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.3015061728656292,
+      "client_output_tps": 308.451396255316
+    },
+    {
+      "case": "chat-sse-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.30143340304493904,
+      "client_output_tps": 308.5258603079737
+    },
+    {
+      "case": "completion-json-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.5701223351061344,
+      "client_output_tps": 338.52383622906297
+    },
+    {
+      "case": "completion-sse-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.5705510452389717,
+      "client_output_tps": 338.2694705592261
+    },
+    {
+      "case": "chat-json-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.5710636340081692,
+      "client_output_tps": 337.96583866735784
+    },
+    {
+      "case": "chat-sse-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.5714281424880028,
+      "client_output_tps": 337.75025353087517
+    },
+    {
+      "case": "concurrent-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.7848636470735073,
+      "client_output_tps": 146.52226591051368
+    },
+    {
+      "case": "concurrent-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.3118165247142315,
+      "client_output_tps": 298.2523138734585
+    },
+    {
+      "case": "concurrent-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 1.2874290980398655,
+      "client_output_tps": 149.91116815197518
+    },
+    {
+      "case": "concurrent-003",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 1.1710546724498272,
+      "client_output_tps": 98.20207604775777
+    },
+    {
+      "case": "recovery-after-rejections",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.4375069998204708,
+      "client_output_tps": 262.8529373180081
+    }
+  ]
+}

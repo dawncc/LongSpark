@@ -67,6 +67,8 @@ def parser():
     p.add_argument("--gpu", type=int, default=0)
     p.add_argument("--seed", type=int, default=0)
     p.add_argument("--kernel-policy", choices=("invariant", "default"), default="invariant")
+    p.add_argument("--native-optimizations", choices=("reference", "fused"), default="fused",
+                   help="Select reference or fused state stores/direct gather for controlled comparisons.")
     p.add_argument("--execute", action="store_true")
     return p
 
@@ -92,7 +94,11 @@ def llm_options(plan, method):
             draft_sample_method="greedy",
         )
         options["additional_config"] = dict(
-            native_v2_custom_class=True, longspark=dict(draft_model=plan["draft"]),
+            native_v2_custom_class=True, longspark=dict(
+                draft_model=plan["draft"],
+                use_fused_state_commit=plan.get("native_optimizations", "fused") == "fused",
+                use_direct_gather=plan.get("native_optimizations", "fused") == "fused",
+            ),
         )
     return options
 
@@ -127,7 +133,8 @@ def make_plan(args):
         max_new_tokens=args.max_new_tokens, max_model_len=args.max_model_len,
         max_num_seqs=args.max_num_seqs, max_num_batched_tokens=args.max_num_batched_tokens,
         kv_cache_gib=args.kv_cache_gib, gpu=args.gpu, seed=args.seed,
-        kernel_policy=args.kernel_policy, temperature=0.0, ignore_eos=False,
+        kernel_policy=args.kernel_policy, native_optimizations=args.native_optimizations,
+        temperature=0.0, ignore_eos=False,
         async_scheduling=True, target_tp=1, dtype="bfloat16", retokenize=False,
         flashinfer_sampler=False,
         sampler_policy="VLLM_USE_FLASHINFER_SAMPLER=0 is fixed for this greedy evaluation, including startup warmup; FLASH_ATTN attention is unchanged",

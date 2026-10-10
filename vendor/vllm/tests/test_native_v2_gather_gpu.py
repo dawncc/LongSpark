@@ -135,3 +135,42 @@ torch.cuda.synchronize()
                             capture_output=True, text=True, timeout=120)
     assert result.returncode != 0
     assert "resident target KV slot" in result.stderr or "device-side assert" in result.stderr
+
+
+@pytest.mark.parametrize("widths,rejected", [
+    ((1,), (0,)), ((8,), (3,)), ((8, 3, 1, 7), (6, 0, 1, 2)),
+])
+def test_direct_graph_buffers_match_reference_and_clear_tail(widths, rejected):
+    args, reference, fused = make_case(widths, rejected, strided=True,
+                                     dim=128, heads=8, hidden=2560)
+    batch = len(widths)
+    buffers = (
+        torch.full((batch, 5, 8, 8, 128), float("nan"), dtype=torch.bfloat16, device="cuda"),
+        torch.full((batch, 5, 8, 8, 128), float("nan"), dtype=torch.bfloat16, device="cuda"),
+        torch.empty(batch, 5, 2560, dtype=torch.bfloat16, device="cuda"),
+        torch.empty(batch, dtype=torch.int64, device="cuda"),
+        torch.empty(batch, dtype=torch.int64, device="cuda"),
+    )
+    actual = fused(*args, output_buffers=buffers)
+    expected = reference(*args)
+    for tensor, buffer in zip(actual[:-1], buffers):
+        assert tensor.data_ptr() == buffer.data_ptr()
+    for old, new in zip(expected[:2], actual[:2]):
+        torch.testing.assert_close(new[:, :, :max(widths)], old, atol=0, rtol=0)
+        assert torch.count_nonzero(new[:, :, max(widths):]).item() == 0
+    for old, new in zip(expected[2:-1], actual[2:-1]):
+        torch.testing.assert_close(new, old, atol=0, rtol=0, equal_nan=True)
+    stream = torch.cuda.Stream()
+    stream.wait_stream(torch.cuda.current_stream())
+    with torch.cuda.stream(stream):
+        fused(*args, output_buffers=buffers)
+    torch.cuda.current_stream().wait_stream(stream)
+    graph = torch.cuda.CUDAGraph()
+    with torch.cuda.graph(graph):
+        fused(*args, output_buffers=buffers)
+    args[-1].copy_(torch.tensor(widths, device="cuda"))
+    graph.replay()
+    torch.cuda.synchronize()
+    assert torch.count_nonzero(buffers[0]).item() == 0
+    assert torch.count_nonzero(buffers[1]).item() == 0
+    assert torch.count_nonzero(buffers[4]).item() == 0

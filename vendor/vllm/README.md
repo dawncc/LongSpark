@@ -6,7 +6,17 @@ engine owns scheduling, target execution, paged KV, GPU rejection and output
 delivery. LongSpark supplies bounded Global16/Raw256/Local7 state and the next
 seven draft tokens. All vLLM integration code lives under `vendor/vllm/`.
 
-The retained GSM8K first-100 benchmark, run before the code cleanup, matched
+The latest [performance and API validation](validation/perf-api-20261010/README.md)
+matched all GSM8K first-100 output tokens with AR, with 96% accuracy. Fused
+state stores and direct graph-input gathering improved C1 decode from
+334.210 to 335.982 token/s in the recorded before/after run (+0.53%), with
+unchanged acceptance length 4.727. At C4, offline wall throughput was
+980.625 token/s versus AR's 215.502 (4.550x). These C4 figures compare methods
+within that concurrency setting, not the isolated effect of the code change.
+The native HTTP API separately passed ordinary, streaming and four-request
+concurrency validation with actual target/draft graph replay.
+
+The retained earlier GSM8K first-100 benchmark, run before the code cleanup, matched
 AR on **100/100 complete token sequences**, with **96% accuracy for both** and
 natural EOS throughout. On one L20X GPU, LongSpark reached **334.022 decode
 token/s versus 72.782 for AR (4.589x)**, accepting **4.727 draft tokens/round
@@ -108,12 +118,31 @@ fresh processes, warms them independently, and excludes loading, capture and
 warmup from measurement. `invariant` enables batch-invariant kernels for strict
 greedy token comparisons. `default` is a separate experimental condition.
 
+## Native HTTP API
+
+Use `scripts/serve_native_v2.py` to launch the native vLLM OpenAI-compatible
+server with the same V2 speculator, async scheduling and target/draft CUDA
+graphs. It supports `/v1/chat/completions`, `/v1/completions`, SSE streaming,
+token-ID input/output and concurrent requests. Temperature defaults to zero;
+unsupported sampling options receive a client error before engine submission.
+
+```bash
+vendor/vllm/.venv/bin/python vendor/vllm/scripts/serve_native_v2.py \
+  --target models/4B/target --draft models/4B/longspark --gpu 0 \
+  --max-num-seqs 4 --port 18080 \
+  --audit-dir results/longspark-api --execute
+```
+
+The default address is `127.0.0.1`. The [serving guide](SERVING.md) covers API
+calls, SSH forwarding, authentication, supported parameters and graph audits.
+Omit `--execute` for a plan preview without loading vLLM or CUDA.
+
 Supported scope is dense unquantized Qwen3 BF16, native unscaled RoPE,
 FlashAttention's packed BF16 KV layout, one GPU with TP=PP=DP=CP=1, text input,
 and greedy seven-token proposals. Prefix caching, LoRA, fixed-NTK, temperature
-sampling, quantization and multi-GPU drafting are unsupported. The runner is
-an offline native engine evaluation entry point; serving API and production
-load coverage are not established by these measurements.
+sampling, quantization and multi-GPU drafting are unsupported. The retained
+first-100 figures above measure offline native engine execution; HTTP API
+validation and any API throughput measurement are recorded separately.
 
 ## Implementation
 
@@ -121,10 +150,12 @@ load coverage are not established by these measurements.
 | --- | --- |
 | `longspark_vllm/native_v2/speculator.py` | V2 lifecycle, native graph manager, accepted-prefix updates and proposal scheduling |
 | `longspark_vllm/native_v2/state.py` | Per-request Global16/Raw256/Local7 state and checkpoint execution |
+| `longspark_vllm/native_v2/commit_kernel.py` | Fused final state stores, preserving the reference attention arithmetic |
 | `longspark_vllm/native_v2/target_modules.py` | Shared target modules and attention-statistics helpers |
 | `longspark_vllm/native_v2/inputs.py`, `gather_kernel.py` | Reference prefill gather and fused decode KV/hidden gather |
 | `longspark_vllm/native_v2/startup.py`, `diagnostics.py` | Memory/graph coverage checks, prefill warmup and actual replay audits |
 | `longspark_vllm/gsm8k.py` | Fixture loading, answer scoring and shared evaluation utilities |
+| `longspark_vllm/serving.py`, `scripts/serve_native_v2.py` | Native vLLM HTTP launch configuration, greedy request validation and lifecycle graph audits |
 | `patches/` | Exact vLLM 0.30.0 extension patch and source-hash manifest |
 | `scripts/` | Installation, native evaluation and independent audit entry points |
 | `tests/` | CPU contracts and opt-in GPU checks |

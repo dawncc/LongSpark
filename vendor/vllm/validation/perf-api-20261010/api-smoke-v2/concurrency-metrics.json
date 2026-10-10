@@ -1,0 +1,221 @@
+{
+  "samples": [
+    {
+      "monotonic": 17663008.193938307,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 300.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2100.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1296.0,
+        "vllm:num_requests_running": 0.0
+      }
+    },
+    {
+      "monotonic": 17663008.249547437,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 305.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2135.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1310.0,
+        "vllm:num_requests_running": 4.0
+      }
+    },
+    {
+      "monotonic": 17663008.304634344,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 317.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2219.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1363.0,
+        "vllm:num_requests_running": 4.0
+      }
+    },
+    {
+      "monotonic": 17663008.35988888,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 329.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2303.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1402.0,
+        "vllm:num_requests_running": 4.0
+      }
+    },
+    {
+      "monotonic": 17663008.414822716,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 345.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2415.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1484.0,
+        "vllm:num_requests_running": 4.0
+      }
+    },
+    {
+      "monotonic": 17663008.469850153,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 357.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2499.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1530.0,
+        "vllm:num_requests_running": 4.0
+      }
+    },
+    {
+      "monotonic": 17663008.52491181,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 369.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2583.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1582.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663008.579854865,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 369.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2583.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1582.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663008.634674925,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 369.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2583.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1582.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663008.69123091,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 369.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2583.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1582.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663008.74610056,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 369.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2583.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1582.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663008.800988253,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 369.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2583.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1582.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663008.856025036,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 369.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2583.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1582.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663008.911417313,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 378.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2646.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1613.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663008.966425117,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 387.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2709.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1665.0,
+        "vllm:num_requests_running": 3.0
+      }
+    },
+    {
+      "monotonic": 17663009.021719765,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 390.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2730.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1668.0,
+        "vllm:num_requests_running": 2.0
+      }
+    },
+    {
+      "monotonic": 17663009.07659989,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 390.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2730.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1668.0,
+        "vllm:num_requests_running": 2.0
+      }
+    },
+    {
+      "monotonic": 17663009.131376587,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 390.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2730.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1668.0,
+        "vllm:num_requests_running": 2.0
+      }
+    },
+    {
+      "monotonic": 17663009.18624577,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 390.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2730.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1668.0,
+        "vllm:num_requests_running": 2.0
+      }
+    },
+    {
+      "monotonic": 17663009.240988042,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 390.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2730.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1668.0,
+        "vllm:num_requests_running": 2.0
+      }
+    },
+    {
+      "monotonic": 17663009.29592705,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 390.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2730.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1668.0,
+        "vllm:num_requests_running": 2.0
+      }
+    },
+    {
+      "monotonic": 17663009.35098613,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 390.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2730.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1668.0,
+        "vllm:num_requests_running": 2.0
+      }
+    },
+    {
+      "monotonic": 17663009.40718283,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 395.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2765.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1684.0,
+        "vllm:num_requests_running": 1.0
+      }
+    },
+    {
+      "monotonic": 17663009.46243575,
+      "values": {
+        "vllm:spec_decode_num_drafts_total": 398.0,
+        "vllm:spec_decode_num_draft_tokens_total": 2786.0,
+        "vllm:spec_decode_num_accepted_tokens_total": 1703.0,
+        "vllm:num_requests_running": 1.0
+      }
+    }
+  ],
+  "errors": []
+}

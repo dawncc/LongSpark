@@ -1,0 +1,44 @@
+test_bad_limits_fail_before_loading_engine (test_native_v2_serving.LaunchPlanTests.test_bad_limits_fail_before_loading_engine) ... ok
+test_plan_pins_native_runner_async_graphs_and_model_defaults (test_native_v2_serving.LaunchPlanTests.test_plan_pins_native_runner_async_graphs_and_model_defaults) ... ok
+test_preview_needs_no_vllm_and_does_not_create_audit_directory (test_native_v2_serving.LaunchPlanTests.test_preview_needs_no_vllm_and_does_not_create_audit_directory) ... ok
+test_bad_requests_never_reach_native_engine (test_native_v2_serving.MiddlewareTests.test_bad_requests_never_reach_native_engine) ... ok
+test_body_limit_and_compression_fail_before_engine (test_native_v2_serving.MiddlewareTests.test_body_limit_and_compression_fail_before_engine) ... ok
+test_concurrent_requests_have_separate_replayed_bodies (test_native_v2_serving.MiddlewareTests.test_concurrent_requests_have_separate_replayed_bodies) ... ok
+test_disconnect_remains_available_to_native_stream_cancellation (test_native_v2_serving.MiddlewareTests.test_disconnect_remains_available_to_native_stream_cancellation) ... ok
+test_health_models_and_metrics_are_native (test_native_v2_serving.MiddlewareTests.test_health_models_and_metrics_are_native) ... ok
+test_lifespan_warms_before_ready_and_audits_before_native_cleanup (test_native_v2_serving.MiddlewareTests.test_lifespan_warms_before_ready_and_audits_before_native_cleanup) ... ok
+test_other_generation_and_management_endpoints_cannot_bypass_guard (test_native_v2_serving.MiddlewareTests.test_other_generation_and_management_endpoints_cannot_bypass_guard) ... ok
+test_valid_request_rewrites_length_and_preserves_stream_chunks (test_native_v2_serving.MiddlewareTests.test_valid_request_rewrites_length_and_preserves_stream_chunks) ... ok
+test_native_protocol_still_validates_non_object_json (test_native_v2_serving.RequestPolicyTests.test_native_protocol_still_validates_non_object_json) ... ok
+test_omitted_or_null_temperature_is_greedy_without_mutating_caller (test_native_v2_serving.RequestPolicyTests.test_omitted_or_null_temperature_is_greedy_without_mutating_caller) ... ok
+test_sampling_modifiers_are_rejected_including_nonfinite_and_bool (test_native_v2_serving.RequestPolicyTests.test_sampling_modifiers_are_rejected_including_nonfinite_and_bool) ... ok
+test_text_messages_and_common_openai_controls_are_preserved (test_native_v2_serving.RequestPolicyTests.test_text_messages_and_common_openai_controls_are_preserved) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.033s
+
+OK
+test_real_http_transport_full_smoke_and_recovery (test_native_v2_api_validation.ClientIntegrationTests.test_real_http_transport_full_smoke_and_recovery) ... ok
+test_absent_metrics_report_unavailable (test_native_v2_api_validation.MetricsTests.test_absent_metrics_report_unavailable) ... ok
+test_counters_aggregate_engines_but_ignore_histograms (test_native_v2_api_validation.MetricsTests.test_counters_aggregate_engines_but_ignore_histograms) ... ok
+test_invalid_or_reset_counters_fail (test_native_v2_api_validation.MetricsTests.test_invalid_or_reset_counters_fail) ... ok
+test_overlap_does_not_count_adjacent_requests_as_concurrent (test_native_v2_api_validation.MetricsTests.test_overlap_does_not_count_adjacent_requests_as_concurrent) ... ok
+test_crlf_comments_and_multiline_data (test_native_v2_api_validation.SSETests.test_crlf_comments_and_multiline_data) ... ok
+test_duplicate_finish_and_changed_prompt_fail (test_native_v2_api_validation.SSETests.test_duplicate_finish_and_changed_prompt_fail) ... ok
+test_json_and_sse_match_for_both_endpoints (test_native_v2_api_validation.SSETests.test_json_and_sse_match_for_both_endpoints) ... ok
+test_missing_duplicate_or_out_of_order_done (test_native_v2_api_validation.SSETests.test_missing_duplicate_or_out_of_order_done) ... ok
+test_mixed_request_ids_and_models_fail (test_native_v2_api_validation.SSETests.test_mixed_request_ids_and_models_fail) ... ok
+test_server_error_inside_successful_http_stream (test_native_v2_api_validation.SSETests.test_server_error_inside_successful_http_stream) ... ok
+test_thinking_output_is_not_silently_ignored (test_native_v2_api_validation.SSETests.test_thinking_output_is_not_silently_ignored) ... ok
+test_unterminated_frame (test_native_v2_api_validation.SSETests.test_unterminated_frame) ... ok
+test_wrong_usage_missing_ids_and_truncation_fail (test_native_v2_api_validation.SSETests.test_wrong_usage_missing_ids_and_truncation_fail) ... ok
+test_baseline_duplicate_or_missing_source_rejected (test_native_v2_api_validation.ValidationTests.test_baseline_duplicate_or_missing_source_rejected) ... ok
+test_exact_baseline_tokens_and_text (test_native_v2_api_validation.ValidationTests.test_exact_baseline_tokens_and_text) ... ok
+test_existing_output_cannot_be_modified_even_on_failure (test_native_v2_api_validation.ValidationTests.test_existing_output_cannot_be_modified_even_on_failure) ... ok
+test_retokenized_prompt_cannot_count_as_parity (test_native_v2_api_validation.ValidationTests.test_retokenized_prompt_cannot_count_as_parity) ... ok
+test_tokenized_completions_and_chat_messages_preserve_fixture (test_native_v2_api_validation.ValidationTests.test_tokenized_completions_and_chat_messages_preserve_fixture) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.695s
+
+OK

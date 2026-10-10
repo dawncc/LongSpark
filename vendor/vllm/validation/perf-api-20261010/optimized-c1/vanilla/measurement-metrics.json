@@ -1,0 +1,1450 @@
+{
+  "before": [
+    {
+      "name": "vllm:estimated_flops_per_gpu",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:estimated_read_bytes_per_gpu",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:estimated_write_bytes_per_gpu",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:num_requests_running",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:num_requests_waiting",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:num_requests_waiting_by_reason",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "reason": "capacity"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:num_requests_waiting_by_reason",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "reason": "deferred"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:engine_sleep_state",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "sleep_state": "awake"
+      },
+      "value": 1.0
+    },
+    {
+      "name": "vllm:engine_sleep_state",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "sleep_state": "weights_offloaded"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:engine_sleep_state",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "sleep_state": "discard_all"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:kv_cache_usage_perc",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:prefix_cache_queries",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:prefix_cache_hits",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:external_prefix_cache_queries",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:external_prefix_cache_hits",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:mm_cache_queries",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:mm_cache_hits",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:num_preemptions",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:prompt_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 334
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "source": "local_compute"
+      },
+      "value": 334
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "source": "local_cache_hit"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "source": "external_kv_transfer"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:prompt_tokens_cached",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:generation_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 401
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "stop"
+      },
+      "value": 3
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "length"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "abort"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "error"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "repetition"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:request_prompt_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 334.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 1,
+        "200.0": 3,
+        "500.0": 3,
+        "1000.0": 3,
+        "2000.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_generation_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 401.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 1,
+        "200.0": 3,
+        "500.0": 3,
+        "1000.0": 3,
+        "2000.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:iteration_tokens_total",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 401,
+      "sum": 735.0,
+      "buckets": {
+        "1.0": 398,
+        "8.0": 398,
+        "16.0": 398,
+        "32.0": 398,
+        "64.0": 398,
+        "128.0": 401,
+        "256.0": 401,
+        "512.0": 401,
+        "1024.0": 401,
+        "2048.0": 401,
+        "4096.0": 401,
+        "8192.0": 401,
+        "16384.0": 401,
+        "+Inf": 401
+      }
+    },
+    {
+      "name": "vllm:request_max_num_generation_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 401.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 1,
+        "200.0": 3,
+        "500.0": 3,
+        "1000.0": 3,
+        "2000.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_params_n",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 3.0,
+      "buckets": {
+        "1.0": 3,
+        "2.0": 3,
+        "5.0": 3,
+        "10.0": 3,
+        "20.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_params_max_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 3072.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 0,
+        "200.0": 0,
+        "500.0": 0,
+        "1000.0": 0,
+        "2000.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:time_to_first_token_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 0.13196206092834473,
+      "buckets": {
+        "0.001": 0,
+        "0.005": 0,
+        "0.01": 0,
+        "0.02": 0,
+        "0.04": 2,
+        "0.06": 2,
+        "0.08": 3,
+        "0.1": 3,
+        "0.25": 3,
+        "0.5": 3,
+        "0.75": 3,
+        "1.0": 3,
+        "2.5": 3,
+        "5.0": 3,
+        "7.5": 3,
+        "10.0": 3,
+        "20.0": 3,
+        "40.0": 3,
+        "80.0": 3,
+        "160.0": 3,
+        "640.0": 3,
+        "2560.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:inter_token_latency_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 398,
+      "sum": 5.462401758879423,
+      "buckets": {
+        "0.01": 0,
+        "0.025": 398,
+        "0.05": 398,
+        "0.075": 398,
+        "0.1": 398,
+        "0.15": 398,
+        "0.2": 398,
+        "0.3": 398,
+        "0.4": 398,
+        "0.5": 398,
+        "0.75": 398,
+        "1.0": 398,
+        "2.5": 398,
+        "5.0": 398,
+        "7.5": 398,
+        "10.0": 398,
+        "20.0": 398,
+        "40.0": 398,
+        "80.0": 398,
+        "+Inf": 398
+      }
+    },
+    {
+      "name": "vllm:request_time_per_output_token_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 0.04115493721072935,
+      "buckets": {
+        "0.01": 0,
+        "0.025": 3,
+        "0.05": 3,
+        "0.075": 3,
+        "0.1": 3,
+        "0.15": 3,
+        "0.2": 3,
+        "0.3": 3,
+        "0.4": 3,
+        "0.5": 3,
+        "0.75": 3,
+        "1.0": 3,
+        "2.5": 3,
+        "5.0": 3,
+        "7.5": 3,
+        "10.0": 3,
+        "20.0": 3,
+        "40.0": 3,
+        "80.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:e2e_request_latency_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 5.594204425811768,
+      "buckets": {
+        "0.3": 0,
+        "0.5": 0,
+        "0.8": 0,
+        "1.0": 0,
+        "1.5": 1,
+        "2.0": 2,
+        "2.5": 2,
+        "5.0": 3,
+        "10.0": 3,
+        "15.0": 3,
+        "20.0": 3,
+        "30.0": 3,
+        "40.0": 3,
+        "50.0": 3,
+        "60.0": 3,
+        "120.0": 3,
+        "240.0": 3,
+        "480.0": 3,
+        "960.0": 3,
+        "1920.0": 3,
+        "7680.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_queue_time_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 3.150850534439087e-05,
+      "buckets": {
+        "0.3": 3,
+        "0.5": 3,
+        "0.8": 3,
+        "1.0": 3,
+        "1.5": 3,
+        "2.0": 3,
+        "2.5": 3,
+        "5.0": 3,
+        "10.0": 3,
+        "15.0": 3,
+        "20.0": 3,
+        "30.0": 3,
+        "40.0": 3,
+        "50.0": 3,
+        "60.0": 3,
+        "120.0": 3,
+        "240.0": 3,
+        "480.0": 3,
+        "960.0": 3,
+        "1920.0": 3,
+        "7680.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_inference_time_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 5.505463182926178,
+      "buckets": {
+        "0.3": 0,
+        "0.5": 0,
+        "0.8": 0,
+        "1.0": 0,
+        "1.5": 1,
+        "2.0": 2,
+        "2.5": 2,
+        "5.0": 3,
+        "10.0": 3,
+        "15.0": 3,
+        "20.0": 3,
+        "30.0": 3,
+        "40.0": 3,
+        "50.0": 3,
+        "60.0": 3,
+        "120.0": 3,
+        "240.0": 3,
+        "480.0": 3,
+        "960.0": 3,
+        "1920.0": 3,
+        "7680.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_prefill_time_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 0.04306142404675484,
+      "buckets": {
+        "0.3": 3,
+        "0.5": 3,
+        "0.8": 3,
+        "1.0": 3,
+        "1.5": 3,
+        "2.0": 3,
+        "2.5": 3,
+        "5.0": 3,
+        "10.0": 3,
+        "15.0": 3,
+        "20.0": 3,
+        "30.0": 3,
+        "40.0": 3,
+        "50.0": 3,
+        "60.0": 3,
+        "120.0": 3,
+        "240.0": 3,
+        "480.0": 3,
+        "960.0": 3,
+        "1920.0": 3,
+        "7680.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_decode_time_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 5.462401758879423,
+      "buckets": {
+        "0.3": 0,
+        "0.5": 0,
+        "0.8": 0,
+        "1.0": 0,
+        "1.5": 1,
+        "2.0": 2,
+        "2.5": 2,
+        "5.0": 3,
+        "10.0": 3,
+        "15.0": 3,
+        "20.0": 3,
+        "30.0": 3,
+        "40.0": 3,
+        "50.0": 3,
+        "60.0": 3,
+        "120.0": 3,
+        "240.0": 3,
+        "480.0": 3,
+        "960.0": 3,
+        "1920.0": 3,
+        "7680.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_num_preemptions",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 0.0,
+      "buckets": {
+        "1.0": 3,
+        "2.0": 3,
+        "3.0": 3,
+        "4.0": 3,
+        "5.0": 3,
+        "10.0": 3,
+        "20.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:request_prefill_kv_computed_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 3,
+      "sum": 334.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 1,
+        "200.0": 3,
+        "500.0": 3,
+        "1000.0": 3,
+        "2000.0": 3,
+        "+Inf": 3
+      }
+    },
+    {
+      "name": "vllm:cache_config_info",
+      "labels": {
+        "block_size": "16",
+        "user_specified_block_size": "False",
+        "user_specified_mamba_block_size": "False",
+        "kv_cache_layout": "None",
+        "prefix_match_unit": "None",
+        "gpu_memory_utilization": "0.92",
+        "cache_dtype": "auto",
+        "is_attention_free": "False",
+        "num_gpu_blocks_override": "None",
+        "sliding_window": "None",
+        "enable_prefix_caching": "False",
+        "prefix_caching_hash_algo": "sha256",
+        "prefix_cache_retention_interval": "0",
+        "kv_cache_dtype_skip_layers": "[]",
+        "mamba_page_size_padded": "None",
+        "skip_page_size_padded": "None",
+        "mamba_block_size": "None",
+        "mamba_cache_dtype": "auto",
+        "mamba_ssm_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "enable_mamba_fine_grained_prefix_cache": "False",
+        "replayssm_buffer_len": "16",
+        "use_replayssm": "False",
+        "use_kda_recoverssm": "False",
+        "num_gpu_blocks": "910",
+        "num_cpu_blocks": "None",
+        "kv_cache_size_tokens": "14560",
+        "kv_cache_max_concurrency": "3.5546875",
+        "kv_sharing_fast_prefill": "False",
+        "kv_cache_memory_bytes": "2147483648",
+        "kv_offloading_size": "None",
+        "kv_offloading_backend": "native",
+        "_block_size_resolved": "True",
+        "engine": "0"
+      },
+      "value": 1.0
+    }
+  ],
+  "after": [
+    {
+      "name": "vllm:estimated_flops_per_gpu",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:estimated_read_bytes_per_gpu",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:estimated_write_bytes_per_gpu",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:num_requests_running",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:num_requests_waiting",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:num_requests_waiting_by_reason",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "reason": "capacity"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:num_requests_waiting_by_reason",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "reason": "deferred"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:engine_sleep_state",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "sleep_state": "awake"
+      },
+      "value": 1.0
+    },
+    {
+      "name": "vllm:engine_sleep_state",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "sleep_state": "weights_offloaded"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:engine_sleep_state",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "sleep_state": "discard_all"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:kv_cache_usage_perc",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0.0
+    },
+    {
+      "name": "vllm:prefix_cache_queries",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:prefix_cache_hits",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:external_prefix_cache_queries",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:external_prefix_cache_hits",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:mm_cache_queries",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:mm_cache_hits",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:num_preemptions",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:prompt_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 12457
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "source": "local_compute"
+      },
+      "value": 12457
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "source": "local_cache_hit"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "source": "external_kv_transfer"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:prompt_tokens_cached",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:generation_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "value": 21740
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "stop"
+      },
+      "value": 103
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "length"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "abort"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "error"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:request_success",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0",
+        "finished_reason": "repetition"
+      },
+      "value": 0
+    },
+    {
+      "name": "vllm:request_prompt_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 12457.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 16,
+        "200.0": 103,
+        "500.0": 103,
+        "1000.0": 103,
+        "2000.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_generation_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 21740.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 7,
+        "200.0": 48,
+        "500.0": 103,
+        "1000.0": 103,
+        "2000.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:iteration_tokens_total",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 21740,
+      "sum": 34197.0,
+      "buckets": {
+        "1.0": 21637,
+        "8.0": 21637,
+        "16.0": 21637,
+        "32.0": 21637,
+        "64.0": 21637,
+        "128.0": 21709,
+        "256.0": 21740,
+        "512.0": 21740,
+        "1024.0": 21740,
+        "2048.0": 21740,
+        "4096.0": 21740,
+        "8192.0": 21740,
+        "16384.0": 21740,
+        "+Inf": 21740
+      }
+    },
+    {
+      "name": "vllm:request_max_num_generation_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 21740.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 7,
+        "200.0": 48,
+        "500.0": 103,
+        "1000.0": 103,
+        "2000.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_params_n",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 103.0,
+      "buckets": {
+        "1.0": 103,
+        "2.0": 103,
+        "5.0": 103,
+        "10.0": 103,
+        "20.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_params_max_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 105472.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 0,
+        "200.0": 0,
+        "500.0": 0,
+        "1000.0": 0,
+        "2000.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:time_to_first_token_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 2.866164445877075,
+      "buckets": {
+        "0.001": 0,
+        "0.005": 0,
+        "0.01": 0,
+        "0.02": 1,
+        "0.04": 102,
+        "0.06": 102,
+        "0.08": 103,
+        "0.1": 103,
+        "0.25": 103,
+        "0.5": 103,
+        "0.75": 103,
+        "1.0": 103,
+        "2.5": 103,
+        "5.0": 103,
+        "7.5": 103,
+        "10.0": 103,
+        "20.0": 103,
+        "40.0": 103,
+        "80.0": 103,
+        "160.0": 103,
+        "640.0": 103,
+        "2560.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:inter_token_latency_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 21637,
+      "sum": 297.1287771128118,
+      "buckets": {
+        "0.01": 1,
+        "0.025": 21636,
+        "0.05": 21636,
+        "0.075": 21637,
+        "0.1": 21637,
+        "0.15": 21637,
+        "0.2": 21637,
+        "0.3": 21637,
+        "0.4": 21637,
+        "0.5": 21637,
+        "0.75": 21637,
+        "1.0": 21637,
+        "2.5": 21637,
+        "5.0": 21637,
+        "7.5": 21637,
+        "10.0": 21637,
+        "20.0": 21637,
+        "40.0": 21637,
+        "80.0": 21637,
+        "+Inf": 21637
+      }
+    },
+    {
+      "name": "vllm:request_time_per_output_token_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 1.413723854330671,
+      "buckets": {
+        "0.01": 0,
+        "0.025": 103,
+        "0.05": 103,
+        "0.075": 103,
+        "0.1": 103,
+        "0.15": 103,
+        "0.2": 103,
+        "0.3": 103,
+        "0.4": 103,
+        "0.5": 103,
+        "0.75": 103,
+        "1.0": 103,
+        "2.5": 103,
+        "5.0": 103,
+        "7.5": 103,
+        "10.0": 103,
+        "20.0": 103,
+        "40.0": 103,
+        "80.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:e2e_request_latency_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 299.9898557662964,
+      "buckets": {
+        "0.3": 0,
+        "0.5": 0,
+        "0.8": 0,
+        "1.0": 0,
+        "1.5": 11,
+        "2.0": 25,
+        "2.5": 37,
+        "5.0": 98,
+        "10.0": 103,
+        "15.0": 103,
+        "20.0": 103,
+        "30.0": 103,
+        "40.0": 103,
+        "50.0": 103,
+        "60.0": 103,
+        "120.0": 103,
+        "240.0": 103,
+        "480.0": 103,
+        "960.0": 103,
+        "1920.0": 103,
+        "7680.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_queue_time_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 0.0005974061787128448,
+      "buckets": {
+        "0.3": 103,
+        "0.5": 103,
+        "0.8": 103,
+        "1.0": 103,
+        "1.5": 103,
+        "2.0": 103,
+        "2.5": 103,
+        "5.0": 103,
+        "10.0": 103,
+        "15.0": 103,
+        "20.0": 103,
+        "30.0": 103,
+        "40.0": 103,
+        "50.0": 103,
+        "60.0": 103,
+        "120.0": 103,
+        "240.0": 103,
+        "480.0": 103,
+        "960.0": 103,
+        "1920.0": 103,
+        "7680.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_inference_time_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 298.5850316286087,
+      "buckets": {
+        "0.3": 0,
+        "0.5": 0,
+        "0.8": 0,
+        "1.0": 0,
+        "1.5": 11,
+        "2.0": 26,
+        "2.5": 38,
+        "5.0": 98,
+        "10.0": 103,
+        "15.0": 103,
+        "20.0": 103,
+        "30.0": 103,
+        "40.0": 103,
+        "50.0": 103,
+        "60.0": 103,
+        "120.0": 103,
+        "240.0": 103,
+        "480.0": 103,
+        "960.0": 103,
+        "1920.0": 103,
+        "7680.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_prefill_time_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 1.4562545157968998,
+      "buckets": {
+        "0.3": 103,
+        "0.5": 103,
+        "0.8": 103,
+        "1.0": 103,
+        "1.5": 103,
+        "2.0": 103,
+        "2.5": 103,
+        "5.0": 103,
+        "10.0": 103,
+        "15.0": 103,
+        "20.0": 103,
+        "30.0": 103,
+        "40.0": 103,
+        "50.0": 103,
+        "60.0": 103,
+        "120.0": 103,
+        "240.0": 103,
+        "480.0": 103,
+        "960.0": 103,
+        "1920.0": 103,
+        "7680.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_decode_time_seconds",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 297.1287771128118,
+      "buckets": {
+        "0.3": 0,
+        "0.5": 0,
+        "0.8": 0,
+        "1.0": 0,
+        "1.5": 11,
+        "2.0": 26,
+        "2.5": 39,
+        "5.0": 98,
+        "10.0": 103,
+        "15.0": 103,
+        "20.0": 103,
+        "30.0": 103,
+        "40.0": 103,
+        "50.0": 103,
+        "60.0": 103,
+        "120.0": 103,
+        "240.0": 103,
+        "480.0": 103,
+        "960.0": 103,
+        "1920.0": 103,
+        "7680.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_num_preemptions",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 0.0,
+      "buckets": {
+        "1.0": 103,
+        "2.0": 103,
+        "3.0": 103,
+        "4.0": 103,
+        "5.0": 103,
+        "10.0": 103,
+        "20.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:request_prefill_kv_computed_tokens",
+      "labels": {
+        "model_name": "/data/lpf/models/Qwen3-4B",
+        "engine": "0"
+      },
+      "count": 103,
+      "sum": 12457.0,
+      "buckets": {
+        "1.0": 0,
+        "2.0": 0,
+        "5.0": 0,
+        "10.0": 0,
+        "20.0": 0,
+        "50.0": 0,
+        "100.0": 16,
+        "200.0": 103,
+        "500.0": 103,
+        "1000.0": 103,
+        "2000.0": 103,
+        "+Inf": 103
+      }
+    },
+    {
+      "name": "vllm:cache_config_info",
+      "labels": {
+        "block_size": "16",
+        "user_specified_block_size": "False",
+        "user_specified_mamba_block_size": "False",
+        "kv_cache_layout": "None",
+        "prefix_match_unit": "None",
+        "gpu_memory_utilization": "0.92",
+        "cache_dtype": "auto",
+        "is_attention_free": "False",
+        "num_gpu_blocks_override": "None",
+        "sliding_window": "None",
+        "enable_prefix_caching": "False",
+        "prefix_caching_hash_algo": "sha256",
+        "prefix_cache_retention_interval": "0",
+        "kv_cache_dtype_skip_layers": "[]",
+        "mamba_page_size_padded": "None",
+        "skip_page_size_padded": "None",
+        "mamba_block_size": "None",
+        "mamba_cache_dtype": "auto",
+        "mamba_ssm_cache_dtype": "auto",
+        "mamba_cache_mode": "none",
+        "enable_mamba_fine_grained_prefix_cache": "False",
+        "replayssm_buffer_len": "16",
+        "use_replayssm": "False",
+        "use_kda_recoverssm": "False",
+        "num_gpu_blocks": "910",
+        "num_cpu_blocks": "None",
+        "kv_cache_size_tokens": "14560",
+        "kv_cache_max_concurrency": "3.5546875",
+        "kv_sharing_fast_prefill": "False",
+        "kv_cache_memory_bytes": "2147483648",
+        "kv_offloading_size": "None",
+        "kv_offloading_backend": "native",
+        "_block_size_resolved": "True",
+        "engine": "0"
+      },
+      "value": 1.0
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "passed": true,
+  "api_smoke": "api-smoke-v3/summary.json",
+  "target": {
+    "captured_before": 4,
+    "captured_after": 4,
+    "captures_delta": 0,
+    "actual_replays": 372,
+    "max_decode_requests": 4,
+    "dispatches": {
+      "other:NONE": 15,
+      "uniform_decode:FULL": 372
+    },
+    "replay_shapes": {
+      "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=8, num_reqs=1, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)": 346,
+      "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=32, num_reqs=4, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)": 18,
+      "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=24, num_reqs=3, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)": 7,
+      "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=16, num_reqs=2, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)": 1
+    }
+  },
+  "draft": {
+    "captured_before": 4,
+    "captured_after": 4,
+    "captures_delta": 0,
+    "actual_replays": 387,
+    "fallbacks_delta": 0,
+    "startup_eager_calls_before": 6,
+    "startup_eager_calls_after": 6
+  },
+  "smoke": {
+    "generations": 17,
+    "exact_token_text_parity": true,
+    "negative_http400_cases": 10,
+    "client_concurrency": 4,
+    "server_running_max": 4.0
+  },
+  "inference_jit": {
+    "window": "Application startup complete through API shutdown triggered; includes first request compilation",
+    "first_line": 116,
+    "last_line": 285,
+    "count": 4,
+    "entries": [
+      {
+        "line": 121,
+        "text": "(EngineCore pid=3268990) WARNING 10-10 02:45:22 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _compute_local_logits_stats_kernel. This causes a latency spike; consider extending warmup to cover this shape/config."
+      },
+      {
+        "line": 122,
+        "text": "(EngineCore pid=3268990) WARNING 10-10 02:45:22 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _rejection_kernel. This causes a latency spike; consider extending warmup to cover this shape/config."
+      },
+      {
+        "line": 123,
+        "text": "(EngineCore pid=3268990) WARNING 10-10 02:45:22 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _resample_kernel. This causes a latency spike; consider extending warmup to cover this shape/config."
+      },
+      {
+        "line": 233,
+        "text": "(EngineCore pid=3268990) WARNING 10-10 02:45:28 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _gather_context_kernel. This causes a latency spike; consider extending warmup to cover this shape/config."
+      }
+    ],
+    "zero_inference_jit": false,
+    "note": "API smoke validates functionality; client wall times include HTTP and any observed compilation."
+  },
+  "proof_files_sha256": {
+    "api-server-v3/startup-audit.json": "6ec13317995ff624b5fd7bab89755cc7f0b11929bfa8c79b8cf5f534b04d1eed",
+    "api-server-v3/shutdown-audit.json": "53e26cf26cf954d4fe12ab4d5ecbd3c6b28aa379392d2e61d80c44f8e362399c",
+    "api-smoke-v3/summary.json": "40f03fe979fe15bf321b93f7cf89f2c922242e83369f6f15899b59b966e76cc5",
+    "api-server-v3.log": "cd7ed04b0977ec641d4910a720d7c883b94361a01142439b0afe7da6b3b0dd5c"
+  }
+}

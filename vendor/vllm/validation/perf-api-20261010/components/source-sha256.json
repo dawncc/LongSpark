@@ -1,0 +1,9 @@
+{
+  "vendor/vllm/longspark_vllm/native_v2/commit_kernel.py": "0952a61412b90b31a613aebb86a880262e6901b00a5533345c7994c449dba29b",
+  "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "064db516ea2623e81dd8735384ba24a90ecae2ac6b53b4594ca13e702da56761",
+  "vendor/vllm/longspark_vllm/native_v2/speculator.py": "6a201bab082895b2b6c7b88cf47c2821eef42155a27b8dcd1659df04dc1f90d1",
+  "vendor/vllm/longspark_vllm/native_v2/state.py": "9b8093777f6c2491d77f0450669a64f139a26235dfe27ead274c46319237ef3a",
+  "vendor/vllm/tests/test_native_v2_commit_gpu.py": "c3af40439a0b51ad90b6804660b8266e8ed39bd45ce69dd4edcb968c48ee9cb4",
+  "vendor/vllm/tests/test_native_v2_gather_gpu.py": "8ca37218558e52d56dc9b6d53b707e59f7ca00ad3783a42f6223f6acdbbfdbd6",
+  "vendor/vllm/tests/test_native_v2_state.py": "e682f70a2b9206ba53f27c168b4b2f96701fa28717ffc318b6a42af215689337"
+}

@@ -30,6 +30,10 @@ class LongSparkSpeculator(DraftModelSpeculator):
         super().__init__(vllm_config, device)
         options = vllm_config.additional_config.get("longspark", {})
         self.draft_path = Path(options["draft_model"])
+        self._use_fused_state_commit = options.get("use_fused_state_commit", True)
+        self._use_direct_gather = options.get("use_direct_gather", True)
+        if not isinstance(self._use_fused_state_commit, bool) or not isinstance(self._use_direct_gather, bool):
+            raise ValueError("LongSpark performance switches must be booleans")
         checkpoint = json.loads((self.draft_path / "config.json").read_text())
         self.layer_ids = list(checkpoint["target_layer_ids"])
         if self.layer_ids != sorted(set(self.layer_ids)):
@@ -92,6 +96,7 @@ class LongSparkSpeculator(DraftModelSpeculator):
             str(self.draft_path), target_model, self.hf_config,
             max_num_reqs=2 * self.max_num_reqs, device=self.device,
         )
+        self.state.use_fused_commit = self._use_fused_state_commit
         self._target_attention = [target_model.model.layers[i].self_attn.attn for i in self.layer_ids]
         layers = len(self.layer_ids)
         kv_heads = int(self.hf_config.num_key_value_heads)
@@ -192,13 +197,19 @@ class LongSparkSpeculator(DraftModelSpeculator):
         # Fuse the repeatedly used decode shapes. Keep variable-size prefill
         # on the reference path to avoid a first-time Triton compile per prompt.
         gather = gather_target_context
+        gather_kwargs = {}
         if int(input_batch.num_scheduled_tokens.max()) <= 8:
             gather = fused_gather_target_context
             self._fused_gather_calls += 1
+            if self._use_direct_gather:
+                gather_kwargs["output_buffers"] = (
+                    self._keys[:batch], self._values[:batch], self._hidden[:batch],
+                    self._starts[:batch], self._counts[:batch],
+                )
         else:
             self._reference_gather_calls += 1
         keys, values, hidden, starts, counts, width = gather(
-            self, input_batch, slot_mappings, last_hidden_states, aux_hidden_states, num_rejected,
+            self, input_batch, slot_mappings, last_hidden_states, aux_hidden_states, num_rejected, **gather_kwargs,
         )
         self._idx[:batch].copy_(idx)
         anchors = last_sampled.reshape(self.max_num_reqs, -1)[idx, 0]
@@ -212,13 +223,14 @@ class LongSparkSpeculator(DraftModelSpeculator):
             self.state.update(idx, keys, values, hidden, starts, counts)
         else:
             self._decode_calls += 1
-            self._keys[:batch].zero_()
-            self._values[:batch].zero_()
-            self._keys[:batch, :, :width].copy_(keys)
-            self._values[:batch, :, :width].copy_(values)
-            self._hidden[:batch].copy_(hidden)
-            self._starts[:batch].copy_(starts)
-            self._counts[:batch].copy_(counts)
+            if not self._use_direct_gather:
+                self._keys[:batch].zero_()
+                self._values[:batch].zero_()
+                self._keys[:batch, :, :width].copy_(keys)
+                self._values[:batch, :, :width].copy_(values)
+                self._hidden[:batch].copy_(hidden)
+                self._starts[:batch].copy_(starts)
+                self._counts[:batch].copy_(counts)
         manager = self._graph_manager
         if manager is None:
             raise RuntimeError("Native LongSpark graph manager was not initialized")
@@ -244,6 +256,8 @@ class LongSparkSpeculator(DraftModelSpeculator):
             prefill_calls=self._prefill_calls, decode_calls=self._decode_calls, dummy_calls=self._dummy_calls,
             startup_complete=self._startup_complete, startup_eager_calls=self._startup_eager_calls,
             context_gather="triton_decode_reference_prefill",
+            direct_gather=self._use_direct_gather,
+            fused_state_commit=self._use_fused_state_commit,
             fused_gather_calls=self._fused_gather_calls, reference_gather_calls=self._reference_gather_calls,
             cuda_graph_manager=type(manager).__module__ + "." + type(manager).__name__ if manager else None,
             selected_target_layers=self.layer_ids, draft_tokens=7,

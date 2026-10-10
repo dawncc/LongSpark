@@ -1,0 +1,1 @@
+{"error": {"message": "LongSpark V2 requires temperature=0.0.", "type": "invalid_request_error", "param": "temperature", "code": "unsupported_longspark_request"}}

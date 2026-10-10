@@ -1,0 +1,1 @@
+{"error": {"message": "LongSpark V2 requires repetition_penalty=1.0.", "type": "invalid_request_error", "param": "repetition_penalty", "code": "unsupported_longspark_request"}}

@@ -1,0 +1,160 @@
+{
+  "status": "completed",
+  "method": "longspark",
+  "llm_options": {
+    "model": "/data/lpf/models/Qwen3-4B",
+    "dtype": "bfloat16",
+    "tensor_parallel_size": 1,
+    "max_model_len": 4096,
+    "max_num_seqs": 1,
+    "max_num_batched_tokens": 512,
+    "kv_cache_memory_bytes": 2147483648,
+    "enforce_eager": false,
+    "enable_prefix_caching": false,
+    "enable_chunked_prefill": true,
+    "async_scheduling": true,
+    "disable_log_stats": false,
+    "seed": 0,
+    "generation_config": "auto",
+    "trust_remote_code": false,
+    "attention_config": {
+      "backend": "FLASH_ATTN"
+    },
+    "cudagraph_metrics": true,
+    "worker_extension_cls": "longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics",
+    "compilation_config": {
+      "cudagraph_mode": "FULL_AND_PIECEWISE"
+    },
+    "per_request_spec_decode_metrics": "detailed",
+    "speculative_config": {
+      "method": "custom_class",
+      "model": "longspark_vllm.native_v2.speculator.LongSparkSpeculator",
+      "num_speculative_tokens": 7,
+      "draft_sample_method": "greedy"
+    },
+    "additional_config": {
+      "native_v2_custom_class": true,
+      "longspark": {
+        "draft_model": "/data/chenchen/codex/LongSpark/models/4B/longspark"
+      }
+    }
+  },
+  "integration_source_hashes": {
+    "vendor/specforge/modeling/draft/draftfreekv.py": "4f7166dd276bec0e726644153dd55157616f14deab615bac9328717f6085a755",
+    "vendor/specforge/modeling/draft/draftfreekv_validation.py": "11b80a84b25c7a6820bc5e23b8f4d577e37bbd209559f4e77d1ca56b1fdb891d",
+    "vendor/specforge/modeling/draft/global16_raw256.py": "b881bb90b2ab32e8194446b4c32bd1c301893307bfaabb2f0f9c523b73593409",
+    "vendor/specforge/modeling/draft/global16_raw256_training.py": "e61ca2b4a9434c76b3da1bd83e01b91eec6d34575d8d01399f3272228b71f62d",
+    "vendor/vllm/longspark_vllm/gsm8k.py": "a6835966cde4a6d43bedc003c4da45ceabd14daeb56e5bed307059139e7e4289",
+    "vendor/vllm/longspark_vllm/native_v2/__init__.py": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79",
+    "vendor/vllm/longspark_vllm/native_v2/diagnostics.py": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510",
+    "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "6ccbca9c9325b8f2a25a9f377ebd31e410b54d500fc29904d0fa57e7f2fba4d5",
+    "vendor/vllm/longspark_vllm/native_v2/inputs.py": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be",
+    "vendor/vllm/longspark_vllm/native_v2/speculator.py": "449b39dcb09dbe29e5346c58fba3fa720c0f0249e2cbeb46c103b96227ec77ac",
+    "vendor/vllm/longspark_vllm/native_v2/startup.py": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a",
+    "vendor/vllm/longspark_vllm/native_v2/state.py": "4659867c258fee7945a921440eb3970671831b3c328c55facf3ca0b4a478a863",
+    "vendor/vllm/longspark_vllm/native_v2/target_modules.py": "ae5b688af3c6862f3f36d9fa4746ea7ba8dfdabd5f477d9364b403d0dae6508e",
+    "vendor/vllm/patches/native-v2-custom-class.manifest.json": "1ad2c1aa4b284ca5e17a47a85120606246ee2835c3f810e99e443d0b8c878ac7",
+    "vendor/vllm/scripts/evaluate_native_v2_gsm8k.py": "12794543801f9537d81f3d2308c7d2590d7249ad6809de9e5c27c9281d5dc6a0"
+  },
+  "integration_sources_verified_before_load": true,
+  "eos": {
+    "effective_token_ids": [
+      151643,
+      151645
+    ],
+    "selected_source": "generation_config.json:eos_token_id",
+    "sources": {
+      "generation_config.json:eos_token_id": [
+        151643,
+        151645
+      ],
+      "config.json:eos_token_id": [
+        151645
+      ],
+      "tokenizer:eos_token_id": [
+        151645
+      ],
+      "tokenizer:eos_token_ids": [
+        151645
+      ]
+    },
+    "generation_config_present": true
+  },
+  "environment": {
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "executable": "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/bin/python",
+    "vllm": "0.30.0+cu129",
+    "torch": "2.13.0+cu129",
+    "pid": 3239535,
+    "cuda_visible_devices": "0",
+    "vllm_use_v2_model_runner": "1",
+    "vllm_use_flashinfer_sampler": "0",
+    "vllm_batch_invariant": "1"
+  },
+  "after_load": [
+    {
+      "runner_class": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+      "use_v2_model_runner": true,
+      "async_scheduling": true,
+      "target": {
+        "manager_class": "vllm.v1.worker.gpu.cudagraph_utils.ModelCudaGraphManager",
+        "captures": 1,
+        "captured_shapes": [
+          "BatchExecutionDescriptor(cg_mode=<CUDAGraphMode.FULL: 2>, num_tokens=8, num_reqs=1, uniform_token_count=8, max_query_len=None, num_active_loras=0, num_ubatches=1)"
+        ]
+      },
+      "speculator_class": "longspark_vllm.native_v2.speculator.LongSparkSpeculator",
+      "speculator": {
+        "implementation": "longspark_native_model_runner_v2",
+        "captures": 1,
+        "replays": 0,
+        "fallbacks": 0,
+        "prefill_calls": 1,
+        "decode_calls": 2,
+        "dummy_calls": 1,
+        "startup_complete": true,
+        "startup_eager_calls": 3,
+        "context_gather": "triton_decode_reference_prefill",
+        "fused_gather_calls": 2,
+        "reference_gather_calls": 1,
+        "cuda_graph_manager": "vllm.v1.worker.gpu.cudagraph_utils.CudaGraphManager",
+        "selected_target_layers": [
+          0,
+          9,
+          18,
+          26,
+          35
+        ],
+        "draft_tokens": 7,
+        "target_forward_owned_by": "vllm.v1.worker.gpu.model_runner.GPUModelRunner",
+        "graph_batch_sizes": [
+          1
+        ],
+        "graph_batch_coverage": [
+          1
+        ],
+        "prefill_workspace_budget": {
+          "bytes": 91554400,
+          "max_batch": 1,
+          "padded_width": 512,
+          "gather_bytes": 21049408,
+          "update_bytes": 57999968,
+          "update_terms": {
+            "input_and_clean_kv": 20971520,
+            "attention_scores": 20971520,
+            "global_outputs": 7864320,
+            "scalar_statistics": 163840,
+            "raw_ring": 7864320,
+            "boundary_hidden": 102400,
+            "indices_masks": 62048
+          },
+          "allocator_library_margin_bytes": 33554432,
+          "policy": "bf16_rectangular_gather_and_fp32_global16_update_v1"
+        },
+        "profile_budget_checks": 1,
+        "post_capture_budget_checks": 1
+      }
+    }
+  ],
+  "measured_requests": 100
+}

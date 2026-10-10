@@ -237,6 +237,14 @@ class LongSparkState:
         old_output = torch.where(reset[:, None, None, None, None], 0, old_output)
         old_lse = torch.where(reset[:, None, None, None], float("-inf"), old_lse)
         output, lse = merge_normalized_attention(((old_output, old_lse), _normalized(statistics)))
+        # Keep the attention contractions and normalization above unchanged.
+        # Fuse only the final indexed stores; this removes staging allocations
+        # and preserves every committed BF16/FP32 bit. The reference switch is
+        # useful for GPU regression tests and paired performance measurements.
+        if self.device.type == "cuda" and getattr(self, "use_fused_commit", True):
+            from .commit_kernel import fused_commit_state
+            fused_commit_state(self, slots, keys, values, hidden, starts, counts, output, lse)
+            return
         self.global_output.index_copy_(0, slots, torch.where(changed[:, None, None, None, None], output, old_output))
         self.global_lse.index_copy_(0, slots, torch.where(changed[:, None, None, None], lse, old_lse))
 

@@ -1,0 +1,32 @@
+[
+  {
+    "widths": [
+      1
+    ],
+    "staged_gpu_graph_ms": 0.013281632423400878,
+    "staged_eager_wall_ms": 0.12471741437911987,
+    "direct_gpu_graph_ms": 0.0029543681144714356,
+    "direct_eager_wall_ms": 0.06644919887185097
+  },
+  {
+    "widths": [
+      8
+    ],
+    "staged_gpu_graph_ms": 0.012007904052734376,
+    "staged_eager_wall_ms": 0.12202790752053261,
+    "direct_gpu_graph_ms": 0.003047424077987671,
+    "direct_eager_wall_ms": 0.06553875654935837
+  },
+  {
+    "widths": [
+      8,
+      3,
+      1,
+      7
+    ],
+    "staged_gpu_graph_ms": 0.012191328048706054,
+    "staged_eager_wall_ms": 0.1250617690384388,
+    "direct_gpu_graph_ms": 0.0031647679805755615,
+    "direct_eager_wall_ms": 0.06767415627837181
+  }
+]

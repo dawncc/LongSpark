@@ -1,0 +1,1 @@
+{"error": {"message": "LongSpark V2 requires min_tokens=0.", "type": "invalid_request_error", "param": "min_tokens", "code": "unsupported_longspark_request"}}

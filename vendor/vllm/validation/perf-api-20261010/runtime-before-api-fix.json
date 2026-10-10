@@ -1,0 +1,52 @@
+{
+  "host": "rl10",
+  "repo": "/data/chenchen/codex/LongSpark",
+  "python": "3.12.3",
+  "packages": {
+    "vllm": "0.30.0+cu129",
+    "torch": "2.13.0+cu129",
+    "triton": "3.7.1",
+    "transformers": "5.12.1"
+  },
+  "gpus": [
+    "0, NVIDIA L20X, 570.172.08, 143771 MiB",
+    "1, NVIDIA L20X, 570.172.08, 143771 MiB",
+    "2, NVIDIA L20X, 570.172.08, 143771 MiB",
+    "3, NVIDIA L20X, 570.172.08, 143771 MiB",
+    "4, NVIDIA L20X, 570.172.08, 143771 MiB",
+    "5, NVIDIA L20X, 570.172.08, 143771 MiB",
+    "6, NVIDIA L20X, 570.172.08, 143771 MiB",
+    "7, NVIDIA L20X, 570.172.08, 143771 MiB"
+  ],
+  "code_sha256": {
+    "vendor/vllm/longspark_vllm/__init__.py": "d3e1470e777d0d1c935948d32267067a8c8945a9030ee9b3ae6ae1c8fb0c459e",
+    "vendor/vllm/longspark_vllm/gsm8k.py": "a6835966cde4a6d43bedc003c4da45ceabd14daeb56e5bed307059139e7e4289",
+    "vendor/vllm/longspark_vllm/native_v2/__init__.py": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79",
+    "vendor/vllm/longspark_vllm/native_v2/commit_kernel.py": "0952a61412b90b31a613aebb86a880262e6901b00a5533345c7994c449dba29b",
+    "vendor/vllm/longspark_vllm/native_v2/diagnostics.py": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510",
+    "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "064db516ea2623e81dd8735384ba24a90ecae2ac6b53b4594ca13e702da56761",
+    "vendor/vllm/longspark_vllm/native_v2/inputs.py": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be",
+    "vendor/vllm/longspark_vllm/native_v2/speculator.py": "6a201bab082895b2b6c7b88cf47c2821eef42155a27b8dcd1659df04dc1f90d1",
+    "vendor/vllm/longspark_vllm/native_v2/startup.py": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a",
+    "vendor/vllm/longspark_vllm/native_v2/state.py": "9b8093777f6c2491d77f0450669a64f139a26235dfe27ead274c46319237ef3a",
+    "vendor/vllm/longspark_vllm/native_v2/target_modules.py": "ae5b688af3c6862f3f36d9fa4746ea7ba8dfdabd5f477d9364b403d0dae6508e",
+    "vendor/vllm/longspark_vllm/serving.py": "011d492d67eb18ed114ef5028360643a231c0181bff888c095542e9c806a7c6f",
+    "vendor/vllm/scripts/audit_native_v2_gsm8k.py": "64e96104a361cf63a27742a1ff47f458bd8fc357850505abab795d759e3a1ed7",
+    "vendor/vllm/scripts/evaluate_native_v2_gsm8k.py": "5a9b47a1a8f175a418c546be22bdaff1c8d50042216598c7790dc524506796df",
+    "vendor/vllm/scripts/install_native_v2_patch.py": "40c7758a27b6a738ea761a3b0a578a00927fb2fefa62f4a1b900ef7396a9d336",
+    "vendor/vllm/scripts/serve_native_v2.py": "0f0b7c67797e939ec61ae217b74d5cc12c45479d4efd6f70580e99e2999f087a",
+    "vendor/vllm/scripts/tokenize_gsm8k.py": "8e9718f96566fa277047da58e5c001fb9c41f9a643fbf9c5514df17c59c5d51b",
+    "vendor/vllm/scripts/validate_native_v2_api.py": "87fbafc8332c92facacb65325eebf0254f6cb965a614284161202502efe8b2f1",
+    "vendor/vllm/tests/test_gsm8k.py": "9eef4f579dca1901ca852e6294d57672b3f02e32c7d263eb0f1567f0f53aa86a",
+    "vendor/vllm/tests/test_native_v2_api_validation.py": "fc6fa033f05f7b3a754d88af2ecec4e1df3c8edc3600c4c904d6b240d95a99ca",
+    "vendor/vllm/tests/test_native_v2_auditor.py": "6f17fbd42665861702494020781f8b35de5b0f96f03244779a772ad676fd83b3",
+    "vendor/vllm/tests/test_native_v2_commit_gpu.py": "c3af40439a0b51ad90b6804660b8266e8ed39bd45ce69dd4edcb968c48ee9cb4",
+    "vendor/vllm/tests/test_native_v2_gather_gpu.py": "8ca37218558e52d56dc9b6d53b707e59f7ca00ad3783a42f6223f6acdbbfdbd6",
+    "vendor/vllm/tests/test_native_v2_gsm8k_runner.py": "1a9933d99f631a209e2317e424747ce1d9c79112bf17c5360a3daeda35673375",
+    "vendor/vllm/tests/test_native_v2_inputs.py": "faa730e66fc98ebbd441d1bf87eb7c410c2ed26a916003666b56d3c6f40f2adf",
+    "vendor/vllm/tests/test_native_v2_patch_installer.py": "5f14b1ee886d48f4440a404090672d966a8261adb303df2a62f4ee68dd08ec87",
+    "vendor/vllm/tests/test_native_v2_serving.py": "edab4d554b2b0bfdbf415e3d4c9e24453bc53b249b7d9f9b34f673d1dd8f2339",
+    "vendor/vllm/tests/test_native_v2_startup.py": "bd315fd1626e2cd2896bfbb2bfb6da45a3ee7c081311a4da36e6bd1abc5117fd",
+    "vendor/vllm/tests/test_native_v2_state.py": "e682f70a2b9206ba53f27c168b4b2f96701fa28717ffc318b6a42af215689337"
+  }
+}

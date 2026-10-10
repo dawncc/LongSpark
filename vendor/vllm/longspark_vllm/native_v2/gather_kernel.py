@@ -24,7 +24,7 @@ def _gather_context_kernel(
     QUERY_STRIDE: tl.constexpr, REJECTED_STRIDE: tl.constexpr,
     POSITION_STRIDE: tl.constexpr, POSITION_ROWS: tl.constexpr,
     HIDDEN_ROWS: tl.constexpr,
-    LAYERS: tl.constexpr, WIDTH: tl.constexpr, KV_HEADS: tl.constexpr,
+    LAYERS: tl.constexpr, WIDTH: tl.constexpr, INPUT_WIDTH: tl.constexpr, KV_HEADS: tl.constexpr,
     HEAD_DIM: tl.constexpr, HIDDEN_SIZE: tl.constexpr, BLOCK: tl.constexpr,
 ):
     tile, batch, layer_id = tl.program_id(0), tl.program_id(1), tl.program_id(2)
@@ -34,7 +34,7 @@ def _gather_context_kernel(
     count = end - begin - reject_count
     valid_range = ((begin >= 0) & (begin < POSITION_ROWS)
                    & (end >= begin) & (end <= POSITION_ROWS)
-                   & (reject_count >= 0) & (count >= 0) & (count <= WIDTH))
+                   & (reject_count >= 0) & (count >= 0) & (count <= INPUT_WIDTH))
     tl.device_assert(valid_range, "Invalid native LongSpark query/rejection range")
     start = tl.load(positions + begin * POSITION_STRIDE, mask=valid_range, other=0)
     if (tile == 0) & (layer_id == 0):
@@ -86,10 +86,12 @@ def _gather_context_kernel(
 
 
 def fused_gather_target_context(owner, input_batch, slot_mappings,
-                                last_hidden_states, aux_hidden_states, num_rejected):
+                                last_hidden_states, aux_hidden_states, num_rejected, *, output_buffers=None):
     """Return ``keys, values, hidden, starts, counts, width`` as in inputs.py.
 
-    Outputs own their storage. All cache/hidden/index strides are passed to the
+    Without output_buffers, outputs own their storage. Optional validated decode
+    buffers write directly into the fixed-width CUDA-graph inputs. All input
+    cache/hidden/index strides are passed to the
     kernel; no contiguous copy or CPU accepted-length synchronization occurs.
     ``width`` alone comes from the native scheduler's CPU upper bound.
     Device assertions are explicitly enabled, independent of TRITON_DEBUG.
@@ -128,15 +130,29 @@ def fused_gather_target_context(owner, input_batch, slot_mappings,
             or input_batch.positions.numel() < 1 or last_hidden_states.shape[0] < 1):
         raise ValueError("Native gather index buffers are too short")
     layers = len(caches)
-    shape = (batch, layers, width, kv_heads, owner.head_dim)
-    keys = torch.empty(shape, dtype=dtype, device=device)
-    values = torch.empty_like(keys)
-    hidden = torch.empty((batch, layers, hidden_size),
-                         dtype=last_hidden_states.dtype, device=device)
-    starts = torch.empty(batch, dtype=torch.int64, device=device)
-    counts = torch.empty_like(starts)
+    output_width = width
+    if output_buffers is None:
+        shape = (batch, layers, width, kv_heads, owner.head_dim)
+        keys = torch.empty(shape, dtype=dtype, device=device)
+        values = torch.empty_like(keys)
+        hidden = torch.empty((batch, layers, hidden_size),
+                             dtype=last_hidden_states.dtype, device=device)
+        starts = torch.empty(batch, dtype=torch.int64, device=device)
+        counts = torch.empty_like(starts)
+    else:
+        if width > 8 or len(output_buffers) != 5:
+            raise ValueError("Direct LongSpark gather requires five fixed-width decode buffers")
+        keys, values, hidden, starts, counts = output_buffers
+        output_width = 8
+        shapes = ((batch, layers, 8, kv_heads, owner.head_dim),) * 2 + (
+            (batch, layers, hidden_size), (batch,), (batch,))
+        dtypes = (dtype, dtype, last_hidden_states.dtype, torch.int64, torch.int64)
+        if any(t.shape != shape or t.dtype != expected_dtype or t.device != device
+               or not t.is_contiguous()
+               for t, shape, expected_dtype in zip(output_buffers, shapes, dtypes)):
+            raise ValueError("Direct LongSpark gather buffer shape, dtype, device or layout differs")
     block = 256
-    tiles = triton.cdiv(max(width * kv_heads * owner.head_dim, hidden_size), block)
+    tiles = triton.cdiv(max(output_width * kv_heads * owner.head_dim, hidden_size), block)
     _gather_context_kernel[(tiles, batch, layers)](
         caches, slots, hidden_inputs,
         input_batch.query_start_loc, num_rejected, input_batch.positions,
@@ -151,7 +167,7 @@ def fused_gather_target_context(owner, input_batch, slot_mappings,
         REJECTED_STRIDE=num_rejected.stride(0),
         POSITION_STRIDE=input_batch.positions.stride(0),
         POSITION_ROWS=input_batch.positions.numel(),
-        HIDDEN_ROWS=last_hidden_states.shape[0], LAYERS=layers, WIDTH=width,
+        HIDDEN_ROWS=last_hidden_states.shape[0], LAYERS=layers, WIDTH=output_width, INPUT_WIDTH=width,
         KV_HEADS=kv_heads, HEAD_DIM=owner.head_dim, HIDDEN_SIZE=hidden_size,
         BLOCK=block, num_warps=4, debug=True,
     )

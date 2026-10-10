@@ -1,0 +1,22 @@
+{
+  "model": "longspark-qwen3-4b",
+  "temperature": 0,
+  "top_p": 1,
+  "n": 1,
+  "max_tokens": 1024,
+  "return_token_ids": true,
+  "seed": 0,
+  "stream": true,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Solve the following math problem step by step. Your final line must be four hashes, a space, and the numeric answer. Do not put units, XML tags, or Markdown formatting on the final line.\nFor example:\n#### 42\n\nJosh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repairs.  This increased the value of the house by 150%.  How much profit did he make?"
+    }
+  ],
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "stream_options": {
+    "include_usage": true
+  }
+}

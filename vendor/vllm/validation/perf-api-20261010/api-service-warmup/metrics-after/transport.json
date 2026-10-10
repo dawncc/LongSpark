@@ -1,0 +1,15 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 10 Oct 2026 02:49:36 GMT",
+    "server": "uvicorn",
+    "content-length": "59146",
+    "content-type": "text/plain; version=1.0.0; charset=utf-8",
+    "vary": "Origin",
+    "connection": "close"
+  },
+  "start": 17663597.650833268,
+  "end": 17663597.65815537,
+  "seconds": 0.007322102785110474,
+  "line_timings": []
+}

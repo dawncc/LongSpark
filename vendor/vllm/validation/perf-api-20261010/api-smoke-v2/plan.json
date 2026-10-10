@@ -1,0 +1,21 @@
+{
+  "base_url": "http://127.0.0.1:18080",
+  "model": "longspark-qwen3-4b",
+  "input": "/data/chenchen/codex/LongSpark/vendor/vllm/validation/gsm8k100/inputs.jsonl",
+  "baseline": "artifacts/perf-api-20261010/baseline-c1/vanilla/records.jsonl",
+  "output": "artifacts/perf-api-20261010/api-smoke-v2",
+  "limit": 3,
+  "concurrency": 4,
+  "max_new_tokens": 1024,
+  "max_model_len": 4096,
+  "timeout": 120,
+  "metrics_settle_seconds": 2.0,
+  "eos_token_ids": null,
+  "check_unsupported": true,
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "api_key_configured": false,
+  "baseline_sha256": "ff8e96bf5f42cd251bf3658949730d59abc97185e9c18e863b5a3ab762230b5e",
+  "timing_definition": "Client wall time including HTTP serialization, scheduling and network",
+  "metrics_scope": "Dedicated server required: /metrics counters are server-global",
+  "source_sha256": "87fbafc8332c92facacb65325eebf0254f6cb965a614284161202502efe8b2f1"
+}

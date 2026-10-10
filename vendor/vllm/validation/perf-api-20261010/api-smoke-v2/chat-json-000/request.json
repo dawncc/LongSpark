@@ -1,0 +1,19 @@
+{
+  "model": "longspark-qwen3-4b",
+  "temperature": 0,
+  "top_p": 1,
+  "n": 1,
+  "max_tokens": 1024,
+  "return_token_ids": true,
+  "seed": 0,
+  "stream": false,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Solve the following math problem step by step. Your final line must be four hashes, a space, and the numeric answer. Do not put units, XML tags, or Markdown formatting on the final line.\nFor example:\n#### 42\n\nJanet’s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?"
+    }
+  ],
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  }
+}

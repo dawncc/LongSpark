@@ -1,0 +1,72 @@
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"Josh","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":[151644,872,198,50,3948,279,2701,6888,3491,3019,553,3019,13,4615,1590,1555,1969,387,3040,50257,11,264,3550,11,323,279,24064,4226,13,3155,537,2182,8153,11,11874,9492,11,476,73192,36566,389,279,1590,1555,624,2461,3110,510,820,220,19,17,271,50744,27627,311,1430,64661,264,3753,13,220,1260,49531,264,3753,369,400,23,15,11,15,15,15,323,1221,9521,304,400,20,15,11,15,15,15,304,30186,13,220,1096,7172,279,897,315,279,3753,553,220,16,20,15,14360,220,2585,1753,11372,1521,566,1281,30,151645,198,151644,77091,198,151667,271,151668,271],"token_ids":[50744]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" buys a house for","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[49531,264,3753,369]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" $80,000 and","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[400,23,15,11,15,15,15,323]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" spends $50,000","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[37102,400,20,15,11,15,15,15]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" on repairs. The total cost","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[389,30186,13,576,2790,2783]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" is","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[374]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":":\n\n$$\n80,00","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[1447,14085,198,23,15,11,15,15]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"0 + 50,00","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,488,220,20,15,11,15,15]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"0 = 130,0","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,284,220,16,18,15,11,15]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"00\n$$\n\nThe","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,15,198,14085,271,785]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" repairs increased the value","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[30186,7172,279,897]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" of the house by 150","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[315,279,3753,553,220,16,20,15]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"%. This means the value","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[14360,1096,3363,279,897]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" of the house after","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[315,279,3753,1283]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" repairs is:\n\n$$\n8","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[30186,374,1447,14085,198,23]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"0,000 + (1","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,11,15,15,15,488,320,16]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"50\\","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[20,15,59]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"% \\text{ of } 8","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[4,1124,1318,90,315,335,220,23]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"0,000) = ","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,11,15,15,15,8,284,220]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"80,000 + ","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[23,15,11,15,15,15,488,220]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"12","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[16,17]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"0,000 = 2","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,11,15,15,15,284,220,17]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"00,000\n$$","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,15,11,15,15,15,198,14085]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"\n\nNow, we calculate the profit","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[271,7039,11,582,11047,279,11372]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" by","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[553]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" subtracting the total","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[32256,287,279,2790]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" cost from the final","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[2783,504,279,1590]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" value:\n\n","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[897,1447]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"$$\n200,00","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[14085,198,17,15,15,11,15,15]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"0 - 130,0","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,481,220,16,18,15,11,15]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"00 = 70,0","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,15,284,220,22,15,11,15]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"00\n$$\n\n####","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[15,15,198,14085,271,820]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":" ","logprobs":null,"finish_reason":null,"stop_reason":null,"prompt_token_ids":null,"token_ids":[220]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[{"index":0,"text":"70000","logprobs":null,"finish_reason":"stop","stop_reason":null,"prompt_token_ids":null,"token_ids":[22,15,15,15,15,151645]}]}
+
+data: {"id":"cmpl-b26d5d7e106ff3cd","object":"text_completion","created":1791600327,"model":"longspark-qwen3-4b","choices":[],"usage":{"prompt_tokens":119,"total_tokens":312,"completion_tokens":193},"system_fingerprint":"vllm-0.30.0-nohash"}
+
+data: [DONE]
+

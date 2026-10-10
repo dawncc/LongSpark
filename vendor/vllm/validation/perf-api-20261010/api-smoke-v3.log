@@ -1,0 +1,266 @@
+{
+  "passed": true,
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "unique_examples": 3,
+  "successful_generations": 17,
+  "correct_generations": 17,
+  "baseline_exact_token_parity": true,
+  "json_sse_chat_completion_exact_parity": true,
+  "concurrent_requests": 4,
+  "max_client_overlap": 4,
+  "max_observed_server_running": 4.0,
+  "concurrency_note": "Client overlap is proven; short-lived server metrics may lag. Use native worker max_decode_batch_size audit to prove GPU batching.",
+  "rejection_cases": [
+    {
+      "case": "reject-completion-temperature",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires temperature=0.0.",
+          "type": "invalid_request_error",
+          "param": "temperature",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-completion-top_p",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires top_p=1.0.",
+          "type": "invalid_request_error",
+          "param": "top_p",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-completion-repetition_penalty",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires repetition_penalty=1.0.",
+          "type": "invalid_request_error",
+          "param": "repetition_penalty",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-completion-n",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires n=1.",
+          "type": "invalid_request_error",
+          "param": "n",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-completion-min_tokens_with_many_stop_ids",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires min_tokens=0.",
+          "type": "invalid_request_error",
+          "param": "min_tokens",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-temperature",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires temperature=0.0.",
+          "type": "invalid_request_error",
+          "param": "temperature",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-top_p",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires top_p=1.0.",
+          "type": "invalid_request_error",
+          "param": "top_p",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-repetition_penalty",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires repetition_penalty=1.0.",
+          "type": "invalid_request_error",
+          "param": "repetition_penalty",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-n",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires n=1.",
+          "type": "invalid_request_error",
+          "param": "n",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    },
+    {
+      "case": "reject-chat-min_tokens_with_many_stop_ids",
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "LongSpark V2 requires min_tokens=0.",
+          "type": "invalid_request_error",
+          "param": "min_tokens",
+          "code": "unsupported_longspark_request"
+        }
+      }
+    }
+  ],
+  "acceptance": {
+    "available": true,
+    "verification_rounds": 425.0,
+    "proposed_tokens": 2975.0,
+    "accepted_tokens": 1798.0,
+    "accepted_per_round": 4.2305882352941175,
+    "tau": 5.2305882352941175,
+    "acceptance_rate": 0.6043697478991596,
+    "definition": "Server-global raw counter delta for this entire validation run; final EOS clipping is not applied"
+  },
+  "records": [
+    {
+      "case": "completion-json-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.5719797536730766,
+      "client_output_tps": 201.05606756446474
+    },
+    {
+      "case": "completion-sse-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.44062188640236855,
+      "client_output_tps": 260.99475207408085
+    },
+    {
+      "case": "chat-json-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.4413604475557804,
+      "client_output_tps": 260.55801020880097
+    },
+    {
+      "case": "chat-sse-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.43997715041041374,
+      "client_output_tps": 261.3772099135767
+    },
+    {
+      "case": "completion-json-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.30240460112690926,
+      "client_output_tps": 307.535003281815
+    },
+    {
+      "case": "completion-sse-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.30872761830687523,
+      "client_output_tps": 301.23641192203934
+    },
+    {
+      "case": "chat-json-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.3031379468739033,
+      "client_output_tps": 306.7910202568118
+    },
+    {
+      "case": "chat-sse-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.3023502975702286,
+      "client_output_tps": 307.59023803639013
+    },
+    {
+      "case": "completion-json-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.5714952796697617,
+      "client_output_tps": 337.7105758625425
+    },
+    {
+      "case": "completion-sse-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.571615919470787,
+      "client_output_tps": 337.63930189117735
+    },
+    {
+      "case": "chat-json-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.5732542760670185,
+      "client_output_tps": 336.67433119580704
+    },
+    {
+      "case": "chat-sse-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.5737366676330566,
+      "client_output_tps": 336.3912590705054
+    },
+    {
+      "case": "concurrent-000",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.42532700300216675,
+      "client_output_tps": 270.3801996775976
+    },
+    {
+      "case": "concurrent-001",
+      "source_id": "gsm8k-test-0001",
+      "correct": true,
+      "client_seconds": 0.3092278987169266,
+      "client_output_tps": 300.74906043692414
+    },
+    {
+      "case": "concurrent-002",
+      "source_id": "gsm8k-test-0002",
+      "correct": true,
+      "client_seconds": 0.5778920389711857,
+      "client_output_tps": 333.9724152345057
+    },
+    {
+      "case": "concurrent-003",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.4623131677508354,
+      "client_output_tps": 248.7491337516466
+    },
+    {
+      "case": "recovery-after-rejections",
+      "source_id": "gsm8k-test-0000",
+      "correct": true,
+      "client_seconds": 0.43775494396686554,
+      "client_output_tps": 262.704057566748
+    }
+  ]
+}

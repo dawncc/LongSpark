@@ -1,0 +1,58 @@
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}],"prompt_token_ids":[151644,872,198,50,3948,279,2701,6888,3491,3019,553,3019,13,4615,1590,1555,1969,387,3040,50257,11,264,3550,11,323,279,24064,4226,13,3155,537,2182,8153,11,11874,9492,11,476,73192,36566,389,279,1590,1555,624,2461,3110,510,820,220,19,17,271,18315,295,748,77778,10962,220,16,21,18805,817,1899,13,2932,49677,2326,369,17496,1449,6556,323,293,2050,54304,1330,369,1059,4780,1449,1899,448,3040,13,2932,30778,279,26313,518,279,20336,6,3081,7298,369,400,17,817,7722,35985,18636,13,2585,1753,304,11192,1558,1340,1281,1449,1899,518,279,20336,6,3081,30,151645,198,151644,77091,198,151667,271,151668,271],"prompt_text":null}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"Jan"},"logprobs":null,"finish_reason":null,"token_ids":[18315]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"et's ducks"},"logprobs":null,"finish_reason":null,"token_ids":[295,594,77778]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" lay "},"logprobs":null,"finish_reason":null,"token_ids":[10962,220]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"16 eggs per day.\n\n"},"logprobs":null,"finish_reason":null,"token_ids":[16,21,18805,817,1899,382]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"She eats 3 eggs for breakfast every"},"logprobs":null,"finish_reason":null,"token_ids":[7941,49677,220,18,18805,369,17496,1449]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" morning.\n\n"},"logprobs":null,"finish_reason":null,"token_ids":[6556,382]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"She bakes muff"},"logprobs":null,"finish_reason":null,"token_ids":[7941,293,2050,54304]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"ins using"},"logprobs":null,"finish_reason":null,"token_ids":[1330,1667]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" 4 eggs every day.\n\n"},"logprobs":null,"finish_reason":null,"token_ids":[220,19,18805,1449,1899,382]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"So, the number of eggs she uses"},"logprobs":null,"finish_reason":null,"token_ids":[4416,11,279,1372,315,18805,1340,5711]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" daily"},"logprobs":null,"finish_reason":null,"token_ids":[7298]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" is:\n$$\n3"},"logprobs":null,"finish_reason":null,"token_ids":[374,510,14085,198,18]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" + 4 = 7\n"},"logprobs":null,"finish_reason":null,"token_ids":[488,220,19,284,220,22,198]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"$$\n\nThe number of eggs remaining"},"logprobs":null,"finish_reason":null,"token_ids":[14085,271,785,1372,315,18805,9664]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" for"},"logprobs":null,"finish_reason":null,"token_ids":[369]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" sale"},"logprobs":null,"finish_reason":null,"token_ids":[6278]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" is:\n$$\n16 - "},"logprobs":null,"finish_reason":null,"token_ids":[374,510,14085,198,16,21,481,220]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"7 = 9\n$$\n\nShe"},"logprobs":null,"finish_reason":null,"token_ids":[22,284,220,24,198,14085,271,7941]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" sells each"},"logprobs":null,"finish_reason":null,"token_ids":[30778,1817]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" egg for $2,"},"logprobs":null,"finish_reason":null,"token_ids":[18636,369,400,17,11]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" so the total"},"logprobs":null,"finish_reason":null,"token_ids":[773,279,2790]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" amount she makes daily"},"logprobs":null,"finish_reason":null,"token_ids":[3311,1340,3643,7298]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":" is:\n$$\n9 \\times "},"logprobs":null,"finish_reason":null,"token_ids":[374,510,14085,198,24,1124,15136,220]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"2 = 18\n$$\n\n"},"logprobs":null,"finish_reason":null,"token_ids":[17,284,220,16,23,198,14085,271]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"#### "},"logprobs":null,"finish_reason":null,"token_ids":[820,220]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[{"index":0,"delta":{"content":"18"},"logprobs":null,"finish_reason":"stop","stop_reason":null,"token_ids":[16,23,151645]}]}
+
+data: {"id":"chatcmpl-aea38126ecd83b34","object":"chat.completion.chunk","created":1791600323,"model":"longspark-qwen3-4b","choices":[],"usage":{"prompt_tokens":127,"total_tokens":242,"completion_tokens":115},"system_fingerprint":"vllm-0.30.0-nohash"}
+
+data: [DONE]
+

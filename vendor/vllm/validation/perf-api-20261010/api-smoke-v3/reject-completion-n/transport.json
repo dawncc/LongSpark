@@ -1,0 +1,14 @@
+{
+  "status": 400,
+  "headers": {
+    "date": "Sat, 10 Oct 2026 02:45:27 GMT",
+    "server": "uvicorn",
+    "content-type": "application/json",
+    "content-length": "140",
+    "connection": "close"
+  },
+  "start": 17663349.1320615,
+  "end": 17663349.1324165,
+  "seconds": 0.0003550015389919281,
+  "line_timings": []
+}

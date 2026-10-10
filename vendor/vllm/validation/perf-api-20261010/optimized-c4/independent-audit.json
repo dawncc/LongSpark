@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "backend": "vllm_native_v2",
+  "directory": "/Users/cc/.codex/.chatgpt-projects/g-p-6abb23ffc6508191a06bb0a811f84656/LongSpark/vendor/vllm/validation/perf-api-20261010/optimized-c4",
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "required_requests_per_method": 100,
+  "verified_requests_per_method": {
+    "vanilla": 100,
+    "longspark": 100
+  },
+  "token_parity": {
+    "matches": 100,
+    "comparisons": 100,
+    "passed": true
+  },
+  "scoring": {
+    "vanilla": {
+      "correct": 96,
+      "incorrect": 4,
+      "unparsed": 0,
+      "accuracy": 0.96,
+      "eos_count": 100,
+      "truncated_count": 0
+    },
+    "longspark": {
+      "correct": 96,
+      "incorrect": 4,
+      "unparsed": 0,
+      "accuracy": 0.96,
+      "eos_count": 100,
+      "truncated_count": 0
+    }
+  },
+  "performance": {
+    "vanilla": {
+      "requests": 100,
+      "output_tokens": 21339,
+      "decode_tokens": 21239,
+      "service_seconds": 290.30497900024056,
+      "decode_seconds": 288.4520008713007,
+      "aggregate_service_tps": 73.50545648058733,
+      "aggregate_decode_tps": 73.6309678416003,
+      "verification_rounds": 0,
+      "proposed_tokens": 0,
+      "accepted_draft_tokens_raw": 0,
+      "accepted_draft_tokens_emitted": 0,
+      "mean_accepted_draft_tokens": null,
+      "tau": null,
+      "tau_raw": null,
+      "acceptance_rate": null,
+      "acceptance_rate_raw": null,
+      "effective_advance": null,
+      "generate_wall_seconds": 99.01979460194707,
+      "generate_wall_tps": 215.50236582272615,
+      "max_submitted_concurrency": 4
+    },
+    "longspark": {
+      "requests": 100,
+      "output_tokens": 21339,
+      "decode_tokens": 21239,
+      "service_seconds": 62.185945335775614,
+      "decode_seconds": 60.1862760707736,
+      "aggregate_service_tps": 343.14827707095515,
+      "aggregate_decode_tps": 352.887757584883,
+      "verification_rounds": 3711,
+      "proposed_tokens": 25977,
+      "accepted_draft_tokens_raw": 17536,
+      "accepted_draft_tokens_emitted": 17536,
+      "mean_accepted_draft_tokens": 4.725410940447318,
+      "tau": 5.725410940447318,
+      "tau_raw": 5.725410940447318,
+      "acceptance_rate": 0.6750587057781884,
+      "acceptance_rate_raw": 0.6750587057781884,
+      "effective_advance": 5.723255187281056,
+      "generate_wall_seconds": 21.760603982955217,
+      "generate_wall_tps": 980.6253547334691,
+      "max_submitted_concurrency": 4
+    }
+  },
+  "graphs": {
+    "vanilla": {
+      "target_replays": 7230,
+      "draft_replays": 0,
+      "captures_during_measurement": 0,
+      "decode_fallbacks": 0,
+      "max_dispatched_requests": 4,
+      "max_decode_requests": 4
+    },
+    "longspark": {
+      "target_replays": 1291,
+      "draft_replays": 1325,
+      "captures_during_measurement": 0,
+      "decode_fallbacks": 0,
+      "max_dispatched_requests": 4,
+      "max_decode_requests": 4
+    }
+  },
+  "aggregate_service_speedup": 4.668337474532657,
+  "scope": "Offline evidence consistency and exact token parity; no GPU execution or checkpoint authenticity certification"
+}

@@ -1,0 +1,842 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "backend": "vllm_native_v2",
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "requests": 200,
+  "integration_source_hashes": {
+    "vendor/specforge/modeling/draft/draftfreekv.py": "4f7166dd276bec0e726644153dd55157616f14deab615bac9328717f6085a755",
+    "vendor/specforge/modeling/draft/draftfreekv_validation.py": "11b80a84b25c7a6820bc5e23b8f4d577e37bbd209559f4e77d1ca56b1fdb891d",
+    "vendor/specforge/modeling/draft/global16_raw256.py": "b881bb90b2ab32e8194446b4c32bd1c301893307bfaabb2f0f9c523b73593409",
+    "vendor/specforge/modeling/draft/global16_raw256_training.py": "e61ca2b4a9434c76b3da1bd83e01b91eec6d34575d8d01399f3272228b71f62d",
+    "vendor/vllm/longspark_vllm/gsm8k.py": "a6835966cde4a6d43bedc003c4da45ceabd14daeb56e5bed307059139e7e4289",
+    "vendor/vllm/longspark_vllm/native_v2/__init__.py": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79",
+    "vendor/vllm/longspark_vllm/native_v2/commit_kernel.py": "0952a61412b90b31a613aebb86a880262e6901b00a5533345c7994c449dba29b",
+    "vendor/vllm/longspark_vllm/native_v2/diagnostics.py": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510",
+    "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "064db516ea2623e81dd8735384ba24a90ecae2ac6b53b4594ca13e702da56761",
+    "vendor/vllm/longspark_vllm/native_v2/inputs.py": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be",
+    "vendor/vllm/longspark_vllm/native_v2/speculator.py": "6a201bab082895b2b6c7b88cf47c2821eef42155a27b8dcd1659df04dc1f90d1",
+    "vendor/vllm/longspark_vllm/native_v2/startup.py": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a",
+    "vendor/vllm/longspark_vllm/native_v2/state.py": "9b8093777f6c2491d77f0450669a64f139a26235dfe27ead274c46319237ef3a",
+    "vendor/vllm/longspark_vllm/native_v2/target_modules.py": "ae5b688af3c6862f3f36d9fa4746ea7ba8dfdabd5f477d9364b403d0dae6508e",
+    "vendor/vllm/patches/native-v2-custom-class.manifest.json": "1ad2c1aa4b284ca5e17a47a85120606246ee2835c3f810e99e443d0b8c878ac7",
+    "vendor/vllm/scripts/evaluate_native_v2_gsm8k.py": "5a9b47a1a8f175a418c546be22bdaff1c8d50042216598c7790dc524506796df"
+  },
+  "greedy_parity_passed": true,
+  "parity": {
+    "passed": true,
+    "matches": 100,
+    "comparisons": 100,
+    "checks": [
+      {
+        "source_id": "gsm8k-test-0000",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 115,
+        "longspark_tokens": 115
+      },
+      {
+        "source_id": "gsm8k-test-0001",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 93,
+        "longspark_tokens": 93
+      },
+      {
+        "source_id": "gsm8k-test-0002",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 193,
+        "longspark_tokens": 193
+      },
+      {
+        "source_id": "gsm8k-test-0003",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 119,
+        "longspark_tokens": 119
+      },
+      {
+        "source_id": "gsm8k-test-0004",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 149,
+        "longspark_tokens": 149
+      },
+      {
+        "source_id": "gsm8k-test-0005",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 190,
+        "longspark_tokens": 190
+      },
+      {
+        "source_id": "gsm8k-test-0006",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 219,
+        "longspark_tokens": 219
+      },
+      {
+        "source_id": "gsm8k-test-0007",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 321,
+        "longspark_tokens": 321
+      },
+      {
+        "source_id": "gsm8k-test-0008",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 399,
+        "longspark_tokens": 399
+      },
+      {
+        "source_id": "gsm8k-test-0009",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 204,
+        "longspark_tokens": 204
+      },
+      {
+        "source_id": "gsm8k-test-0010",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 214,
+        "longspark_tokens": 214
+      },
+      {
+        "source_id": "gsm8k-test-0011",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 208,
+        "longspark_tokens": 208
+      },
+      {
+        "source_id": "gsm8k-test-0012",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 285,
+        "longspark_tokens": 285
+      },
+      {
+        "source_id": "gsm8k-test-0013",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 385,
+        "longspark_tokens": 385
+      },
+      {
+        "source_id": "gsm8k-test-0014",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 254,
+        "longspark_tokens": 254
+      },
+      {
+        "source_id": "gsm8k-test-0015",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 197,
+        "longspark_tokens": 197
+      },
+      {
+        "source_id": "gsm8k-test-0016",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 128,
+        "longspark_tokens": 128
+      },
+      {
+        "source_id": "gsm8k-test-0017",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 234,
+        "longspark_tokens": 234
+      },
+      {
+        "source_id": "gsm8k-test-0018",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 100,
+        "longspark_tokens": 100
+      },
+      {
+        "source_id": "gsm8k-test-0019",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 286,
+        "longspark_tokens": 286
+      },
+      {
+        "source_id": "gsm8k-test-0020",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 209,
+        "longspark_tokens": 209
+      },
+      {
+        "source_id": "gsm8k-test-0021",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 305,
+        "longspark_tokens": 305
+      },
+      {
+        "source_id": "gsm8k-test-0022",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 218,
+        "longspark_tokens": 218
+      },
+      {
+        "source_id": "gsm8k-test-0023",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 82,
+        "longspark_tokens": 82
+      },
+      {
+        "source_id": "gsm8k-test-0024",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 142,
+        "longspark_tokens": 142
+      },
+      {
+        "source_id": "gsm8k-test-0025",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 277,
+        "longspark_tokens": 277
+      },
+      {
+        "source_id": "gsm8k-test-0026",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 236,
+        "longspark_tokens": 236
+      },
+      {
+        "source_id": "gsm8k-test-0027",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 157,
+        "longspark_tokens": 157
+      },
+      {
+        "source_id": "gsm8k-test-0028",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 198,
+        "longspark_tokens": 198
+      },
+      {
+        "source_id": "gsm8k-test-0029",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 222,
+        "longspark_tokens": 222
+      },
+      {
+        "source_id": "gsm8k-test-0030",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 211,
+        "longspark_tokens": 211
+      },
+      {
+        "source_id": "gsm8k-test-0031",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 299,
+        "longspark_tokens": 299
+      },
+      {
+        "source_id": "gsm8k-test-0032",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 156,
+        "longspark_tokens": 156
+      },
+      {
+        "source_id": "gsm8k-test-0033",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 216,
+        "longspark_tokens": 216
+      },
+      {
+        "source_id": "gsm8k-test-0034",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 164,
+        "longspark_tokens": 164
+      },
+      {
+        "source_id": "gsm8k-test-0035",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 176,
+        "longspark_tokens": 176
+      },
+      {
+        "source_id": "gsm8k-test-0036",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 145,
+        "longspark_tokens": 145
+      },
+      {
+        "source_id": "gsm8k-test-0037",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 428,
+        "longspark_tokens": 428
+      },
+      {
+        "source_id": "gsm8k-test-0038",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 326,
+        "longspark_tokens": 326
+      },
+      {
+        "source_id": "gsm8k-test-0039",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 380,
+        "longspark_tokens": 380
+      },
+      {
+        "source_id": "gsm8k-test-0040",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 225,
+        "longspark_tokens": 225
+      },
+      {
+        "source_id": "gsm8k-test-0041",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 265,
+        "longspark_tokens": 265
+      },
+      {
+        "source_id": "gsm8k-test-0042",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 99,
+        "longspark_tokens": 99
+      },
+      {
+        "source_id": "gsm8k-test-0043",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 246,
+        "longspark_tokens": 246
+      },
+      {
+        "source_id": "gsm8k-test-0044",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 271,
+        "longspark_tokens": 271
+      },
+      {
+        "source_id": "gsm8k-test-0045",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 284,
+        "longspark_tokens": 284
+      },
+      {
+        "source_id": "gsm8k-test-0046",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 248,
+        "longspark_tokens": 248
+      },
+      {
+        "source_id": "gsm8k-test-0047",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 352,
+        "longspark_tokens": 352
+      },
+      {
+        "source_id": "gsm8k-test-0048",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 134,
+        "longspark_tokens": 134
+      },
+      {
+        "source_id": "gsm8k-test-0049",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 182,
+        "longspark_tokens": 182
+      },
+      {
+        "source_id": "gsm8k-test-0050",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 163,
+        "longspark_tokens": 163
+      },
+      {
+        "source_id": "gsm8k-test-0051",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 189,
+        "longspark_tokens": 189
+      },
+      {
+        "source_id": "gsm8k-test-0052",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 287,
+        "longspark_tokens": 287
+      },
+      {
+        "source_id": "gsm8k-test-0053",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 346,
+        "longspark_tokens": 346
+      },
+      {
+        "source_id": "gsm8k-test-0054",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 280,
+        "longspark_tokens": 280
+      },
+      {
+        "source_id": "gsm8k-test-0055",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 102,
+        "longspark_tokens": 102
+      },
+      {
+        "source_id": "gsm8k-test-0056",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 105,
+        "longspark_tokens": 105
+      },
+      {
+        "source_id": "gsm8k-test-0057",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 269,
+        "longspark_tokens": 269
+      },
+      {
+        "source_id": "gsm8k-test-0058",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 265,
+        "longspark_tokens": 265
+      },
+      {
+        "source_id": "gsm8k-test-0059",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 114,
+        "longspark_tokens": 114
+      },
+      {
+        "source_id": "gsm8k-test-0060",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 197,
+        "longspark_tokens": 197
+      },
+      {
+        "source_id": "gsm8k-test-0061",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 135,
+        "longspark_tokens": 135
+      },
+      {
+        "source_id": "gsm8k-test-0062",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 289,
+        "longspark_tokens": 289
+      },
+      {
+        "source_id": "gsm8k-test-0063",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 245,
+        "longspark_tokens": 245
+      },
+      {
+        "source_id": "gsm8k-test-0064",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 183,
+        "longspark_tokens": 183
+      },
+      {
+        "source_id": "gsm8k-test-0065",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 108,
+        "longspark_tokens": 108
+      },
+      {
+        "source_id": "gsm8k-test-0066",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 146,
+        "longspark_tokens": 146
+      },
+      {
+        "source_id": "gsm8k-test-0067",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 184,
+        "longspark_tokens": 184
+      },
+      {
+        "source_id": "gsm8k-test-0068",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 223,
+        "longspark_tokens": 223
+      },
+      {
+        "source_id": "gsm8k-test-0069",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 223,
+        "longspark_tokens": 223
+      },
+      {
+        "source_id": "gsm8k-test-0070",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 207,
+        "longspark_tokens": 207
+      },
+      {
+        "source_id": "gsm8k-test-0071",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 98,
+        "longspark_tokens": 98
+      },
+      {
+        "source_id": "gsm8k-test-0072",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 172,
+        "longspark_tokens": 172
+      },
+      {
+        "source_id": "gsm8k-test-0073",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 206,
+        "longspark_tokens": 206
+      },
+      {
+        "source_id": "gsm8k-test-0074",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 189,
+        "longspark_tokens": 189
+      },
+      {
+        "source_id": "gsm8k-test-0075",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 277,
+        "longspark_tokens": 277
+      },
+      {
+        "source_id": "gsm8k-test-0076",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 351,
+        "longspark_tokens": 351
+      },
+      {
+        "source_id": "gsm8k-test-0077",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 239,
+        "longspark_tokens": 239
+      },
+      {
+        "source_id": "gsm8k-test-0078",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 301,
+        "longspark_tokens": 301
+      },
+      {
+        "source_id": "gsm8k-test-0079",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 107,
+        "longspark_tokens": 107
+      },
+      {
+        "source_id": "gsm8k-test-0080",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 171,
+        "longspark_tokens": 171
+      },
+      {
+        "source_id": "gsm8k-test-0081",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 155,
+        "longspark_tokens": 155
+      },
+      {
+        "source_id": "gsm8k-test-0082",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 139,
+        "longspark_tokens": 139
+      },
+      {
+        "source_id": "gsm8k-test-0083",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 116,
+        "longspark_tokens": 116
+      },
+      {
+        "source_id": "gsm8k-test-0084",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 203,
+        "longspark_tokens": 203
+      },
+      {
+        "source_id": "gsm8k-test-0085",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 141,
+        "longspark_tokens": 141
+      },
+      {
+        "source_id": "gsm8k-test-0086",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 173,
+        "longspark_tokens": 173
+      },
+      {
+        "source_id": "gsm8k-test-0087",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 369,
+        "longspark_tokens": 369
+      },
+      {
+        "source_id": "gsm8k-test-0088",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 152,
+        "longspark_tokens": 152
+      },
+      {
+        "source_id": "gsm8k-test-0089",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 140,
+        "longspark_tokens": 140
+      },
+      {
+        "source_id": "gsm8k-test-0090",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 201,
+        "longspark_tokens": 201
+      },
+      {
+        "source_id": "gsm8k-test-0091",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 225,
+        "longspark_tokens": 225
+      },
+      {
+        "source_id": "gsm8k-test-0092",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 316,
+        "longspark_tokens": 316
+      },
+      {
+        "source_id": "gsm8k-test-0093",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 245,
+        "longspark_tokens": 245
+      },
+      {
+        "source_id": "gsm8k-test-0094",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 289,
+        "longspark_tokens": 289
+      },
+      {
+        "source_id": "gsm8k-test-0095",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 230,
+        "longspark_tokens": 230
+      },
+      {
+        "source_id": "gsm8k-test-0096",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 87,
+        "longspark_tokens": 87
+      },
+      {
+        "source_id": "gsm8k-test-0097",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 212,
+        "longspark_tokens": 212
+      },
+      {
+        "source_id": "gsm8k-test-0098",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 299,
+        "longspark_tokens": 299
+      },
+      {
+        "source_id": "gsm8k-test-0099",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 130,
+        "longspark_tokens": 130
+      }
+    ]
+  },
+  "correctness_status": "passed",
+  "scoring": {
+    "scoring_policy": "Use only the first nonempty line after the last #### marker. The whole line must be a signed base-10 integer or decimal, optionally with correctly grouped thousands commas and one leading dollar symbol. Compare exact Decimal values; missing/invalid final answers count as incorrect.",
+    "total": 200,
+    "correct": 192,
+    "incorrect": 8,
+    "unparsed": 0,
+    "accuracy": 0.96,
+    "parsed_accuracy": 0.96,
+    "parse_status_counts": {
+      "parsed": 200
+    },
+    "eos_count": 200,
+    "truncated_count": 0,
+    "token_cap_count": 0,
+    "outputs_with_tokens_after_eos": 0,
+    "output_tokens": 42678,
+    "mean_output_tokens": 213.39,
+    "by_method": {
+      "longspark": {
+        "total": 100,
+        "correct": 96,
+        "incorrect": 4,
+        "unparsed": 0,
+        "accuracy": 0.96,
+        "parsed_accuracy": 0.96,
+        "parse_status_counts": {
+          "parsed": 100
+        },
+        "eos_count": 100,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 21339,
+        "mean_output_tokens": 213.39
+      },
+      "vanilla": {
+        "total": 100,
+        "correct": 96,
+        "incorrect": 4,
+        "unparsed": 0,
+        "accuracy": 0.96,
+        "parsed_accuracy": 0.96,
+        "parse_status_counts": {
+          "parsed": 100
+        },
+        "eos_count": 100,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 21339,
+        "mean_output_tokens": 213.39
+      }
+    }
+  },
+  "performance": {
+    "vanilla": {
+      "requests": 100,
+      "output_tokens": 21339,
+      "decode_tokens": 21239,
+      "service_seconds": 293.0795684456825,
+      "decode_seconds": 291.6663753539324,
+      "aggregate_service_tps": 72.80957902718774,
+      "aggregate_decode_tps": 72.81950130256469,
+      "verification_rounds": 0,
+      "proposed_tokens": 0,
+      "accepted_draft_tokens_raw": 0,
+      "accepted_draft_tokens_emitted": 0,
+      "mean_accepted_draft_tokens": null,
+      "tau": null,
+      "tau_raw": null,
+      "acceptance_rate": null,
+      "acceptance_rate_raw": null,
+      "effective_advance": null,
+      "generate_wall_seconds": 294.4137719348073,
+      "generate_wall_tps": 72.4796257313844,
+      "max_submitted_concurrency": 1
+    },
+    "longspark": {
+      "requests": 100,
+      "output_tokens": 21339,
+      "decode_tokens": 21239,
+      "service_seconds": 64.76195234060287,
+      "decode_seconds": 63.21462147310376,
+      "aggregate_service_tps": 329.49902263248157,
+      "aggregate_decode_tps": 335.9823962409814,
+      "verification_rounds": 3710,
+      "proposed_tokens": 25970,
+      "accepted_draft_tokens_raw": 17537,
+      "accepted_draft_tokens_emitted": 17537,
+      "mean_accepted_draft_tokens": 4.726954177897574,
+      "tau": 5.726954177897574,
+      "tau_raw": 5.726954177897574,
+      "acceptance_rate": 0.675279168271082,
+      "acceptance_rate_raw": 0.675279168271082,
+      "effective_advance": 5.724797843665768,
+      "generate_wall_seconds": 66.42691865190864,
+      "generate_wall_tps": 321.24025068543307,
+      "max_submitted_concurrency": 1
+    }
+  },
+  "aggregate_service_speedup": 4.525490011547021,
+  "definitions": {
+    "tau": "1 + emitted accepted draft tokens / verified steps",
+    "tau_raw": "1 + native pre-stop accepted draft tokens / verified steps",
+    "service_tps": "sum(output_tokens) / sum(last_token_ts - scheduled_ts)",
+    "decode_tps": "sum(output_tokens - 1) / sum(last_token_ts - first_token_ts)",
+    "wall_tps": "sum(output_tokens) / sum(generate batch wall time)"
+  }
+}

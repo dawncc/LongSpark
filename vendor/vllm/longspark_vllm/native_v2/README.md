@@ -130,10 +130,22 @@ and Markov feedback remain device data. Larger prefill deltas update bounded
 state outside the fixed-width proposal graph, then run that same proposal
 path with a zero-count update. Decode context gathering uses one fused Triton
 kernel for all selected KV and boundary-hidden layers, outside the draft
-graph. Variable-size prefill gathering retains the reference implementation
-to avoid a new JIT compilation for every prompt length. Input staging also
-occurs outside the draft graph. Missing decode graph coverage
+graph. It writes directly to the graph input buffers, including zeroing the
+unused tail, avoiding intermediate allocation and copy launches. Variable-size
+prefill gathering retains the reference implementation to avoid a new JIT
+compilation for every prompt length. Missing decode graph coverage
 raises an error; the evaluation path does not silently switch to eager.
+
+After the unchanged BF16 contractions and FP32 attention normalization,
+`commit_kernel.py` fuses only the final Global16, Raw256, hidden and length
+stores. Runtime prefill strides keep different prompt lengths on the same
+compiled store kernel. CPU execution retains the reference implementation.
+Both optimizations default on; set
+`additional_config.longspark.use_fused_state_commit=false` and
+`use_direct_gather=false` to restore the previous paths. The offline runner's
+`--native-optimizations reference` selects both reference paths for A/B runs.
+See the [component measurements](../../validation/perf-api-20261010/components/README.md)
+and [end-to-end/API validation](../../validation/perf-api-20261010/README.md).
 
 The three-source draft attention still uses SpecForge's PyTorch statistics
 implementation. This extension does not introduce a fused LongSpark attention
@@ -142,6 +154,9 @@ graph replay establish the execution path; they do not establish optimal
 performance by themselves.
 
 ## Run the native engine
+
+For the native vLLM OpenAI-compatible HTTP service, see the
+[serving guide](../../SERVING.md). It uses this same speculator and graph path.
 
 Prepare the pinned target and draft according to [WEIGHTS.md](../../../../docs/WEIGHTS.md).
 The existing shared GSM8K JSONL supplies token IDs directly. Preview a small

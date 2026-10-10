@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "openai_client_version": "3.22.1",
+  "completion": {
+    "id": "chatcmpl-982e6780dec77758",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "391",
+          "refusal": null,
+          "role": "assistant",
+          "annotations": null,
+          "audio": null,
+          "function_call": null,
+          "tool_calls": null,
+          "reasoning": null
+        },
+        "stop_reason": null,
+        "token_ids": null,
+        "routed_experts": null
+      }
+    ],
+    "created": 1791600627,
+    "model": "longspark-qwen3-4b",
+    "object": "chat.completion",
+    "metadata": null,
+    "moderation": null,
+    "service_tier": null,
+    "system_fingerprint": "vllm-0.30.0-nohash",
+    "usage": {
+      "completion_tokens": 4,
+      "prompt_tokens": 28,
+      "total_tokens": 32,
+      "completion_tokens_details": null,
+      "prompt_tokens_details": null
+    },
+    "prompt_logprobs": null,
+    "prompt_token_ids": null,
+    "prompt_text": null,
+    "kv_transfer_params": null,
+    "ec_transfer_params": null,
+    "metrics": null
+  },
+  "stream_text": "Hello!",
+  "stream_chunks": 3,
+  "post_warmup_jit_warnings": [],
+  "server_pid": 3275906,
+  "base_url": "http://127.0.0.1:18080/v1",
+  "model": "longspark-qwen3-4b",
+  "gpu": 2,
+  "log_start_line": 286
+}

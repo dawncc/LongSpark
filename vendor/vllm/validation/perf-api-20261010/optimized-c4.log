@@ -1,0 +1,1452 @@
+INFO 10-10 02:40:27 [api_utils.py:286] non-default args: {'dtype': 'bfloat16', 'max_model_len': 4096, 'enable_prefix_caching': False, 'kv_cache_memory_bytes': 4294967296, 'max_num_batched_tokens': 512, 'max_num_seqs': 4, 'enable_chunked_prefill': True, 'cudagraph_metrics': True, 'compilation_config': {'mode': None, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': [], 'ir_enable_torch_wrap': None, 'splitting_ops': None, 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': None, 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': None, 'pass_config': {}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': None, 'static_all_moe_layers': []}, 'attention_config': AttentionConfig(backend=<AttentionBackendEnum.FLASH_ATTN: 'vllm.v1.attention.backends.flash_attn.FlashAttentionBackend'>, minimax_m3_msa_decode_backend='triton', backend_per_kind={}, flash_attn_version=None, flash_attn_max_num_splits_for_cuda_graph=32, tq_max_kv_splits_for_cuda_graph=32, use_trtllm_attention=None, disable_flashinfer_q_quantization=False, mla_prefill_backend=None, use_prefill_query_quantization=False, indexer_kv_dtype='auto', hisparse_config=None, use_non_causal=False, sparse_mla_force_mqa=False, flex_attn_block_m=None, flex_attn_block_n=None, flex_attn_q_block_size=None, flex_attn_kv_block_size=None), 'worker_extension_cls': 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics', 'async_scheduling': True, 'model': '/data/lpf/models/Qwen3-4B'}
+INFO 10-10 02:40:27 [model.py:692] Resolved architecture: Qwen3ForCausalLM
+INFO 10-10 02:40:27 [model.py:2030] Using max model len 4096
+INFO 10-10 02:40:27 [scheduler.py:288] Chunked prefill is enabled with max_num_batched_tokens=512.
+INFO 10-10 02:40:27 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(EngineCore pid=3267604) INFO 10-10 02:40:29 [core.py:123] Initializing a V1 LLM engine (v0.30.0) with config: model='/data/lpf/models/Qwen3-4B', speculative_config=None, tokenizer='/data/lpf/models/Qwen3-4B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='none', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=True, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/data/lpf/models/Qwen3-4B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [512], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 8, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=3267604) INFO 10-10 02:40:31 [worker_base.py:306] Injected <class 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics'> into <class 'vllm.v1.worker.gpu_worker.Worker'> for extended collective_rpc calls ['native_v2_audit_end', 'native_v2_audit_snapshot', 'native_v2_audit_start', 'native_v2_warm_prefill_shapes']
+[W1010 02:40:31.129896507 Context.cpp:597] Warning: torch.backends.cuda.preferred_blas_library is an experimental feature. If you see any error or unexpected behavior when this flag is set please file an issue on GitHub. (function operator())
+(EngineCore pid=3267604) INFO 10-10 02:40:31 [parallel_state.py:1827] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_6a44fa82b6344c609965c91f68e59c0a backend=nccl
+(EngineCore pid=3267604) INFO 10-10 02:40:31 [parallel_state.py:2267] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=3267604) INFO 10-10 02:40:31 [gpu_worker.py:441] Using V2 Model Runner
+(EngineCore pid=3267604) INFO 10-10 02:40:32 [model_runner.py:403] Loading model from scratch...
+(EngineCore pid=3267604) INFO 10-10 02:40:32 [cuda.py:478] Using AttentionBackendEnum.FLASH_ATTN backend.
+(EngineCore pid=3267604) INFO 10-10 02:40:32 [flash_attn.py:1116] Using FlashAttention version 3
+(EngineCore pid=3267604) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(EngineCore pid=3267604) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(EngineCore pid=3267604) INFO 10-10 02:40:33 [weight_utils.py:895] Filesystem type for checkpoints: FUSE.ALIYUN-ALINAS-EFC. Checkpoint size: 7.49 GiB. Available RAM: 1445.30 GiB.
+(EngineCore pid=3267604) INFO 10-10 02:40:33 [weight_utils.py:918] Auto-prefetch is disabled because the filesystem (FUSE.ALIYUN-ALINAS-EFC) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+(EngineCore pid=3267604) 
+Loading safetensors checkpoint shards:   0% Completed | 0/3 [00:00<?, ?it/s]
+(EngineCore pid=3267604) 
+Loading safetensors checkpoint shards:  33% Completed | 1/3 [00:00<00:01,  1.40it/s]
+(EngineCore pid=3267604) 
+Loading safetensors checkpoint shards:  67% Completed | 2/3 [00:01<00:00,  1.30it/s]
+(EngineCore pid=3267604) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  2.11it/s]
+(EngineCore pid=3267604) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  1.82it/s]
+(EngineCore pid=3267604) 
+(EngineCore pid=3267604) INFO 10-10 02:40:35 [default_loader.py:430] Loading weights took 1.65 seconds
+(EngineCore pid=3267604) INFO 10-10 02:40:35 [model_runner.py:439] Model loading took 7.56 GiB memory and 4.015050 seconds
+(EngineCore pid=3267604) INFO 10-10 02:40:35 [topk_topp_sampler.py:62] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=3267604) INFO 10-10 02:40:35 [utils.py:320] Using LBNHC KV cache layout.
+(EngineCore pid=3267604) /data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/torch/_dynamo/variables/functions.py:2590: UserWarning: Dynamo detected a call to a `functools.lru_cache`-wrapped function at 'batch_invariant.py:289'. Dynamo ignores the cache wrapper and directly traces the wrapped function. Silent incorrectness is only a *potential* risk, not something we have observed. Enable TORCH_LOGS=+dynamo for a DEBUG stack trace.
+(EngineCore pid=3267604) 
+(EngineCore pid=3267604) This call originates from:
+(EngineCore pid=3267604)   File "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/determinism/batch_invariant.py", line 289, in matmul_persistent
+(EngineCore pid=3267604)     NUM_SMS = num_compute_units(a.device.index)
+(EngineCore pid=3267604)               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=3267604) 
+(EngineCore pid=3267604)   torch._dynamo.utils.warn_once(msg)
+(EngineCore pid=3267604) INFO 10-10 02:40:47 [backends.py:1094] Using cache directory: /root/.cache/vllm/torch_compile_cache/4b3671a062/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=3267604) INFO 10-10 02:40:47 [backends.py:1155] Dynamo bytecode transform time: 11.22 s
+(EngineCore pid=3267604) INFO 10-10 02:40:47 [backends.py:378] Cache the graph of compile range (1, 512) for later use
+(EngineCore pid=3267604) INFO 10-10 02:40:49 [backends.py:393] Compiling a graph for compile range (1, 512) takes 1.41 s
+(EngineCore pid=3267604) INFO 10-10 02:40:49 [monitor.py:53] torch.compile and initial profiling/warmup run together took 13.96 s in total
+(EngineCore pid=3267604) INFO 10-10 02:40:50 [gpu_worker.py:559] Initial free memory 139.3 GiB, reserved 4.0 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.
+(EngineCore pid=3267604) INFO 10-10 02:40:50 [kv_cache_utils.py:2395] GPU KV cache size: 29,120 tokens, Maximum concurrency for 4,096 tokens per request: 7.11x
+(EngineCore pid=3267604) INFO 10-10 02:40:50 [kernel_warmup.py:172] JIT kernel warmup starting.
+(EngineCore pid=3267604) INFO 10-10 02:40:50 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=3267604) 
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/4 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  75%|███████▌  | 3/4 [00:00<00:00, 29.71it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 4/4 [00:00<00:00, 29.81it/s]
+(EngineCore pid=3267604) 
+Capturing CUDA graphs (FULL):   0%|          | 0/3 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 3/3 [00:00<00:00, 37.98it/s]
+(EngineCore pid=3267604) INFO 10-10 02:40:52 [model_runner.py:1077] Graph capturing finished in 1 secs, took 0.04 GiB
+(EngineCore pid=3267604) INFO 10-10 02:40:53 [jit_monitor.py:85] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=3267604) INFO 10-10 02:40:53 [torch_utils.py:287] Reducing Torch threads from 96 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=3267604) INFO 10-10 02:40:53 [core.py:372] init engine (profile, create kv cache, warmup model) took 17.99 s (compilation: 13.96 s)
+(EngineCore pid=3267604) INFO 10-10 02:40:53 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+INFO 10-10 02:40:54 [hf.py:642] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+vanilla: prefill state shape warmup through width 512
+vanilla/warmup: 1/3 gsm8k-test-0000 tokens=115 correct=True service=1.562s
+vanilla/warmup: 2/3 gsm8k-test-0001 tokens=93 correct=True service=1.260s
+vanilla/warmup: 3/3 gsm8k-test-0002 tokens=193 correct=True service=2.633s
+vanilla/measurement: 1/100 gsm8k-test-0000 tokens=115 correct=True service=1.558s
+vanilla/measurement: 2/100 gsm8k-test-0001 tokens=93 correct=True service=1.261s
+vanilla/measurement: 3/100 gsm8k-test-0002 tokens=193 correct=True service=2.632s
+vanilla/measurement: 4/100 gsm8k-test-0003 tokens=119 correct=True service=1.615s
+vanilla/measurement: 5/100 gsm8k-test-0004 tokens=149 correct=True service=2.021s
+vanilla/measurement: 6/100 gsm8k-test-0005 tokens=190 correct=True service=2.579s
+vanilla/measurement: 7/100 gsm8k-test-0006 tokens=219 correct=True service=2.977s
+vanilla/measurement: 8/100 gsm8k-test-0007 tokens=321 correct=True service=4.397s
+INFO 10-10 02:41:04 [loggers.py:315] Engine 000: Avg prompt throughput: 172.6 tokens/s, Avg generation throughput: 177.3 tokens/s, Running: 4 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.2%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:41:04 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:41:04 [cuda_graph.py:123] 
+INFO 10-10 02:41:04 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:41:04 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:41:04 [cuda_graph.py:123] 
+INFO 10-10 02:41:04 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:41:04 [cuda_graph.py:123] 
+INFO 10-10 02:41:04 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:41:04 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 259   |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 256   |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 155   |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 55    |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 127             | 127           | 0            | NONE         | 2     |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 2     |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 208             | 208           | 0            | NONE         | 1     |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 305             | 305           | 0            | NONE         | 1     |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 18              | 18            | 0            | NONE         | 1     |
+INFO 10-10 02:41:04 [cuda_graph.py:123] | 28              | 28            | 0            | NONE         | 1     |
+INFO 10-10 02:41:04 [cuda_graph.py:123] 
+vanilla/measurement: 9/100 gsm8k-test-0008 tokens=399 correct=True service=5.461s
+vanilla/measurement: 10/100 gsm8k-test-0009 tokens=204 correct=True service=2.771s
+vanilla/measurement: 11/100 gsm8k-test-0010 tokens=214 correct=True service=2.907s
+vanilla/measurement: 12/100 gsm8k-test-0011 tokens=208 correct=True service=2.838s
+INFO 10-10 02:41:14 [loggers.py:315] Engine 000: Avg prompt throughput: 51.9 tokens/s, Avg generation throughput: 203.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.6%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:41:14 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:41:14 [cuda_graph.py:123] 
+INFO 10-10 02:41:14 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:41:14 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:41:14 [cuda_graph.py:123] 
+INFO 10-10 02:41:14 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:41:14 [cuda_graph.py:123] 
+INFO 10-10 02:41:14 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:41:14 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:41:14 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 382   |
+INFO 10-10 02:41:14 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 251   |
+INFO 10-10 02:41:14 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 61    |
+INFO 10-10 02:41:14 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 36    |
+INFO 10-10 02:41:14 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 1     |
+INFO 10-10 02:41:14 [cuda_graph.py:123] | 10              | 10            | 0            | NONE         | 1     |
+INFO 10-10 02:41:14 [cuda_graph.py:123] 
+vanilla/measurement: 13/100 gsm8k-test-0012 tokens=285 correct=False service=3.876s
+vanilla/measurement: 14/100 gsm8k-test-0013 tokens=385 correct=True service=5.256s
+vanilla/measurement: 15/100 gsm8k-test-0014 tokens=254 correct=True service=3.450s
+vanilla/measurement: 16/100 gsm8k-test-0015 tokens=197 correct=True service=2.688s
+vanilla/measurement: 17/100 gsm8k-test-0016 tokens=128 correct=True service=1.736s
+vanilla/measurement: 18/100 gsm8k-test-0017 tokens=234 correct=True service=3.191s
+vanilla/measurement: 19/100 gsm8k-test-0018 tokens=100 correct=True service=1.356s
+vanilla/measurement: 20/100 gsm8k-test-0019 tokens=286 correct=True service=3.908s
+vanilla/measurement: 21/100 gsm8k-test-0020 tokens=209 correct=True service=2.839s
+vanilla/measurement: 22/100 gsm8k-test-0021 tokens=305 correct=False service=4.160s
+vanilla/measurement: 23/100 gsm8k-test-0022 tokens=218 correct=True service=2.962s
+vanilla/measurement: 24/100 gsm8k-test-0023 tokens=82 correct=True service=1.113s
+INFO 10-10 02:41:24 [loggers.py:315] Engine 000: Avg prompt throughput: 138.8 tokens/s, Avg generation throughput: 201.9 tokens/s, Running: 4 reqs, Waiting: 0 reqs, GPU KV cache usage: 3.2%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:41:24 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:41:24 [cuda_graph.py:123] 
+INFO 10-10 02:41:24 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:41:24 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:41:24 [cuda_graph.py:123] 
+INFO 10-10 02:41:24 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:41:24 [cuda_graph.py:123] 
+INFO 10-10 02:41:24 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:41:24 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:41:24 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 287   |
+INFO 10-10 02:41:24 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 173   |
+INFO 10-10 02:41:24 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 155   |
+INFO 10-10 02:41:24 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 115   |
+INFO 10-10 02:41:24 [cuda_graph.py:123] | 453             | 453           | 0            | NONE         | 1     |
+INFO 10-10 02:41:24 [cuda_graph.py:123] | 452             | 452           | 0            | NONE         | 1     |
+INFO 10-10 02:41:24 [cuda_graph.py:123] | 483             | 483           | 0            | NONE         | 1     |
+INFO 10-10 02:41:24 [cuda_graph.py:123] 
+vanilla/measurement: 25/100 gsm8k-test-0024 tokens=142 correct=True service=1.926s
+vanilla/measurement: 26/100 gsm8k-test-0025 tokens=277 correct=True service=3.779s
+vanilla/measurement: 27/100 gsm8k-test-0026 tokens=236 correct=True service=3.214s
+vanilla/measurement: 28/100 gsm8k-test-0027 tokens=157 correct=True service=2.130s
+vanilla/measurement: 29/100 gsm8k-test-0028 tokens=198 correct=True service=2.688s
+vanilla/measurement: 30/100 gsm8k-test-0029 tokens=222 correct=True service=3.016s
+vanilla/measurement: 31/100 gsm8k-test-0030 tokens=211 correct=True service=2.865s
+vanilla/measurement: 32/100 gsm8k-test-0031 tokens=299 correct=True service=4.077s
+vanilla/measurement: 33/100 gsm8k-test-0032 tokens=156 correct=True service=2.117s
+vanilla/measurement: 34/100 gsm8k-test-0033 tokens=216 correct=True service=2.940s
+vanilla/measurement: 35/100 gsm8k-test-0034 tokens=164 correct=True service=2.225s
+vanilla/measurement: 36/100 gsm8k-test-0035 tokens=176 correct=True service=2.390s
+INFO 10-10 02:41:34 [loggers.py:315] Engine 000: Avg prompt throughput: 135.3 tokens/s, Avg generation throughput: 220.8 tokens/s, Running: 4 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.4%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:41:34 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:41:34 [cuda_graph.py:123] 
+INFO 10-10 02:41:34 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:41:34 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:41:34 [cuda_graph.py:123] 
+INFO 10-10 02:41:34 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:41:34 [cuda_graph.py:123] 
+INFO 10-10 02:41:34 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:41:34 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:41:34 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 435   |
+INFO 10-10 02:41:34 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 158   |
+INFO 10-10 02:41:34 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 102   |
+INFO 10-10 02:41:34 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 36    |
+INFO 10-10 02:41:34 [cuda_graph.py:123] | 469             | 469           | 0            | NONE         | 1     |
+INFO 10-10 02:41:34 [cuda_graph.py:123] | 413             | 413           | 0            | NONE         | 1     |
+INFO 10-10 02:41:34 [cuda_graph.py:123] | 472             | 472           | 0            | NONE         | 1     |
+INFO 10-10 02:41:34 [cuda_graph.py:123] 
+vanilla/measurement: 37/100 gsm8k-test-0036 tokens=145 correct=True service=1.966s
+vanilla/measurement: 38/100 gsm8k-test-0037 tokens=428 correct=True service=5.837s
+vanilla/measurement: 39/100 gsm8k-test-0038 tokens=326 correct=True service=4.430s
+vanilla/measurement: 40/100 gsm8k-test-0039 tokens=380 correct=True service=5.174s
+vanilla/measurement: 41/100 gsm8k-test-0040 tokens=225 correct=True service=3.053s
+vanilla/measurement: 42/100 gsm8k-test-0041 tokens=265 correct=True service=3.604s
+vanilla/measurement: 43/100 gsm8k-test-0042 tokens=99 correct=True service=1.341s
+vanilla/measurement: 44/100 gsm8k-test-0043 tokens=246 correct=True service=3.356s
+INFO 10-10 02:41:44 [loggers.py:315] Engine 000: Avg prompt throughput: 112.5 tokens/s, Avg generation throughput: 227.1 tokens/s, Running: 4 reqs, Waiting: 0 reqs, GPU KV cache usage: 3.2%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:41:44 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:41:44 [cuda_graph.py:123] 
+INFO 10-10 02:41:44 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:41:44 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:41:44 [cuda_graph.py:123] 
+INFO 10-10 02:41:44 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:41:44 [cuda_graph.py:123] 
+INFO 10-10 02:41:44 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:41:44 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:41:44 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 307   |
+INFO 10-10 02:41:44 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 282   |
+INFO 10-10 02:41:44 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 76    |
+INFO 10-10 02:41:44 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 66    |
+INFO 10-10 02:41:44 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 2     |
+INFO 10-10 02:41:44 [cuda_graph.py:123] | 54              | 54            | 0            | NONE         | 2     |
+INFO 10-10 02:41:44 [cuda_graph.py:123] 
+vanilla/measurement: 45/100 gsm8k-test-0044 tokens=271 correct=True service=3.679s
+vanilla/measurement: 46/100 gsm8k-test-0045 tokens=284 correct=True service=3.858s
+vanilla/measurement: 47/100 gsm8k-test-0046 tokens=248 correct=True service=3.365s
+vanilla/measurement: 48/100 gsm8k-test-0047 tokens=352 correct=True service=4.809s
+vanilla/measurement: 49/100 gsm8k-test-0048 tokens=134 correct=True service=1.819s
+vanilla/measurement: 50/100 gsm8k-test-0049 tokens=182 correct=True service=2.473s
+vanilla/measurement: 51/100 gsm8k-test-0050 tokens=163 correct=True service=2.212s
+vanilla/measurement: 52/100 gsm8k-test-0051 tokens=189 correct=True service=2.569s
+INFO 10-10 02:41:54 [loggers.py:315] Engine 000: Avg prompt throughput: 95.6 tokens/s, Avg generation throughput: 241.3 tokens/s, Running: 3 reqs, Waiting: 0 reqs, GPU KV cache usage: 4.4%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:41:54 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:41:54 [cuda_graph.py:123] 
+INFO 10-10 02:41:54 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:41:54 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:41:54 [cuda_graph.py:123] 
+INFO 10-10 02:41:54 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:41:54 [cuda_graph.py:123] 
+INFO 10-10 02:41:54 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:41:54 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:41:54 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 400   |
+INFO 10-10 02:41:54 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 224   |
+INFO 10-10 02:41:54 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 76    |
+INFO 10-10 02:41:54 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 32    |
+INFO 10-10 02:41:54 [cuda_graph.py:123] | 414             | 414           | 0            | NONE         | 1     |
+INFO 10-10 02:41:54 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 1     |
+INFO 10-10 02:41:54 [cuda_graph.py:123] | 33              | 33            | 0            | NONE         | 1     |
+INFO 10-10 02:41:54 [cuda_graph.py:123] 
+vanilla/measurement: 53/100 gsm8k-test-0052 tokens=287 correct=True service=3.899s
+vanilla/measurement: 54/100 gsm8k-test-0053 tokens=346 correct=True service=4.713s
+vanilla/measurement: 55/100 gsm8k-test-0054 tokens=280 correct=True service=3.803s
+vanilla/measurement: 56/100 gsm8k-test-0055 tokens=102 correct=True service=1.396s
+vanilla/measurement: 57/100 gsm8k-test-0056 tokens=105 correct=True service=1.423s
+vanilla/measurement: 58/100 gsm8k-test-0057 tokens=269 correct=True service=3.673s
+vanilla/measurement: 59/100 gsm8k-test-0058 tokens=265 correct=True service=3.618s
+vanilla/measurement: 60/100 gsm8k-test-0059 tokens=114 correct=True service=1.545s
+vanilla/measurement: 61/100 gsm8k-test-0060 tokens=197 correct=True service=2.672s
+vanilla/measurement: 62/100 gsm8k-test-0061 tokens=135 correct=True service=1.829s
+vanilla/measurement: 63/100 gsm8k-test-0062 tokens=289 correct=False service=3.937s
+vanilla/measurement: 64/100 gsm8k-test-0063 tokens=245 correct=True service=3.331s
+INFO 10-10 02:42:04 [loggers.py:315] Engine 000: Avg prompt throughput: 146.9 tokens/s, Avg generation throughput: 211.3 tokens/s, Running: 4 reqs, Waiting: 0 reqs, GPU KV cache usage: 3.2%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:42:04 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:42:04 [cuda_graph.py:123] 
+INFO 10-10 02:42:04 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:42:04 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:42:04 [cuda_graph.py:123] 
+INFO 10-10 02:42:04 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:42:04 [cuda_graph.py:123] 
+INFO 10-10 02:42:04 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:42:04 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:42:04 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 342   |
+INFO 10-10 02:42:04 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 206   |
+INFO 10-10 02:42:04 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 107   |
+INFO 10-10 02:42:04 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 76    |
+INFO 10-10 02:42:04 [cuda_graph.py:123] | 486             | 486           | 0            | NONE         | 1     |
+INFO 10-10 02:42:04 [cuda_graph.py:123] | 485             | 485           | 0            | NONE         | 1     |
+INFO 10-10 02:42:04 [cuda_graph.py:123] | 500             | 500           | 0            | NONE         | 1     |
+INFO 10-10 02:42:04 [cuda_graph.py:123] 
+vanilla/measurement: 65/100 gsm8k-test-0064 tokens=183 correct=True service=2.488s
+vanilla/measurement: 66/100 gsm8k-test-0065 tokens=108 correct=True service=1.464s
+vanilla/measurement: 67/100 gsm8k-test-0066 tokens=146 correct=True service=1.980s
+vanilla/measurement: 68/100 gsm8k-test-0067 tokens=184 correct=True service=2.501s
+vanilla/measurement: 69/100 gsm8k-test-0068 tokens=223 correct=True service=3.028s
+vanilla/measurement: 70/100 gsm8k-test-0069 tokens=223 correct=True service=3.028s
+vanilla/measurement: 71/100 gsm8k-test-0070 tokens=207 correct=True service=2.809s
+vanilla/measurement: 72/100 gsm8k-test-0071 tokens=98 correct=True service=1.329s
+vanilla/measurement: 73/100 gsm8k-test-0072 tokens=172 correct=True service=2.332s
+vanilla/measurement: 74/100 gsm8k-test-0073 tokens=206 correct=True service=2.797s
+vanilla/measurement: 75/100 gsm8k-test-0074 tokens=189 correct=True service=2.563s
+vanilla/measurement: 76/100 gsm8k-test-0075 tokens=277 correct=True service=3.787s
+INFO 10-10 02:42:14 [loggers.py:315] Engine 000: Avg prompt throughput: 143.8 tokens/s, Avg generation throughput: 236.1 tokens/s, Running: 3 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.9%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:42:14 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:42:14 [cuda_graph.py:123] 
+INFO 10-10 02:42:14 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:42:14 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:42:14 [cuda_graph.py:123] 
+INFO 10-10 02:42:14 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:42:14 [cuda_graph.py:123] 
+INFO 10-10 02:42:14 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:42:14 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:42:14 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 382   |
+INFO 10-10 02:42:14 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 207   |
+INFO 10-10 02:42:14 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 73    |
+INFO 10-10 02:42:14 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 70    |
+INFO 10-10 02:42:14 [cuda_graph.py:123] | 434             | 434           | 0            | NONE         | 1     |
+INFO 10-10 02:42:14 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 1     |
+INFO 10-10 02:42:14 [cuda_graph.py:123] | 26              | 26            | 0            | NONE         | 1     |
+INFO 10-10 02:42:14 [cuda_graph.py:123] | 471             | 471           | 0            | NONE         | 1     |
+INFO 10-10 02:42:14 [cuda_graph.py:123] 
+vanilla/measurement: 77/100 gsm8k-test-0076 tokens=351 correct=True service=4.791s
+vanilla/measurement: 78/100 gsm8k-test-0077 tokens=239 correct=True service=3.249s
+vanilla/measurement: 79/100 gsm8k-test-0078 tokens=301 correct=True service=4.102s
+vanilla/measurement: 80/100 gsm8k-test-0079 tokens=107 correct=True service=1.453s
+vanilla/measurement: 81/100 gsm8k-test-0080 tokens=171 correct=True service=2.326s
+vanilla/measurement: 82/100 gsm8k-test-0081 tokens=155 correct=True service=2.106s
+vanilla/measurement: 83/100 gsm8k-test-0082 tokens=139 correct=True service=1.888s
+vanilla/measurement: 84/100 gsm8k-test-0083 tokens=116 correct=True service=1.576s
+INFO 10-10 02:42:24 [loggers.py:315] Engine 000: Avg prompt throughput: 92.6 tokens/s, Avg generation throughput: 189.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.8%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:42:24 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:42:24 [cuda_graph.py:123] 
+INFO 10-10 02:42:24 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:42:24 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:42:24 [cuda_graph.py:123] 
+INFO 10-10 02:42:24 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:42:24 [cuda_graph.py:123] 
+INFO 10-10 02:42:24 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:42:24 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:42:24 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 256   |
+INFO 10-10 02:42:24 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 221   |
+INFO 10-10 02:42:24 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 144   |
+INFO 10-10 02:42:24 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 108   |
+INFO 10-10 02:42:24 [cuda_graph.py:123] | 404             | 404           | 0            | NONE         | 1     |
+INFO 10-10 02:42:24 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 1     |
+INFO 10-10 02:42:24 [cuda_graph.py:123] | 13              | 13            | 0            | NONE         | 1     |
+INFO 10-10 02:42:24 [cuda_graph.py:123] 
+vanilla/measurement: 85/100 gsm8k-test-0084 tokens=203 correct=True service=2.756s
+vanilla/measurement: 86/100 gsm8k-test-0085 tokens=141 correct=True service=1.910s
+vanilla/measurement: 87/100 gsm8k-test-0086 tokens=173 correct=True service=2.345s
+vanilla/measurement: 88/100 gsm8k-test-0087 tokens=369 correct=True service=5.058s
+vanilla/measurement: 89/100 gsm8k-test-0088 tokens=152 correct=True service=2.061s
+vanilla/measurement: 90/100 gsm8k-test-0089 tokens=140 correct=False service=1.898s
+vanilla/measurement: 91/100 gsm8k-test-0090 tokens=201 correct=True service=2.733s
+vanilla/measurement: 92/100 gsm8k-test-0091 tokens=225 correct=True service=3.063s
+vanilla/measurement: 93/100 gsm8k-test-0092 tokens=316 correct=True service=4.300s
+vanilla/measurement: 94/100 gsm8k-test-0093 tokens=245 correct=True service=3.324s
+vanilla/measurement: 95/100 gsm8k-test-0094 tokens=289 correct=True service=3.928s
+vanilla/measurement: 96/100 gsm8k-test-0095 tokens=230 correct=True service=3.120s
+INFO 10-10 02:42:34 [loggers.py:315] Engine 000: Avg prompt throughput: 144.7 tokens/s, Avg generation throughput: 238.5 tokens/s, Running: 2 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.3%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:42:34 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:42:34 [cuda_graph.py:123] 
+INFO 10-10 02:42:34 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:42:34 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8]
+INFO 10-10 02:42:34 [cuda_graph.py:123] 
+INFO 10-10 02:42:34 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:42:34 [cuda_graph.py:123] 
+INFO 10-10 02:42:34 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:42:34 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:42:34 [cuda_graph.py:123] | 4               | 4             | 0            | FULL         | 457   |
+INFO 10-10 02:42:34 [cuda_graph.py:123] | 2               | 2             | 0            | FULL         | 142   |
+INFO 10-10 02:42:34 [cuda_graph.py:123] | 3               | 4             | 1            | FULL         | 70    |
+INFO 10-10 02:42:34 [cuda_graph.py:123] | 1               | 1             | 0            | FULL         | 63    |
+INFO 10-10 02:42:34 [cuda_graph.py:123] | 460             | 460           | 0            | NONE         | 1     |
+INFO 10-10 02:42:34 [cuda_graph.py:123] | 476             | 476           | 0            | NONE         | 1     |
+INFO 10-10 02:42:34 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 1     |
+INFO 10-10 02:42:34 [cuda_graph.py:123] 
+vanilla/measurement: 97/100 gsm8k-test-0096 tokens=87 correct=True service=1.179s
+vanilla/measurement: 98/100 gsm8k-test-0097 tokens=212 correct=True service=2.887s
+vanilla/measurement: 99/100 gsm8k-test-0098 tokens=299 correct=True service=4.085s
+vanilla/measurement: 100/100 gsm8k-test-0099 tokens=130 correct=True service=1.762s
+INFO 10-10 02:42:36 [core_client.py:744] [shutdown] MPClient: start timeout=default
+INFO 10-10 02:42:36 [core_client.py:746] [shutdown] MPClient: stopping engine manager
+INFO 10-10 02:42:36 [utils.py:632] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=3267604) INFO 10-10 02:42:36 [core.py:1342] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=3267604) INFO 10-10 02:42:36 [core.py:1493] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=3267604) INFO 10-10 02:42:36 [core.py:1524] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=3267604) INFO 10-10 02:42:36 [core.py:1355] [shutdown] EngineCore: exiting busy loop
+INFO 10-10 02:42:37 [core_client.py:748] [shutdown] MPClient: engine manager stopped
+INFO 10-10 02:42:37 [core_client.py:749] [shutdown] MPClient: cleaning up background resources
+INFO 10-10 02:42:37 [core_client.py:751] [shutdown] MPClient: complete
+INFO 10-10 02:42:58 [api_utils.py:286] non-default args: {'dtype': 'bfloat16', 'max_model_len': 4096, 'enable_prefix_caching': False, 'kv_cache_memory_bytes': 4294967296, 'max_num_batched_tokens': 512, 'max_num_seqs': 4, 'enable_chunked_prefill': True, 'speculative_config': {'method': 'custom_class', 'model': 'longspark_vllm.native_v2.speculator.LongSparkSpeculator', 'num_speculative_tokens': 7, 'draft_sample_method': 'greedy'}, 'per_request_spec_decode_metrics': 'detailed', 'cudagraph_metrics': True, 'compilation_config': {'mode': None, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': [], 'ir_enable_torch_wrap': None, 'splitting_ops': None, 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': None, 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': None, 'pass_config': {}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': None, 'static_all_moe_layers': []}, 'attention_config': AttentionConfig(backend=<AttentionBackendEnum.FLASH_ATTN: 'vllm.v1.attention.backends.flash_attn.FlashAttentionBackend'>, minimax_m3_msa_decode_backend='triton', backend_per_kind={}, flash_attn_version=None, flash_attn_max_num_splits_for_cuda_graph=32, tq_max_kv_splits_for_cuda_graph=32, use_trtllm_attention=None, disable_flashinfer_q_quantization=False, mla_prefill_backend=None, use_prefill_query_quantization=False, indexer_kv_dtype='auto', hisparse_config=None, use_non_causal=False, sparse_mla_force_mqa=False, flex_attn_block_m=None, flex_attn_block_n=None, flex_attn_q_block_size=None, flex_attn_kv_block_size=None), 'worker_extension_cls': 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics', 'additional_config': {'native_v2_custom_class': True, 'longspark': {'draft_model': '/data/chenchen/codex/LongSpark/models/4B/longspark', 'use_fused_state_commit': True, 'use_direct_gather': True}}, 'async_scheduling': True, 'model': '/data/lpf/models/Qwen3-4B'}
+INFO 10-10 02:42:58 [model.py:692] Resolved architecture: Qwen3ForCausalLM
+INFO 10-10 02:42:58 [model.py:2030] Using max model len 4096
+WARNING 10-10 02:42:58 [speculative.py:1213] Using a custom class-based proposer backend. This is an experimental feature and the proposer interface is subject to breaking changes in future vLLM releases.
+INFO 10-10 02:42:58 [scheduler.py:288] Chunked prefill is enabled with max_num_batched_tokens=512.
+INFO 10-10 02:42:58 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+WARNING 10-10 02:42:58 [vllm.py:2137] max_num_scheduled_tokens is set to 512 based on the speculative decoding settings. This may lead to suboptimal performance. Consider increasing max_num_batched_tokens to accommodate the additional draft token slots, or decrease num_speculative_tokens.
+(EngineCore pid=3268193) INFO 10-10 02:43:01 [core.py:123] Initializing a V1 LLM engine (v0.30.0) with config: model='/data/lpf/models/Qwen3-4B', speculative_config=SpeculativeConfig(method='custom_class', model=None, num_spec_tokens=7), tokenizer='/data/lpf/models/Qwen3-4B', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, per_request_spec_decode_metrics='detailed', kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=True, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False, jit_monitor_mode='warn', jit_monitor_verbose=False), seed=0, served_model_name=/data/lpf/models/Qwen3-4B, enable_prefix_caching=False, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::qwen4_exp_ple_short_conv', 'vllm::qwen4_exp_qsa_with_output', 'vllm::linear_attention', 'vllm::qwen_gdn_attention_core', 'vllm::qwen_gdn_attention_core_fused_norm_packed', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::hpc_rope_norm_forward', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [512], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'enable_qk_norm_rope_fusion': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False, 'fuse_qk_norm_rope_kvcache': False}, 'max_cudagraph_capture_size': 64, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native']), enable_flashinfer_autotune=True, enable_cutedsl_warmup=True, enable_jit_warmup=True, moe_backend='auto', sparse_indexer_topk_backend='auto', linear_backend='auto', linear_backend_per_quant=None)
+(EngineCore pid=3268193) INFO 10-10 02:43:02 [worker_base.py:306] Injected <class 'longspark_vllm.native_v2.diagnostics.NativeV2Diagnostics'> into <class 'vllm.v1.worker.gpu_worker.Worker'> for extended collective_rpc calls ['native_v2_audit_end', 'native_v2_audit_snapshot', 'native_v2_audit_start', 'native_v2_warm_prefill_shapes']
+[W1010 02:43:03.052413765 Context.cpp:597] Warning: torch.backends.cuda.preferred_blas_library is an experimental feature. If you see any error or unexpected behavior when this flag is set please file an issue on GitHub. (function operator())
+(EngineCore pid=3268193) INFO 10-10 02:43:03 [parallel_state.py:1827] world_size=1 rank=0 local_rank=0 distributed_init_method=file:///tmp/vllm_dist_3bc41cac807d45dbbf6b4757869bceee backend=nccl
+(EngineCore pid=3268193) INFO 10-10 02:43:03 [parallel_state.py:2267] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, ETP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=3268193) INFO 10-10 02:43:03 [gpu_worker.py:441] Using V2 Model Runner
+(EngineCore pid=3268193) INFO 10-10 02:43:04 [model_runner.py:403] Loading model from scratch...
+(EngineCore pid=3268193) INFO 10-10 02:43:04 [cuda.py:478] Using AttentionBackendEnum.FLASH_ATTN backend.
+(EngineCore pid=3268193) INFO 10-10 02:43:04 [flash_attn.py:1116] Using FlashAttention version 3
+(EngineCore pid=3268193) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(EngineCore pid=3268193) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(EngineCore pid=3268193) INFO 10-10 02:43:05 [weight_utils.py:895] Filesystem type for checkpoints: FUSE.ALIYUN-ALINAS-EFC. Checkpoint size: 7.49 GiB. Available RAM: 1444.74 GiB.
+(EngineCore pid=3268193) INFO 10-10 02:43:05 [weight_utils.py:918] Auto-prefetch is disabled because the filesystem (FUSE.ALIYUN-ALINAS-EFC) is not a recognized network FS (NFS/Lustre). If you want to force prefetching, start vLLM with --safetensors-load-strategy=prefetch.
+(EngineCore pid=3268193) 
+Loading safetensors checkpoint shards:   0% Completed | 0/3 [00:00<?, ?it/s]
+(EngineCore pid=3268193) 
+Loading safetensors checkpoint shards:  33% Completed | 1/3 [00:00<00:01,  1.59it/s]
+(EngineCore pid=3268193) 
+Loading safetensors checkpoint shards:  67% Completed | 2/3 [00:01<00:00,  1.46it/s]
+(EngineCore pid=3268193) 
+Loading safetensors checkpoint shards: 100% Completed | 3/3 [00:01<00:00,  2.07it/s]
+(EngineCore pid=3268193) 
+(EngineCore pid=3268193) INFO 10-10 02:43:07 [default_loader.py:430] Loading weights took 1.45 seconds
+(EngineCore pid=3268193) INFO 10-10 02:43:07 [eagle3_utils.py:43] Using speculator-declared auxiliary layers: (1, 10, 19, 27)
+(EngineCore pid=3268193) 
+Loading weights:   0%|          | 0/65 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 65/65 [00:00<00:00, 13581.91it/s]
+(EngineCore pid=3268193) INFO 10-10 02:43:08 [model_runner.py:439] Model loading took 8.82 GiB memory and 4.258265 seconds
+(EngineCore pid=3268193) INFO 10-10 02:43:08 [topk_topp_sampler.py:62] FlashInfer top-p/top-k sampling disabled via VLLM_USE_FLASHINFER_SAMPLER=0.
+(EngineCore pid=3268193) INFO 10-10 02:43:08 [utils.py:320] Using LBNHC KV cache layout.
+(EngineCore pid=3268193) /data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/torch/_dynamo/variables/functions.py:2590: UserWarning: Dynamo detected a call to a `functools.lru_cache`-wrapped function at 'batch_invariant.py:289'. Dynamo ignores the cache wrapper and directly traces the wrapped function. Silent incorrectness is only a *potential* risk, not something we have observed. Enable TORCH_LOGS=+dynamo for a DEBUG stack trace.
+(EngineCore pid=3268193) 
+(EngineCore pid=3268193) This call originates from:
+(EngineCore pid=3268193)   File "/data/chenchen/codex/LongSpark/vendor/vllm/.venv/lib/python3.12/site-packages/vllm/model_executor/determinism/batch_invariant.py", line 289, in matmul_persistent
+(EngineCore pid=3268193)     NUM_SMS = num_compute_units(a.device.index)
+(EngineCore pid=3268193)               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=3268193) 
+(EngineCore pid=3268193)   torch._dynamo.utils.warn_once(msg)
+(EngineCore pid=3268193) INFO 10-10 02:43:20 [backends.py:1094] Using cache directory: /root/.cache/vllm/torch_compile_cache/c58a3b4cae/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=3268193) INFO 10-10 02:43:20 [backends.py:1155] Dynamo bytecode transform time: 11.96 s
+(EngineCore pid=3268193) INFO 10-10 02:43:21 [backends.py:378] Cache the graph of compile range (1, 512) for later use
+(EngineCore pid=3268193) INFO 10-10 02:43:22 [backends.py:393] Compiling a graph for compile range (1, 512) takes 1.34 s
+(EngineCore pid=3268193) INFO 10-10 02:43:23 [monitor.py:53] torch.compile and initial profiling/warmup run together took 14.94 s in total
+(EngineCore pid=3268193) INFO 10-10 02:43:23 [gpu_worker.py:559] Initial free memory 139.3 GiB, reserved 4.0 GiB memory for KV Cache as specified by kv_cache_memory_bytes config and skipped memory profiling. This does not respect the gpu_memory_utilization config. Only use kv_cache_memory_bytes config when you want manual control of KV cache memory size. If OOM'ed, check the difference of initial free memory between the current run and the previous run where kv_cache_memory_bytes is suggested and update it correspondingly.
+(EngineCore pid=3268193) INFO 10-10 02:43:23 [kv_cache_utils.py:2395] GPU KV cache size: 29,120 tokens, Maximum concurrency for 4,096 tokens per request: 7.11x
+(EngineCore pid=3268193) INFO 10-10 02:43:23 [kernel_warmup.py:172] JIT kernel warmup starting.
+(EngineCore pid=3268193) INFO 10-10 02:43:23 [kernel_warmup.py:185] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=3268193) 
+Capturing CUDA graphs (PIECEWISE):   0%|          | 0/11 [00:00<?, ?it/s]
+Capturing CUDA graphs (PIECEWISE):  27%|██▋       | 3/11 [00:00<00:00, 28.51it/s]
+Capturing CUDA graphs (PIECEWISE):  55%|█████▍    | 6/11 [00:00<00:00, 28.93it/s]
+Capturing CUDA graphs (PIECEWISE):  82%|████████▏ | 9/11 [00:00<00:00, 29.26it/s]
+Capturing CUDA graphs (PIECEWISE): 100%|██████████| 11/11 [00:00<00:00, 29.11it/s]
+(EngineCore pid=3268193) 
+Capturing CUDA graphs (FULL):   0%|          | 0/4 [00:00<?, ?it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 4/4 [00:00<00:00, 39.87it/s]
+Capturing CUDA graphs (FULL): 100%|██████████| 4/4 [00:00<00:00, 39.82it/s]
+(EngineCore pid=3268193) 
+Capturing native LongSpark CUDA graphs (FULL):   0%|          | 0/4 [00:00<?, ?it/s]
+Capturing native LongSpark CUDA graphs (FULL):  75%|███████▌  | 3/4 [00:00<00:00, 23.08it/s]
+Capturing native LongSpark CUDA graphs (FULL): 100%|██████████| 4/4 [00:00<00:00, 24.02it/s]
+(EngineCore pid=3268193) INFO 10-10 02:43:26 [model_runner.py:1077] Graph capturing finished in 2 secs, took 0.49 GiB
+(EngineCore pid=3268193) INFO 10-10 02:43:27 [jit_monitor.py:85] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=3268193) INFO 10-10 02:43:28 [torch_utils.py:287] Reducing Torch threads from 96 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=3268193) INFO 10-10 02:43:28 [core.py:372] init engine (profile, create kv cache, warmup model) took 20.33 s (compilation: 14.94 s)
+(EngineCore pid=3268193) INFO 10-10 02:43:28 [kernel.py:416] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+INFO 10-10 02:43:28 [hf.py:642] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+longspark: prefill state shape warmup through width 512
+(EngineCore pid=3268193) WARNING 10-10 02:43:29 [jit_monitor.py:141] Triton kernel JIT compilation during inference: bmm_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=3268193) WARNING 10-10 02:43:31 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _compute_local_logits_stats_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=3268193) WARNING 10-10 02:43:31 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _rejection_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=3268193) WARNING 10-10 02:43:31 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _resample_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+(EngineCore pid=3268193) WARNING 10-10 02:43:31 [jit_monitor.py:141] Triton kernel JIT compilation during inference: _gather_context_kernel. This causes a latency spike; consider extending warmup to cover this shape/config.
+longspark/warmup: 1/3 gsm8k-test-0000 tokens=115 correct=True service=0.439s
+longspark/warmup: 2/3 gsm8k-test-0001 tokens=93 correct=True service=0.301s
+longspark/warmup: 3/3 gsm8k-test-0002 tokens=193 correct=True service=0.573s
+longspark/measurement: 1/100 gsm8k-test-0000 tokens=115 correct=True service=0.421s
+longspark/measurement: 2/100 gsm8k-test-0001 tokens=93 correct=True service=0.290s
+longspark/measurement: 3/100 gsm8k-test-0002 tokens=193 correct=True service=0.558s
+longspark/measurement: 4/100 gsm8k-test-0003 tokens=119 correct=True service=0.372s
+longspark/measurement: 5/100 gsm8k-test-0004 tokens=149 correct=True service=0.614s
+longspark/measurement: 6/100 gsm8k-test-0005 tokens=190 correct=True service=0.748s
+longspark/measurement: 7/100 gsm8k-test-0006 tokens=219 correct=True service=0.531s
+longspark/measurement: 8/100 gsm8k-test-0007 tokens=321 correct=True service=1.037s
+longspark/measurement: 9/100 gsm8k-test-0008 tokens=399 correct=True service=1.279s
+longspark/measurement: 10/100 gsm8k-test-0009 tokens=204 correct=True service=0.563s
+longspark/measurement: 11/100 gsm8k-test-0010 tokens=214 correct=True service=0.530s
+longspark/measurement: 12/100 gsm8k-test-0011 tokens=208 correct=True service=0.563s
+longspark/measurement: 13/100 gsm8k-test-0012 tokens=285 correct=False service=0.793s
+longspark/measurement: 14/100 gsm8k-test-0013 tokens=385 correct=True service=0.998s
+longspark/measurement: 15/100 gsm8k-test-0014 tokens=254 correct=True service=0.693s
+longspark/measurement: 16/100 gsm8k-test-0015 tokens=197 correct=True service=0.693s
+longspark/measurement: 17/100 gsm8k-test-0016 tokens=128 correct=True service=0.388s
+longspark/measurement: 18/100 gsm8k-test-0017 tokens=234 correct=True service=0.690s
+longspark/measurement: 19/100 gsm8k-test-0018 tokens=100 correct=True service=0.356s
+longspark/measurement: 20/100 gsm8k-test-0019 tokens=286 correct=True service=0.929s
+longspark/measurement: 21/100 gsm8k-test-0020 tokens=209 correct=True service=0.670s
+longspark/measurement: 22/100 gsm8k-test-0021 tokens=305 correct=False service=0.976s
+longspark/measurement: 23/100 gsm8k-test-0022 tokens=218 correct=True service=0.636s
+longspark/measurement: 24/100 gsm8k-test-0023 tokens=82 correct=True service=0.291s
+longspark/measurement: 25/100 gsm8k-test-0024 tokens=142 correct=True service=0.370s
+longspark/measurement: 26/100 gsm8k-test-0025 tokens=277 correct=True service=0.705s
+longspark/measurement: 27/100 gsm8k-test-0026 tokens=236 correct=True service=0.620s
+longspark/measurement: 28/100 gsm8k-test-0027 tokens=157 correct=True service=0.452s
+longspark/measurement: 29/100 gsm8k-test-0028 tokens=198 correct=True service=0.563s
+longspark/measurement: 30/100 gsm8k-test-0029 tokens=222 correct=True service=0.664s
+longspark/measurement: 31/100 gsm8k-test-0030 tokens=211 correct=True service=0.547s
+longspark/measurement: 32/100 gsm8k-test-0031 tokens=299 correct=True service=0.732s
+longspark/measurement: 33/100 gsm8k-test-0032 tokens=156 correct=True service=0.452s
+longspark/measurement: 34/100 gsm8k-test-0033 tokens=216 correct=True service=0.569s
+longspark/measurement: 35/100 gsm8k-test-0034 tokens=164 correct=True service=0.452s
+longspark/measurement: 36/100 gsm8k-test-0035 tokens=176 correct=True service=0.501s
+longspark/measurement: 37/100 gsm8k-test-0036 tokens=145 correct=True service=0.419s
+longspark/measurement: 38/100 gsm8k-test-0037 tokens=428 correct=True service=1.336s
+longspark/measurement: 39/100 gsm8k-test-0038 tokens=326 correct=True service=0.996s
+longspark/measurement: 40/100 gsm8k-test-0039 tokens=380 correct=True service=0.979s
+INFO 10-10 02:43:41 [loggers.py:315] Engine 000: Avg prompt throughput: 434.2 tokens/s, Avg generation throughput: 720.8 tokens/s, Running: 4 reqs, Waiting: 0 reqs, GPU KV cache usage: 2.6%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:43:41 [metrics.py:120] SpecDecoding metrics: Mean acceptance length: 5.66, Accepted throughput: 590.80 tokens/s, Drafted throughput: 887.13 tokens/s, Accepted: 7692 tokens, Drafted: 11550 tokens, Per-position acceptance rate: 0.905, 0.813, 0.730, 0.652, 0.585, 0.519, 0.458, Avg Draft acceptance rate: 66.6%
+INFO 10-10 02:43:41 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:43:41 [cuda_graph.py:123] 
+INFO 10-10 02:43:41 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:43:41 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64]
+INFO 10-10 02:43:41 [cuda_graph.py:123] 
+INFO 10-10 02:43:41 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:43:41 [cuda_graph.py:123] 
+INFO 10-10 02:43:41 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:43:41 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 32              | 32            | 0            | FULL         | 280   |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 8               | 8             | 0            | FULL         | 154   |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 24              | 24            | 0            | FULL         | 93    |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 16              | 16            | 0            | FULL         | 63    |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 4     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 127             | 127           | 0            | NONE         | 2     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 215             | 215           | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 312             | 312           | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 39              | 40            | 1            | PIECEWISE    | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 49              | 56            | 7            | PIECEWISE    | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 31              | 32            | 1            | PIECEWISE    | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 453             | 453           | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 452             | 452           | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 483             | 483           | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 469             | 469           | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 413             | 413           | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 472             | 472           | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] | 75              | 75            | 0            | NONE         | 1     |
+INFO 10-10 02:43:41 [cuda_graph.py:123] 
+longspark/measurement: 41/100 gsm8k-test-0040 tokens=225 correct=True service=0.584s
+longspark/measurement: 42/100 gsm8k-test-0041 tokens=265 correct=True service=0.822s
+longspark/measurement: 43/100 gsm8k-test-0042 tokens=99 correct=True service=0.321s
+longspark/measurement: 44/100 gsm8k-test-0043 tokens=246 correct=True service=0.635s
+longspark/measurement: 45/100 gsm8k-test-0044 tokens=271 correct=True service=0.757s
+longspark/measurement: 46/100 gsm8k-test-0045 tokens=284 correct=True service=0.691s
+longspark/measurement: 47/100 gsm8k-test-0046 tokens=248 correct=True service=0.724s
+longspark/measurement: 48/100 gsm8k-test-0047 tokens=352 correct=True service=0.928s
+longspark/measurement: 49/100 gsm8k-test-0048 tokens=134 correct=True service=0.357s
+longspark/measurement: 50/100 gsm8k-test-0049 tokens=182 correct=True service=0.422s
+longspark/measurement: 51/100 gsm8k-test-0050 tokens=163 correct=True service=0.489s
+longspark/measurement: 52/100 gsm8k-test-0051 tokens=189 correct=True service=0.591s
+longspark/measurement: 53/100 gsm8k-test-0052 tokens=287 correct=True service=0.799s
+longspark/measurement: 54/100 gsm8k-test-0053 tokens=346 correct=True service=0.950s
+longspark/measurement: 55/100 gsm8k-test-0054 tokens=280 correct=True service=1.172s
+longspark/measurement: 56/100 gsm8k-test-0055 tokens=102 correct=True service=0.322s
+longspark/measurement: 57/100 gsm8k-test-0056 tokens=105 correct=True service=0.353s
+longspark/measurement: 58/100 gsm8k-test-0057 tokens=269 correct=True service=0.739s
+longspark/measurement: 59/100 gsm8k-test-0058 tokens=265 correct=True service=0.739s
+longspark/measurement: 60/100 gsm8k-test-0059 tokens=114 correct=True service=0.353s
+longspark/measurement: 61/100 gsm8k-test-0060 tokens=197 correct=True service=0.502s
+longspark/measurement: 62/100 gsm8k-test-0061 tokens=135 correct=True service=0.370s
+longspark/measurement: 63/100 gsm8k-test-0062 tokens=289 correct=False service=0.992s
+longspark/measurement: 64/100 gsm8k-test-0063 tokens=245 correct=True service=0.753s
+longspark/measurement: 65/100 gsm8k-test-0064 tokens=183 correct=True service=0.520s
+longspark/measurement: 66/100 gsm8k-test-0065 tokens=108 correct=True service=0.321s
+longspark/measurement: 67/100 gsm8k-test-0066 tokens=146 correct=True service=0.486s
+longspark/measurement: 68/100 gsm8k-test-0067 tokens=184 correct=True service=0.469s
+longspark/measurement: 69/100 gsm8k-test-0068 tokens=223 correct=True service=0.538s
+longspark/measurement: 70/100 gsm8k-test-0069 tokens=223 correct=True service=0.622s
+longspark/measurement: 71/100 gsm8k-test-0070 tokens=207 correct=True service=0.571s
+longspark/measurement: 72/100 gsm8k-test-0071 tokens=98 correct=True service=0.308s
+longspark/measurement: 73/100 gsm8k-test-0072 tokens=172 correct=True service=0.418s
+longspark/measurement: 74/100 gsm8k-test-0073 tokens=206 correct=True service=0.549s
+longspark/measurement: 75/100 gsm8k-test-0074 tokens=189 correct=True service=0.566s
+longspark/measurement: 76/100 gsm8k-test-0075 tokens=277 correct=True service=0.855s
+longspark/measurement: 77/100 gsm8k-test-0076 tokens=351 correct=True service=0.887s
+longspark/measurement: 78/100 gsm8k-test-0077 tokens=239 correct=True service=0.652s
+longspark/measurement: 79/100 gsm8k-test-0078 tokens=301 correct=True service=0.870s
+longspark/measurement: 80/100 gsm8k-test-0079 tokens=107 correct=True service=0.290s
+longspark/measurement: 81/100 gsm8k-test-0080 tokens=171 correct=True service=0.525s
+longspark/measurement: 82/100 gsm8k-test-0081 tokens=155 correct=True service=0.457s
+longspark/measurement: 83/100 gsm8k-test-0082 tokens=139 correct=True service=0.390s
+longspark/measurement: 84/100 gsm8k-test-0083 tokens=116 correct=True service=0.308s
+INFO 10-10 02:43:51 [loggers.py:315] Engine 000: Avg prompt throughput: 535.4 tokens/s, Avg generation throughput: 982.6 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+INFO 10-10 02:43:51 [metrics.py:120] SpecDecoding metrics: Mean acceptance length: 5.73, Accepted throughput: 807.95 tokens/s, Drafted throughput: 1194.53 tokens/s, Accepted: 8082 tokens, Drafted: 11949 tokens, Per-position acceptance rate: 0.906, 0.823, 0.735, 0.655, 0.591, 0.540, 0.484, Avg Draft acceptance rate: 67.6%
+INFO 10-10 02:43:51 [cuda_graph.py:123] **CUDAGraph Config Settings:**
+INFO 10-10 02:43:51 [cuda_graph.py:123] 
+INFO 10-10 02:43:51 [cuda_graph.py:123] - Mode: FULL_AND_PIECEWISE
+INFO 10-10 02:43:51 [cuda_graph.py:123] - Capture sizes: [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64]
+INFO 10-10 02:43:51 [cuda_graph.py:123] 
+INFO 10-10 02:43:51 [cuda_graph.py:123] **CUDAGraph Stats:**
+INFO 10-10 02:43:51 [cuda_graph.py:123] 
+INFO 10-10 02:43:51 [cuda_graph.py:123] | Unpadded Tokens | Padded Tokens | Num Paddings | Runtime Mode | Count |
+INFO 10-10 02:43:51 [cuda_graph.py:123] |-----------------|---------------|--------------|--------------|-------|
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 32              | 32            | 0            | FULL         | 278   |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 24              | 24            | 0            | FULL         | 117   |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 8               | 8             | 0            | FULL         | 117   |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 16              | 16            | 0            | FULL         | 81    |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 512             | 512           | 0            | NONE         | 4     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 75              | 75            | 0            | NONE         | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 414             | 414           | 0            | NONE         | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 54              | 56            | 2            | PIECEWISE    | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 486             | 486           | 0            | NONE         | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 485             | 485           | 0            | NONE         | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 500             | 500           | 0            | NONE         | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 434             | 434           | 0            | NONE         | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 47              | 48            | 1            | PIECEWISE    | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 471             | 471           | 0            | NONE         | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 404             | 404           | 0            | NONE         | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] | 34              | 40            | 6            | PIECEWISE    | 1     |
+INFO 10-10 02:43:51 [cuda_graph.py:123] 
+longspark/measurement: 85/100 gsm8k-test-0084 tokens=203 correct=True service=0.579s
+longspark/measurement: 86/100 gsm8k-test-0085 tokens=141 correct=True service=0.579s
+longspark/measurement: 87/100 gsm8k-test-0086 tokens=173 correct=True service=0.646s
+longspark/measurement: 88/100 gsm8k-test-0087 tokens=369 correct=True service=1.276s
+longspark/measurement: 89/100 gsm8k-test-0088 tokens=152 correct=True service=0.418s
+longspark/measurement: 90/100 gsm8k-test-0089 tokens=140 correct=False service=0.434s
+longspark/measurement: 91/100 gsm8k-test-0090 tokens=201 correct=True service=0.620s
+longspark/measurement: 92/100 gsm8k-test-0091 tokens=225 correct=True service=0.535s
+longspark/measurement: 93/100 gsm8k-test-0092 tokens=316 correct=True service=0.728s
+longspark/measurement: 94/100 gsm8k-test-0093 tokens=245 correct=True service=0.796s
+longspark/measurement: 95/100 gsm8k-test-0094 tokens=289 correct=True service=0.678s
+longspark/measurement: 96/100 gsm8k-test-0095 tokens=230 correct=True service=0.579s
+longspark/measurement: 97/100 gsm8k-test-0096 tokens=87 correct=True service=0.224s
+longspark/measurement: 98/100 gsm8k-test-0097 tokens=212 correct=True service=0.805s
+longspark/measurement: 99/100 gsm8k-test-0098 tokens=299 correct=True service=0.891s
+longspark/measurement: 100/100 gsm8k-test-0099 tokens=130 correct=True service=0.454s
+INFO 10-10 02:43:54 [core_client.py:744] [shutdown] MPClient: start timeout=default
+INFO 10-10 02:43:54 [core_client.py:746] [shutdown] MPClient: stopping engine manager
+INFO 10-10 02:43:54 [utils.py:632] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=3268193) INFO 10-10 02:43:54 [core.py:1342] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=3268193) INFO 10-10 02:43:54 [core.py:1493] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=3268193) INFO 10-10 02:43:54 [core.py:1524] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=3268193) INFO 10-10 02:43:54 [core.py:1355] [shutdown] EngineCore: exiting busy loop
+INFO 10-10 02:43:55 [core_client.py:748] [shutdown] MPClient: engine manager stopped
+INFO 10-10 02:43:55 [core_client.py:749] [shutdown] MPClient: cleaning up background resources
+INFO 10-10 02:43:55 [core_client.py:751] [shutdown] MPClient: complete
+{
+  "schema_version": 1,
+  "status": "completed",
+  "backend": "vllm_native_v2",
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "requests": 200,
+  "integration_source_hashes": {
+    "vendor/specforge/modeling/draft/draftfreekv.py": "4f7166dd276bec0e726644153dd55157616f14deab615bac9328717f6085a755",
+    "vendor/specforge/modeling/draft/draftfreekv_validation.py": "11b80a84b25c7a6820bc5e23b8f4d577e37bbd209559f4e77d1ca56b1fdb891d",
+    "vendor/specforge/modeling/draft/global16_raw256.py": "b881bb90b2ab32e8194446b4c32bd1c301893307bfaabb2f0f9c523b73593409",
+    "vendor/specforge/modeling/draft/global16_raw256_training.py": "e61ca2b4a9434c76b3da1bd83e01b91eec6d34575d8d01399f3272228b71f62d",
+    "vendor/vllm/longspark_vllm/gsm8k.py": "a6835966cde4a6d43bedc003c4da45ceabd14daeb56e5bed307059139e7e4289",
+    "vendor/vllm/longspark_vllm/native_v2/__init__.py": "ea46b88ad4ba61d9adf689109621cd308f691965437d869592e1a0afd70d3e79",
+    "vendor/vllm/longspark_vllm/native_v2/commit_kernel.py": "0952a61412b90b31a613aebb86a880262e6901b00a5533345c7994c449dba29b",
+    "vendor/vllm/longspark_vllm/native_v2/diagnostics.py": "03303cb294dd902bc2f9ffea35b889b181ef72b124b3060788f451869e1ab510",
+    "vendor/vllm/longspark_vllm/native_v2/gather_kernel.py": "064db516ea2623e81dd8735384ba24a90ecae2ac6b53b4594ca13e702da56761",
+    "vendor/vllm/longspark_vllm/native_v2/inputs.py": "b1db2a069a62450def4f6a750dfcf21ecbf01366ea5dc054d93fe270c16736be",
+    "vendor/vllm/longspark_vllm/native_v2/speculator.py": "6a201bab082895b2b6c7b88cf47c2821eef42155a27b8dcd1659df04dc1f90d1",
+    "vendor/vllm/longspark_vllm/native_v2/startup.py": "dab16f2eaab7f8f000ac73eaf11a84fc455be859c4c69cf626fb716703b5167a",
+    "vendor/vllm/longspark_vllm/native_v2/state.py": "9b8093777f6c2491d77f0450669a64f139a26235dfe27ead274c46319237ef3a",
+    "vendor/vllm/longspark_vllm/native_v2/target_modules.py": "ae5b688af3c6862f3f36d9fa4746ea7ba8dfdabd5f477d9364b403d0dae6508e",
+    "vendor/vllm/patches/native-v2-custom-class.manifest.json": "1ad2c1aa4b284ca5e17a47a85120606246ee2835c3f810e99e443d0b8c878ac7",
+    "vendor/vllm/scripts/evaluate_native_v2_gsm8k.py": "5a9b47a1a8f175a418c546be22bdaff1c8d50042216598c7790dc524506796df"
+  },
+  "greedy_parity_passed": true,
+  "parity": {
+    "passed": true,
+    "matches": 100,
+    "comparisons": 100,
+    "checks": [
+      {
+        "source_id": "gsm8k-test-0000",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 115,
+        "longspark_tokens": 115
+      },
+      {
+        "source_id": "gsm8k-test-0001",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 93,
+        "longspark_tokens": 93
+      },
+      {
+        "source_id": "gsm8k-test-0002",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 193,
+        "longspark_tokens": 193
+      },
+      {
+        "source_id": "gsm8k-test-0003",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 119,
+        "longspark_tokens": 119
+      },
+      {
+        "source_id": "gsm8k-test-0004",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 149,
+        "longspark_tokens": 149
+      },
+      {
+        "source_id": "gsm8k-test-0005",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 190,
+        "longspark_tokens": 190
+      },
+      {
+        "source_id": "gsm8k-test-0006",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 219,
+        "longspark_tokens": 219
+      },
+      {
+        "source_id": "gsm8k-test-0007",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 321,
+        "longspark_tokens": 321
+      },
+      {
+        "source_id": "gsm8k-test-0008",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 399,
+        "longspark_tokens": 399
+      },
+      {
+        "source_id": "gsm8k-test-0009",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 204,
+        "longspark_tokens": 204
+      },
+      {
+        "source_id": "gsm8k-test-0010",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 214,
+        "longspark_tokens": 214
+      },
+      {
+        "source_id": "gsm8k-test-0011",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 208,
+        "longspark_tokens": 208
+      },
+      {
+        "source_id": "gsm8k-test-0012",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 285,
+        "longspark_tokens": 285
+      },
+      {
+        "source_id": "gsm8k-test-0013",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 385,
+        "longspark_tokens": 385
+      },
+      {
+        "source_id": "gsm8k-test-0014",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 254,
+        "longspark_tokens": 254
+      },
+      {
+        "source_id": "gsm8k-test-0015",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 197,
+        "longspark_tokens": 197
+      },
+      {
+        "source_id": "gsm8k-test-0016",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 128,
+        "longspark_tokens": 128
+      },
+      {
+        "source_id": "gsm8k-test-0017",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 234,
+        "longspark_tokens": 234
+      },
+      {
+        "source_id": "gsm8k-test-0018",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 100,
+        "longspark_tokens": 100
+      },
+      {
+        "source_id": "gsm8k-test-0019",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 286,
+        "longspark_tokens": 286
+      },
+      {
+        "source_id": "gsm8k-test-0020",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 209,
+        "longspark_tokens": 209
+      },
+      {
+        "source_id": "gsm8k-test-0021",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 305,
+        "longspark_tokens": 305
+      },
+      {
+        "source_id": "gsm8k-test-0022",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 218,
+        "longspark_tokens": 218
+      },
+      {
+        "source_id": "gsm8k-test-0023",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 82,
+        "longspark_tokens": 82
+      },
+      {
+        "source_id": "gsm8k-test-0024",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 142,
+        "longspark_tokens": 142
+      },
+      {
+        "source_id": "gsm8k-test-0025",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 277,
+        "longspark_tokens": 277
+      },
+      {
+        "source_id": "gsm8k-test-0026",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 236,
+        "longspark_tokens": 236
+      },
+      {
+        "source_id": "gsm8k-test-0027",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 157,
+        "longspark_tokens": 157
+      },
+      {
+        "source_id": "gsm8k-test-0028",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 198,
+        "longspark_tokens": 198
+      },
+      {
+        "source_id": "gsm8k-test-0029",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 222,
+        "longspark_tokens": 222
+      },
+      {
+        "source_id": "gsm8k-test-0030",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 211,
+        "longspark_tokens": 211
+      },
+      {
+        "source_id": "gsm8k-test-0031",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 299,
+        "longspark_tokens": 299
+      },
+      {
+        "source_id": "gsm8k-test-0032",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 156,
+        "longspark_tokens": 156
+      },
+      {
+        "source_id": "gsm8k-test-0033",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 216,
+        "longspark_tokens": 216
+      },
+      {
+        "source_id": "gsm8k-test-0034",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 164,
+        "longspark_tokens": 164
+      },
+      {
+        "source_id": "gsm8k-test-0035",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 176,
+        "longspark_tokens": 176
+      },
+      {
+        "source_id": "gsm8k-test-0036",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 145,
+        "longspark_tokens": 145
+      },
+      {
+        "source_id": "gsm8k-test-0037",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 428,
+        "longspark_tokens": 428
+      },
+      {
+        "source_id": "gsm8k-test-0038",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 326,
+        "longspark_tokens": 326
+      },
+      {
+        "source_id": "gsm8k-test-0039",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 380,
+        "longspark_tokens": 380
+      },
+      {
+        "source_id": "gsm8k-test-0040",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 225,
+        "longspark_tokens": 225
+      },
+      {
+        "source_id": "gsm8k-test-0041",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 265,
+        "longspark_tokens": 265
+      },
+      {
+        "source_id": "gsm8k-test-0042",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 99,
+        "longspark_tokens": 99
+      },
+      {
+        "source_id": "gsm8k-test-0043",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 246,
+        "longspark_tokens": 246
+      },
+      {
+        "source_id": "gsm8k-test-0044",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 271,
+        "longspark_tokens": 271
+      },
+      {
+        "source_id": "gsm8k-test-0045",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 284,
+        "longspark_tokens": 284
+      },
+      {
+        "source_id": "gsm8k-test-0046",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 248,
+        "longspark_tokens": 248
+      },
+      {
+        "source_id": "gsm8k-test-0047",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 352,
+        "longspark_tokens": 352
+      },
+      {
+        "source_id": "gsm8k-test-0048",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 134,
+        "longspark_tokens": 134
+      },
+      {
+        "source_id": "gsm8k-test-0049",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 182,
+        "longspark_tokens": 182
+      },
+      {
+        "source_id": "gsm8k-test-0050",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 163,
+        "longspark_tokens": 163
+      },
+      {
+        "source_id": "gsm8k-test-0051",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 189,
+        "longspark_tokens": 189
+      },
+      {
+        "source_id": "gsm8k-test-0052",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 287,
+        "longspark_tokens": 287
+      },
+      {
+        "source_id": "gsm8k-test-0053",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 346,
+        "longspark_tokens": 346
+      },
+      {
+        "source_id": "gsm8k-test-0054",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 280,
+        "longspark_tokens": 280
+      },
+      {
+        "source_id": "gsm8k-test-0055",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 102,
+        "longspark_tokens": 102
+      },
+      {
+        "source_id": "gsm8k-test-0056",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 105,
+        "longspark_tokens": 105
+      },
+      {
+        "source_id": "gsm8k-test-0057",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 269,
+        "longspark_tokens": 269
+      },
+      {
+        "source_id": "gsm8k-test-0058",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 265,
+        "longspark_tokens": 265
+      },
+      {
+        "source_id": "gsm8k-test-0059",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 114,
+        "longspark_tokens": 114
+      },
+      {
+        "source_id": "gsm8k-test-0060",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 197,
+        "longspark_tokens": 197
+      },
+      {
+        "source_id": "gsm8k-test-0061",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 135,
+        "longspark_tokens": 135
+      },
+      {
+        "source_id": "gsm8k-test-0062",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 289,
+        "longspark_tokens": 289
+      },
+      {
+        "source_id": "gsm8k-test-0063",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 245,
+        "longspark_tokens": 245
+      },
+      {
+        "source_id": "gsm8k-test-0064",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 183,
+        "longspark_tokens": 183
+      },
+      {
+        "source_id": "gsm8k-test-0065",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 108,
+        "longspark_tokens": 108
+      },
+      {
+        "source_id": "gsm8k-test-0066",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 146,
+        "longspark_tokens": 146
+      },
+      {
+        "source_id": "gsm8k-test-0067",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 184,
+        "longspark_tokens": 184
+      },
+      {
+        "source_id": "gsm8k-test-0068",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 223,
+        "longspark_tokens": 223
+      },
+      {
+        "source_id": "gsm8k-test-0069",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 223,
+        "longspark_tokens": 223
+      },
+      {
+        "source_id": "gsm8k-test-0070",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 207,
+        "longspark_tokens": 207
+      },
+      {
+        "source_id": "gsm8k-test-0071",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 98,
+        "longspark_tokens": 98
+      },
+      {
+        "source_id": "gsm8k-test-0072",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 172,
+        "longspark_tokens": 172
+      },
+      {
+        "source_id": "gsm8k-test-0073",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 206,
+        "longspark_tokens": 206
+      },
+      {
+        "source_id": "gsm8k-test-0074",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 189,
+        "longspark_tokens": 189
+      },
+      {
+        "source_id": "gsm8k-test-0075",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 277,
+        "longspark_tokens": 277
+      },
+      {
+        "source_id": "gsm8k-test-0076",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 351,
+        "longspark_tokens": 351
+      },
+      {
+        "source_id": "gsm8k-test-0077",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 239,
+        "longspark_tokens": 239
+      },
+      {
+        "source_id": "gsm8k-test-0078",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 301,
+        "longspark_tokens": 301
+      },
+      {
+        "source_id": "gsm8k-test-0079",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 107,
+        "longspark_tokens": 107
+      },
+      {
+        "source_id": "gsm8k-test-0080",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 171,
+        "longspark_tokens": 171
+      },
+      {
+        "source_id": "gsm8k-test-0081",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 155,
+        "longspark_tokens": 155
+      },
+      {
+        "source_id": "gsm8k-test-0082",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 139,
+        "longspark_tokens": 139
+      },
+      {
+        "source_id": "gsm8k-test-0083",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 116,
+        "longspark_tokens": 116
+      },
+      {
+        "source_id": "gsm8k-test-0084",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 203,
+        "longspark_tokens": 203
+      },
+      {
+        "source_id": "gsm8k-test-0085",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 141,
+        "longspark_tokens": 141
+      },
+      {
+        "source_id": "gsm8k-test-0086",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 173,
+        "longspark_tokens": 173
+      },
+      {
+        "source_id": "gsm8k-test-0087",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 369,
+        "longspark_tokens": 369
+      },
+      {
+        "source_id": "gsm8k-test-0088",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 152,
+        "longspark_tokens": 152
+      },
+      {
+        "source_id": "gsm8k-test-0089",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 140,
+        "longspark_tokens": 140
+      },
+      {
+        "source_id": "gsm8k-test-0090",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 201,
+        "longspark_tokens": 201
+      },
+      {
+        "source_id": "gsm8k-test-0091",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 225,
+        "longspark_tokens": 225
+      },
+      {
+        "source_id": "gsm8k-test-0092",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 316,
+        "longspark_tokens": 316
+      },
+      {
+        "source_id": "gsm8k-test-0093",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 245,
+        "longspark_tokens": 245
+      },
+      {
+        "source_id": "gsm8k-test-0094",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 289,
+        "longspark_tokens": 289
+      },
+      {
+        "source_id": "gsm8k-test-0095",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 230,
+        "longspark_tokens": 230
+      },
+      {
+        "source_id": "gsm8k-test-0096",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 87,
+        "longspark_tokens": 87
+      },
+      {
+        "source_id": "gsm8k-test-0097",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 212,
+        "longspark_tokens": 212
+      },
+      {
+        "source_id": "gsm8k-test-0098",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 299,
+        "longspark_tokens": 299
+      },
+      {
+        "source_id": "gsm8k-test-0099",
+        "exact_match": true,
+        "first_mismatch_index": null,
+        "vanilla_tokens": 130,
+        "longspark_tokens": 130
+      }
+    ]
+  },
+  "correctness_status": "passed",
+  "scoring": {
+    "scoring_policy": "Use only the first nonempty line after the last #### marker. The whole line must be a signed base-10 integer or decimal, optionally with correctly grouped thousands commas and one leading dollar symbol. Compare exact Decimal values; missing/invalid final answers count as incorrect.",
+    "total": 200,
+    "correct": 192,
+    "incorrect": 8,
+    "unparsed": 0,
+    "accuracy": 0.96,
+    "parsed_accuracy": 0.96,
+    "parse_status_counts": {
+      "parsed": 200
+    },
+    "eos_count": 200,
+    "truncated_count": 0,
+    "token_cap_count": 0,
+    "outputs_with_tokens_after_eos": 0,
+    "output_tokens": 42678,
+    "mean_output_tokens": 213.39,
+    "by_method": {
+      "longspark": {
+        "total": 100,
+        "correct": 96,
+        "incorrect": 4,
+        "unparsed": 0,
+        "accuracy": 0.96,
+        "parsed_accuracy": 0.96,
+        "parse_status_counts": {
+          "parsed": 100
+        },
+        "eos_count": 100,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 21339,
+        "mean_output_tokens": 213.39
+      },
+      "vanilla": {
+        "total": 100,
+        "correct": 96,
+        "incorrect": 4,
+        "unparsed": 0,
+        "accuracy": 0.96,
+        "parsed_accuracy": 0.96,
+        "parse_status_counts": {
+          "parsed": 100
+        },
+        "eos_count": 100,
+        "truncated_count": 0,
+        "token_cap_count": 0,
+        "outputs_with_tokens_after_eos": 0,
+        "output_tokens": 21339,
+        "mean_output_tokens": 213.39
+      }
+    }
+  },
+  "performance": {
+    "vanilla": {
+      "requests": 100,
+      "output_tokens": 21339,
+      "decode_tokens": 21239,
+      "service_seconds": 290.30497900024056,
+      "decode_seconds": 288.4520008713007,
+      "aggregate_service_tps": 73.50545648058733,
+      "aggregate_decode_tps": 73.6309678416003,
+      "verification_rounds": 0,
+      "proposed_tokens": 0,
+      "accepted_draft_tokens_raw": 0,
+      "accepted_draft_tokens_emitted": 0,
+      "mean_accepted_draft_tokens": null,
+      "tau": null,
+      "tau_raw": null,
+      "acceptance_rate": null,
+      "acceptance_rate_raw": null,
+      "effective_advance": null,
+      "generate_wall_seconds": 99.01979460194707,
+      "generate_wall_tps": 215.50236582272615,
+      "max_submitted_concurrency": 4
+    },
+    "longspark": {
+      "requests": 100,
+      "output_tokens": 21339,
+      "decode_tokens": 21239,
+      "service_seconds": 62.185945335775614,
+      "decode_seconds": 60.1862760707736,
+      "aggregate_service_tps": 343.14827707095515,
+      "aggregate_decode_tps": 352.887757584883,
+      "verification_rounds": 3711,
+      "proposed_tokens": 25977,
+      "accepted_draft_tokens_raw": 17536,
+      "accepted_draft_tokens_emitted": 17536,
+      "mean_accepted_draft_tokens": 4.725410940447318,
+      "tau": 5.725410940447318,
+      "tau_raw": 5.725410940447318,
+      "acceptance_rate": 0.6750587057781884,
+      "acceptance_rate_raw": 0.6750587057781884,
+      "effective_advance": 5.723255187281056,
+      "generate_wall_seconds": 21.760603982955217,
+      "generate_wall_tps": 980.6253547334691,
+      "max_submitted_concurrency": 4
+    }
+  },
+  "aggregate_service_speedup": 4.668337474532657,
+  "definitions": {
+    "tau": "1 + emitted accepted draft tokens / verified steps",
+    "tau_raw": "1 + native pre-stop accepted draft tokens / verified steps",
+    "service_tps": "sum(output_tokens) / sum(last_token_ts - scheduled_ts)",
+    "decode_tps": "sum(output_tokens - 1) / sum(last_token_ts - first_token_ts)",
+    "wall_tps": "sum(output_tokens) / sum(generate batch wall time)"
+  }
+}

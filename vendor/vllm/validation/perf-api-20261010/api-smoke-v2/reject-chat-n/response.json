@@ -1,0 +1,1 @@
+{"error": {"message": "LongSpark V2 requires n=1.", "type": "invalid_request_error", "param": "n", "code": "unsupported_longspark_request"}}
