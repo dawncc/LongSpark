@@ -1,0 +1,3683 @@
+diff --git a/.buildkite/test_areas/spec_decode.yaml b/.buildkite/test_areas/spec_decode.yaml
+index d031d4fdea9b976173a6acd44cddeb8f9eba3d19..16217ad4e359b1fbc5994ba24a81797d5668b3e0 100644
+--- a/.buildkite/test_areas/spec_decode.yaml
++++ b/.buildkite/test_areas/spec_decode.yaml
+@@ -515,6 +515,27 @@ steps:
+       - vllm/model_executor/kernels/linear/
+       - vllm/platforms/rocm.py
+ 
++- label: ":nvidia: (H200 MIG 35GB) Spec Decode LongSpark"
++  key: spec-decode-longspark
++  device: h200_35gb
++  timeout_in_minutes: 40
++  source_file_dependencies:
++    - vllm/config/longspark.py
++    - vllm/config/speculative.py
++    - vllm/config/vllm.py
++    - vllm/sampling_params.py
++    - vllm/model_executor/models/longspark.py
++    - vllm/model_executor/models/registry.py
++    - vllm/transformers_utils/
++    - vllm/v1/worker/gpu/model_runner.py
++    - vllm/v1/worker/gpu/spec_decode/
++    - tests/v1/e2e/spec_decode/longspark/
++    - tests/config/test_longspark.py
++    - tests/v1/spec_decode/test_longspark_model.py
++    - tests/v1/spec_decode/test_longspark_state.py
++  commands:
++    - pytest -v -s v1/e2e/spec_decode/longspark/
++
+ - label: ":nvidia: (H200 MIG 35GB) Spec Decode AL DSpark Nightly"
+   key: spec-decode-dspark-nightly
+   timeout_in_minutes: 60
+diff --git a/docs/features/speculative_decoding/README.md b/docs/features/speculative_decoding/README.md
+index 7e2c36d29395d856ab71575542a3bff4f07b19bf..da4a8856a38fee7e968ce1c60b8860ac07335484 100644
+--- a/docs/features/speculative_decoding/README.md
++++ b/docs/features/speculative_decoding/README.md
+@@ -10,6 +10,7 @@ vLLM supports a variety of methods of speculative decoding. Model-based methods
+ 
+ - [EAGLE](eagle.md)
+ - [LiLiCorr](lilicorr.md)
++- [LongSpark](longspark.md)
+ - [Multi-Token Prediction (MTP)](mtp.md)
+ - [Draft Model](draft_model.md)
+ - [Parallel Draft Model (PARD)](parallel_draft_model.md)
+diff --git a/docs/features/speculative_decoding/longspark.md b/docs/features/speculative_decoding/longspark.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..c978a102c2f6ecf95364d575ed03ce1de3136066
+--- /dev/null
++++ b/docs/features/speculative_decoding/longspark.md
+@@ -0,0 +1,94 @@
++# LongSpark
++
++LongSpark predicts seven draft tokens in parallel and applies a sequential
++Markov correction before greedy sampling. It summarizes confirmed target KV
++into 16 global memory slots and retains 256 recent target rows. The scheduler,
++target forward pass, rejection sampler, and request lifecycle remain owned by
++vLLM's Model Runner V2.
++
++The initial implementation supports dense Qwen3 targets in BF16 on a single
++CUDA GPU, with FlashAttention and a compatible Global16/Raw256/Local7 checkpoint.
++It shares the target embedding, output head, and final normalization weights.
++Checkpoint parameter names are compatible with the original
++[LongSpark implementation](https://github.com/dawncc/LongSpark).
++
++## Serve an OpenAI-compatible API
++
++```bash
++VLLM_USE_V2_MODEL_RUNNER=1 vllm serve Qwen/Qwen3-4B \
++  --served-model-name longspark-qwen3-4b \
++  --dtype bfloat16 \
++  --no-enable-prefix-caching \
++  --max-model-len 4096 \
++  --max-num-seqs 4 \
++  --max-num-batched-tokens 512 \
++  --compilation-config '{"cudagraph_mode":"FULL_AND_PIECEWISE"}' \
++  --speculative-config '{"method":"longspark","model":"Hehy/LongSpark-Qwen3-4B","num_speculative_tokens":7}'
++```
++
++Use the normal completions or chat completions endpoints, including streaming.
++Set `temperature` explicitly to zero:
++
++```python
++from openai import OpenAI
++
++client = OpenAI(base_url="http://localhost:8000/v1", api_key="EMPTY")
++response = client.chat.completions.create(
++    model="longspark-qwen3-4b",
++    messages=[{"role": "user", "content": "What is 19 times 23?"}],
++    temperature=0,
++    max_tokens=256,
++    extra_body={"chat_template_kwargs": {"enable_thinking": False}},
++)
++print(response.choices[0].message.content)
++```
++
++## Offline generation
++
++The same configuration is accepted by `LLM`. Set
++`VLLM_USE_V2_MODEL_RUNNER=1` in the environment before starting Python:
++
++```python
++from vllm import LLM, SamplingParams
++
++llm = LLM(
++    model="Qwen/Qwen3-4B",
++    dtype="bfloat16",
++    enable_prefix_caching=False,
++    max_model_len=4096,
++    max_num_seqs=4,
++    max_num_batched_tokens=512,
++    speculative_config={
++        "method": "longspark",
++        "model": "Hehy/LongSpark-Qwen3-4B",
++        "num_speculative_tokens": 7,
++    },
++)
++outputs = llm.generate(["The capital of France is"], SamplingParams(temperature=0))
++print(outputs[0].outputs[0].text)
++```
++
++## Supported configuration
++
++- Model Runner V2; seven fixed draft tokens; greedy target and draft sampling.
++- Dense Qwen3, matching target/draft vocabulary and geometry, native unscaled RoPE.
++- BF16 target weights and KV cache; FlashAttention is selected for this method.
++- One device: TP, PP, DP, DCP, and PCP must all be one.
++- Chunked prefill, mixed prefill/decode batches, request-slot reuse, asynchronous
++  scheduling, and native CUDA graph capture for the draft network and sampling.
++- `--enforce-eager` is available for debugging. Full decode graphs are recommended
++  for latency measurements.
++
++Prefix caching must be disabled because the drafter needs to observe every
++confirmed prompt row. LoRA, KV transfer, quantization, watermarking, adaptive
++verification, structured output, custom logits processors, sampling penalties,
++and nonzero temperature are not supported by this initial implementation.
++Unsupported requests are rejected before reaching the worker.
++Streaming input (incrementally appending prompt chunks through `AsyncLLM`) is
++not supported; ordinary streaming output through the HTTP API is supported.
++
++Draft state and prefill workspace add GPU memory overhead. Increase the batch
++and token budgets gradually from the example above. Throughput and acceptance
++depend on the target/checkpoint pair, prompt distribution, and batch size; use
++the standard vLLM benchmarking tools to measure your workload. The usual
++[speculative decoding acceptance metrics](acceptance_metrics.md) apply.
+diff --git a/docs/models/supported_models.md b/docs/models/supported_models.md
+index 221ab877eaa8431c5e7da4f74fb9243fa5a5c3b9..55cbaa033fd285784924f47c26a613f3be150f38 100644
+--- a/docs/models/supported_models.md
++++ b/docs/models/supported_models.md
+@@ -358,6 +358,10 @@ print(output)
+ 
+ See [this page](generative_models.md) for more information on how to use generative models.
+ 
++For the `LongSparkDraftModel` speculative drafter (including original
++`DraftFreeKVModel` checkpoints) with a Qwen3 target, see the
++[LongSpark guide](../features/speculative_decoding/longspark.md).
++
+ #### Text Generation
+ 
+ These models primarily accept the [`LLM.generate`](./generative_models.md#llmgenerate) API. Chat/Instruct models additionally support the [`LLM.chat`](./generative_models.md#llmchat) API.
+diff --git a/tests/config/test_longspark.py b/tests/config/test_longspark.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..42ec1907c2adaf4abea3738374bb0d4c4eb85735
+--- /dev/null
++++ b/tests/config/test_longspark.py
+@@ -0,0 +1,173 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++
++from types import SimpleNamespace
++from unittest.mock import MagicMock, patch
++
++import pytest
++import torch
++from transformers import Qwen3Config
++
++from vllm.config import ParallelConfig, SpeculativeConfig
++from vllm.config.longspark import validate_longspark_config
++from vllm.transformers_utils.config import get_config
++from vllm.transformers_utils.configs.longspark import LongSparkConfig
++from vllm.v1.attention.backends.registry import AttentionBackendEnum
++
++pytestmark = pytest.mark.cpu_test
++
++
++def _draft_config(**kwargs):
++    fields = dict(
++        target_layer_ids=[0, 2],
++        hidden_size=64,
++        vocab_size=128,
++        num_key_value_heads=2,
++        head_dim=16,
++        qwen_num_attention_heads=4,
++        qwen_intermediate_size=128,
++        mask_token_id=0,
++    )
++    fields.update(kwargs)
++    return LongSparkConfig(**fields)
++
++
++def _speculative_config(draft_kwargs=None, **kwargs):
++    target_hf = Qwen3Config(
++        hidden_size=64,
++        vocab_size=128,
++        num_hidden_layers=3,
++        num_attention_heads=4,
++        num_key_value_heads=2,
++        head_dim=16,
++        intermediate_size=128,
++        rope_theta=1_000_000.0,
++    )
++    target = MagicMock(
++        hf_config=target_hf,
++        hf_text_config=target_hf,
++        max_model_len=128,
++        quantization=None,
++        hf_overrides={},
++    )
++    hf_config = _draft_config(**(draft_kwargs or {}))
++    draft = MagicMock(
++        hf_config=hf_config,
++        architectures=hf_config.architectures,
++        max_model_len=128,
++    )
++    with patch("vllm.config.speculative.ModelConfig", return_value=draft):
++        return SpeculativeConfig(
++            model="draft",
++            method="longspark",
++            target_model_config=target,
++            target_parallel_config=ParallelConfig(),
++            **kwargs,
++        )
++
++
++def test_legacy_checkpoint_config_loads_without_remote_code(tmp_path):
++    draft = _draft_config()
++    draft.architectures = ["DraftFreeKVModel"]
++    draft.save_pretrained(tmp_path)
++    loaded = get_config(str(tmp_path), trust_remote_code=False)
++    assert isinstance(loaded, LongSparkConfig)
++    assert loaded.target_layer_ids == [0, 2]
++    assert loaded.architectures == ["LongSparkDraftModel"]
++
++
++def test_longspark_uses_anchor_first_scheduling_and_target_aux_layers():
++    config = _speculative_config()
++    assert config.num_speculative_tokens == 7
++    assert config.parallel_drafting
++    assert config.use_eagle()
++    assert config.max_num_new_slots_for_drafting == 6
++    assert config.draft_model_config.hf_config.eagle_aux_hidden_state_layer_ids == [1]
++
++
++@pytest.mark.parametrize(
++    "kwargs",
++    [
++        {"num_speculative_tokens": 8},
++        {"draft_sample_method": "probabilistic"},
++        {"rejection_sample_method": "block"},
++        {"enable_adaptive_verification": True},
++        {"num_speculative_tokens_per_batch_size": [(1, 4, 3)]},
++        {"use_local_argmax_reduction": True},
++        {"disable_padded_drafter_batch": True},
++    ],
++)
++def test_longspark_rejects_unsupported_drafting_modes(kwargs):
++    with pytest.raises(ValueError, match="LongSpark"):
++        _speculative_config(**kwargs)
++
++
++@pytest.mark.parametrize(
++    "kwargs",
++    [
++        {"target_layer_ids": [2]},
++        {"target_layer_ids": [2, 0]},
++        {"target_layer_ids": [0, 3]},
++        {"global16_raw256_enabled": False},
++        {"raw_target_rows": 128},
++        {"hidden_size": 32},
++        {"qwen_rope_theta": 10000},
++    ],
++)
++def test_longspark_rejects_incompatible_checkpoint_geometry(kwargs):
++    with pytest.raises(ValueError, match="LongSpark"):
++        _speculative_config(draft_kwargs=kwargs)
++
++
++def _serving_config():
++    return SimpleNamespace(
++        use_v2_model_runner=True,
++        model_config=SimpleNamespace(
++            dtype=torch.bfloat16,
++            quantization=None,
++            logits_processors=None,
++            model_impl="auto",
++            runner_type="generate",
++            architectures=["Qwen3ForCausalLM"],
++        ),
++        parallel_config=ParallelConfig(),
++        cache_config=SimpleNamespace(enable_prefix_caching=False, cache_dtype="auto"),
++        attention_config=SimpleNamespace(backend=None),
++        lora_config=None,
++        kv_transfer_config=None,
++        watermark_config=None,
++    )
++
++
++def test_longspark_selects_compatible_target_kv_layout():
++    config = _serving_config()
++    with patch("vllm.platforms.current_platform.is_cuda", return_value=True):
++        validate_longspark_config(config)
++    assert config.attention_config.backend == AttentionBackendEnum.FLASH_ATTN
++
++
++@pytest.mark.parametrize(
++    "section,field,value",
++    [
++        (None, "use_v2_model_runner", False),
++        (None, "lora_config", object()),
++        (None, "kv_transfer_config", object()),
++        ("model_config", "dtype", torch.float16),
++        ("model_config", "quantization", "fp8"),
++        ("model_config", "model_impl", "transformers"),
++        ("model_config", "runner_type", "pooling"),
++        ("cache_config", "enable_prefix_caching", True),
++        ("cache_config", "cache_dtype", "fp8"),
++        ("parallel_config", "tensor_parallel_size", 2),
++        ("parallel_config", "prefill_context_parallel_size", 2),
++        ("attention_config", "backend", AttentionBackendEnum.TRITON_ATTN),
++    ],
++)
++def test_longspark_rejects_unsupported_serving_modes(section, field, value):
++    config = _serving_config()
++    setattr(getattr(config, section) if section else config, field, value)
++    with (
++        patch("vllm.platforms.current_platform.is_cuda", return_value=True),
++        pytest.raises(ValueError, match="LongSpark"),
++    ):
++        validate_longspark_config(config)
+diff --git a/tests/models/registry.py b/tests/models/registry.py
+index 31c3c5433aec406f16381fd38092135b6c0056d8..fde1da530f18d401f3e4524dbbe2a40130cadf0a 100644
+--- a/tests/models/registry.py
++++ b/tests/models/registry.py
+@@ -38,6 +38,9 @@ class _HfExamplesInfo:
+     The method to use for speculative decoding.
+     """
+ 
++    num_speculative_tokens: int = 1
++    """The draft block size to use for speculative model initialization."""
++
+     min_transformers_version: str | None = None
+     """
+     The minimum version of HF Transformers that is required to run this model.
+@@ -1429,6 +1432,31 @@ _MULTIMODAL_EXAMPLE_MODELS = {
+ 
+ 
+ _SPECULATIVE_DECODING_EXAMPLE_MODELS = {
++    # [LongSpark]
++    "DraftFreeKVModel": _HfExamplesInfo(
++        "Qwen/Qwen3-4B",
++        speculative_model="Hehy/LongSpark-Qwen3-4B",
++        speculative_method="longspark",
++        num_speculative_tokens=7,
++        dtype="bfloat16",
++        enable_prefix_caching=False,
++        use_original_num_layers=True,
++        max_model_len=4096,
++        max_num_seqs=4,
++        max_num_batched_tokens=512,
++    ),
++    "LongSparkDraftModel": _HfExamplesInfo(
++        "Qwen/Qwen3-4B",
++        speculative_model="Hehy/LongSpark-Qwen3-4B",
++        speculative_method="longspark",
++        num_speculative_tokens=7,
++        dtype="bfloat16",
++        enable_prefix_caching=False,
++        use_original_num_layers=True,
++        max_model_len=4096,
++        max_num_seqs=4,
++        max_num_batched_tokens=512,
++    ),
+     # [Medusa]
+     "MedusaModel": _HfExamplesInfo(
+         "JackFram/llama-68m", speculative_model="abhigoyal/vllm-medusa-llama-68m-random"
+diff --git a/tests/models/test_initialization.py b/tests/models/test_initialization.py
+index 073f616af875a7a035eef6b117c563497c9ffc25..6872c55a3e815829cf52d128281c12b8c20d7877 100644
+--- a/tests/models/test_initialization.py
++++ b/tests/models/test_initialization.py
+@@ -174,6 +174,12 @@ def can_initialize(
+                 f"capability {capability.major}.{capability.minor}"
+             )
+ 
++    if model_arch in ("DraftFreeKVModel", "LongSparkDraftModel"):
++        from vllm.platforms import current_platform
++
++        if not current_platform.is_cuda():
++            pytest.skip("LongSpark currently requires CUDA")
++
+     if model_arch == "DeepseekV4ForConditionalGeneration":
+         from vllm.platforms import current_platform
+ 
+@@ -219,7 +225,7 @@ def can_initialize(
+             speculative_config={
+                 "model": model_info.speculative_model,
+                 "method": model_info.speculative_method,
+-                "num_speculative_tokens": 1,
++                "num_speculative_tokens": model_info.num_speculative_tokens,
+             }
+             if model_info.speculative_model
+             else None,
+diff --git a/tests/test_config.py b/tests/test_config.py
+index 425d55f29346ef716327bf16390fef1d24371dc9..24ee369ab77651450d2fd00ea2e15c66997c2a4f 100644
+--- a/tests/test_config.py
++++ b/tests/test_config.py
+@@ -917,14 +917,16 @@ def test_dsa_models_select_matching_mtp(model_type, expected_architecture):
+     assert hf_config.architectures == [expected_architecture]
+ 
+ 
+-@pytest.mark.parametrize("method", ["extract_hidden_states", "ngram", "ngram_gpu"])
++@pytest.mark.parametrize(
++    "method", ["extract_hidden_states", "ngram", "ngram_gpu", "dspark", "longspark"]
++)
+ def test_v2_model_runner_supports_speculative_method(method):
+     config = VllmConfig()
+     config.speculative_config = cast(
+         SpeculativeConfig,
+         SimpleNamespace(
+             method=method,
+-            parallel_drafting=False,
++            parallel_drafting=method in ("dspark", "longspark"),
+             enable_adaptive_verification=False,
+         ),
+     )
+@@ -932,6 +934,27 @@ def test_v2_model_runner_supports_speculative_method(method):
+     assert config._get_v2_model_runner_unsupported_features() == []
+ 
+ 
++@pytest.mark.parametrize("method", ["custom_class", "dspark", "longspark"])
++def test_longspark_does_not_enable_v2_for_custom_proposers(method):
++    config = VllmConfig()
++    config.speculative_config = cast(
++        SpeculativeConfig,
++        SimpleNamespace(
++            method=method,
++            parallel_drafting=method != "custom_class",
++            enable_adaptive_verification=False,
++        ),
++    )
++    v2_unsupported = config._get_v2_model_runner_unsupported_features()
++    v1_unsupported = config._get_v1_model_runner_unsupported_features()
++    if method == "custom_class":
++        assert v2_unsupported == ["speculative method 'custom_class'"]
++        assert v1_unsupported == []
++    else:
++        assert v2_unsupported == []
++        assert v1_unsupported == [f"{method} speculative decoding"]
++
++
+ @pytest.mark.parametrize("use_heterogeneous_vocab", [False, True])
+ def test_v2_model_runner_heterogeneous_vocab_draft_falls_back_to_v1(
+     use_heterogeneous_vocab,
+@@ -2140,6 +2163,7 @@ def test_draft_parallel_config_preserves_ep_without_model(
+         pytest.param("eagle3", True, 7, id="p-eagle"),
+         pytest.param("dflash", True, 8, id="dflash"),
+         pytest.param("dspark", True, 7, id="dspark"),
++        pytest.param("longspark", True, 7, id="longspark"),
+         pytest.param("mtp", False, 0, id="mtp"),
+         pytest.param("ngram", False, 0, id="ngram"),
+         pytest.param("draft_model", False, 1, id="draft-model"),
+diff --git a/tests/test_sampling_params.py b/tests/test_sampling_params.py
+index f32a3d4c367f9c17f1c44bfb3110e366e0a5d452..d9ab85d0e0d4be87d6192eeb89c851e086e74794 100644
+--- a/tests/test_sampling_params.py
++++ b/tests/test_sampling_params.py
+@@ -56,6 +56,40 @@ def test_non_diffusion_models_unaffected():
+     params.verify(MockModelConfig(), None, None, None)
+ 
+ 
++@pytest.mark.parametrize(
++    "kwargs",
++    [
++        {"temperature": 0.7},
++        {"presence_penalty": 0.5},
++        {"frequency_penalty": 0.5},
++        {"repetition_penalty": 1.1},
++        {"allowed_token_ids": [1, 2]},
++        {"bad_words": ["foo"]},
++        {"thinking_token_budget": 0},
++    ],
++)
++def test_longspark_rejects_unsupported_requests_at_admission(kwargs):
++    """Unsupported requests fail before a worker can enqueue or assert on them."""
++    fields = {"temperature": 0.0, **kwargs}
++    params = SamplingParams(**fields)
++    with pytest.raises(VLLMValidationError, match="LongSpark"):
++        params.verify(
++            MockModelConfig(), SimpleNamespace(method="longspark"), None, None
++        )
++
++
++@pytest.mark.parametrize("method", [None, "ngram", "custom_class", "dspark"])
++def test_longspark_restrictions_do_not_change_other_methods(method):
++    config = SimpleNamespace(method=method) if method else None
++    params = SamplingParams(temperature=0.7, presence_penalty=0.5)
++    params.verify(MockModelConfig(), config, None, None)
++
++
++def test_longspark_accepts_greedy_generation_with_streaming_and_stop_options():
++    params = SamplingParams(temperature=0.0, max_tokens=32, stop_token_ids=[1])
++    params.verify(MockModelConfig(), SimpleNamespace(method="longspark"), None, None)
++
++
+ def test_verify_leaves_logits_processors_to_admission():
+     """verify() is runner-agnostic; LP validation lives in the admission
+     layer, so an unimportable FQCN must not fail verify()."""
+diff --git a/tests/v1/e2e/spec_decode/longspark/test_longspark.py b/tests/v1/e2e/spec_decode/longspark/test_longspark.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..b69f245fe3a95af6be1fd6f2a6cd5efd3cd87723
+--- /dev/null
++++ b/tests/v1/e2e/spec_decode/longspark/test_longspark.py
+@@ -0,0 +1,140 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++
++import asyncio
++import json
++
++import openai
++import pytest
++
++from tests.evals.gsm8k.gsm8k_eval import _build_gsm8k_prompts, get_answer_value
++from tests.utils import RemoteOpenAIServer
++from tests.v1.e2e.spec_decode.utils import compute_acceptance_len
++from vllm import SamplingParams
++from vllm.config import CompilationConfig
++from vllm.platforms import current_platform
++
++MODEL = "Qwen/Qwen3-4B"
++DRAFT = "Hehy/LongSpark-Qwen3-4B"
++SPECULATIVE_CONFIG = {
++    "method": "longspark",
++    "model": DRAFT,
++    "num_speculative_tokens": 7,
++}
++ENV = {
++    "VLLM_USE_V2_MODEL_RUNNER": "1",
++    "VLLM_GPU_SYNC_CHECK": "error",
++    "VLLM_BATCH_INVARIANT": "1",
++    "VLLM_USE_FLASHINFER_SAMPLER": "0",
++}
++pytestmark = pytest.mark.skipif(
++    not current_platform.is_cuda(), reason="LongSpark requires CUDA"
++)
++
++
++@pytest.mark.parametrize("enforce_eager,num_questions", [(False, 100), (True, 4)])
++def test_longspark_matches_greedy_target_on_gsm8k(
++    vllm_runner, monkeypatch, enforce_eager, num_questions
++):
++    """Pin output tokens and real acceptance with chunked prefill/batching."""
++    for name, value in ENV.items():
++        monkeypatch.setenv(name, value)
++    prompts, labels = _build_gsm8k_prompts(num_questions, num_shots=0)
++    messages = [[{"role": "user", "content": prompt}] for prompt in prompts]
++    params = SamplingParams(temperature=0, max_tokens=1024)
++    options = dict(
++        dtype="bfloat16",
++        max_model_len=4096,
++        max_num_seqs=4,
++        max_num_batched_tokens=512,
++        kv_cache_memory_bytes=4 * 1024**3,
++        enable_prefix_caching=False,
++        enable_chunked_prefill=True,
++        async_scheduling=True,
++        enforce_eager=enforce_eager,
++        disable_log_stats=False,
++        compilation_config=CompilationConfig(cudagraph_mode="FULL_AND_PIECEWISE"),
++    )
++    with vllm_runner(MODEL, **options) as runner:
++        reference = runner.llm.chat(
++            messages, params, chat_template_kwargs={"enable_thinking": False}
++        )
++    with vllm_runner(MODEL, speculative_config=SPECULATIVE_CONFIG, **options) as runner:
++        outputs = runner.llm.chat(
++            messages, params, chat_template_kwargs={"enable_thinking": False}
++        )
++        acceptance_len = compute_acceptance_len(runner.llm.get_metrics())
++
++    assert len(outputs) == len(reference) == num_questions
++    for expected, actual in zip(reference, outputs):
++        assert actual.outputs[0].token_ids == expected.outputs[0].token_ids
++    accuracy = (
++        sum(
++            get_answer_value(output.outputs[0].text) == label
++            for output, label in zip(outputs, labels)
++        )
++        / num_questions
++    )
++    print(
++        f"LongSpark GSM8K: accuracy={accuracy:.3f}, acceptance_len={acceptance_len:.3f}"
++    )
++    assert acceptance_len > 1
++    if num_questions == 100:
++        assert accuracy >= 0.8
++
++
++@pytest.fixture(scope="module")
++def server():
++    args = [
++        "--dtype",
++        "bfloat16",
++        "--max-model-len",
++        "4096",
++        "--max-num-seqs",
++        "4",
++        "--max-num-batched-tokens",
++        "512",
++        "--kv-cache-memory-bytes",
++        str(4 * 1024**3),
++        "--no-enable-prefix-caching",
++        "--compilation-config",
++        '{"cudagraph_mode":"FULL_AND_PIECEWISE"}',
++        "--speculative-config",
++        json.dumps(SPECULATIVE_CONFIG),
++    ]
++    with RemoteOpenAIServer(MODEL, args, env_dict=ENV) as remote_server:
++        yield remote_server
++
++
++@pytest.mark.asyncio
++@pytest.mark.parametrize("chat", [False, True])
++async def test_native_api_streaming_concurrency_and_rejected_requests(server, chat):
++    """An invalid request must not poison subsequent native API generations."""
++    async with server.get_async_client() as client:
++        create = client.chat.completions.create if chat else client.completions.create
++        kwargs = dict(model=MODEL, temperature=0, max_tokens=32)
++        if chat:
++            kwargs.update(
++                messages=[{"role": "user", "content": "What is 12 + 15?"}],
++                extra_body={"chat_template_kwargs": {"enable_thinking": False}},
++            )
++        else:
++            kwargs["prompt"] = "The sum of twelve and fifteen is"
++        result = await create(**kwargs)
++        expected = result.choices[0].message.content if chat else result.choices[0].text
++        assert expected
++        stream = await create(**kwargs, stream=True)
++        chunks = []
++        async for chunk in stream:
++            if chunk.choices:
++                choice = chunk.choices[0]
++                chunks.append((choice.delta.content if chat else choice.text) or "")
++        assert "".join(chunks) == expected
++        for invalid in ({"temperature": 0.7}, {"presence_penalty": 0.5}):
++            with pytest.raises(openai.BadRequestError, match="LongSpark"):
++                await create(**(kwargs | invalid))
++        results = await asyncio.gather(*(create(**kwargs) for _ in range(4)))
++        assert all(
++            (r.choices[0].message.content if chat else r.choices[0].text) == expected
++            for r in results
++        )
+diff --git a/tests/v1/spec_decode/test_longspark_model.py b/tests/v1/spec_decode/test_longspark_model.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..86fb370a7d42717bb59531d953687c4749a9479a
+--- /dev/null
++++ b/tests/v1/spec_decode/test_longspark_model.py
+@@ -0,0 +1,165 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++"""LongSpark checkpoint integrity and independent dense-attention oracle.
++
++The loader must never silently initialize missing draft weights. CPU tests are
++sufficient for this contract; kernel and end-to-end tests cover GPU execution.
++"""
++
++from types import SimpleNamespace
++
++import pytest
++import torch
++from torch.nn import functional as F
++
++from vllm.model_executor.models.longspark import LongSparkDraftModel
++from vllm.v1.worker.gpu.spec_decode.longspark.attention import (
++    attention_statistics_from_4d,
++    merge_normalized_attention,
++)
++
++
++def make_model():
++    config = SimpleNamespace(
++        draft_mode="parallel_shifted_qwen",
++        global16_raw256_enabled=True,
++        target_layer_ids=[0, 2],
++        block_size=7,
++        parallel_mixer_layers=2,
++        hidden_size=16,
++        vocab_size=32,
++        qwen_num_attention_heads=2,
++        num_key_value_heads=1,
++        head_dim=8,
++        qwen_intermediate_size=32,
++        qwen_rms_norm_eps=1e-6,
++        qwen_rope_theta=1_000_000.0,
++        mask_token_id=0,
++        parallel_markov_rank=4,
++        global_memory_slots=16,
++        raw_target_rows=256,
++        local_draft_rows=7,
++        max_accepted_tokens=8,
++        global_query_mode="learned",
++        global_query_equicorrelation=0.4,
++    )
++    vllm_config = SimpleNamespace(
++        speculative_config=SimpleNamespace(
++            method="longspark", draft_model_config=SimpleNamespace(hf_config=config)
++        )
++    )
++    return LongSparkDraftModel(vllm_config=vllm_config)
++
++
++@pytest.fixture
++def model():
++    return make_model()
++
++
++def checkpoint_weights(model):
++    generator = torch.Generator().manual_seed(17)
++    return {
++        name: torch.randn(weight.shape, generator=generator)
++        for name, weight in model.named_parameters()
++    }
++
++
++def test_original_checkpoint_keys_load_without_target_weights(model):
++    weights = checkpoint_weights(model)
++    assert "global16_raw256_reference.global_query_generator.learned_query" in weights
++    assert "parallel_qwen_layers.1.self_attn.q_norm.weight" in weights
++    assert "parallel_markov_head.markov_w2.weight" in weights
++    assert not any("embed_tokens" in name or "lm_head" in name for name in weights)
++    loaded = model.load_weights(iter(weights.items()))
++    assert loaded == weights.keys()
++    for name, parameter in model.named_parameters():
++        torch.testing.assert_close(parameter, weights[name], rtol=0, atol=0)
++
++
++def test_embedding_protocol_shares_target_weights_without_checkpoint_parameters(model):
++    checkpoint_keys = set(dict(model.named_parameters()))
++    embedding = torch.nn.Embedding(32, 16)
++    model.bind_target_embedding(embedding)
++    token_ids = torch.tensor([2, 3])
++    torch.testing.assert_close(model.embed_input_ids(token_ids), embedding(token_ids))
++    assert set(dict(model.named_parameters())) == checkpoint_keys
++
++
++@pytest.mark.parametrize("corruption", ["missing", "unexpected", "duplicate", "shape"])
++def test_checkpoint_corruption_fails_before_inference(model, corruption):
++    weights = list(checkpoint_weights(model).items())
++    if corruption == "missing":
++        weights = [item for item in weights if "learned_query" not in item[0]]
++        error, match = ValueError, "Missing LongSpark checkpoint weights"
++    elif corruption == "unexpected":
++        weights.append(("target_lm_head.weight", torch.zeros(32, 16)))
++        error, match = ValueError, "Unexpected LongSpark checkpoint weight"
++    elif corruption == "duplicate":
++        weights.append(weights[0])
++        error, match = ValueError, "Duplicate LongSpark checkpoint weight"
++    else:
++        weights[0] = (weights[0][0], torch.zeros(1))
++        error, match = AssertionError, None
++    with pytest.raises(error, match=match):
++        model.load_weights(iter(weights))
++
++
++@pytest.mark.parametrize("fill", [0.0, 1.0, float("nan")])
++def test_fixed_query_geometry_is_checked_after_loading(model, fill):
++    model.config.global_query_mode = "fixed_equicorrelated"
++    weights = checkpoint_weights(model)
++    weights["global16_raw256_reference.global_query_generator.learned_query"].fill_(
++        fill
++    )
++    with pytest.raises(ValueError, match="Fixed LongSpark query checkpoint"):
++        model.load_weights(weights.items())
++
++
++@pytest.mark.parametrize("empty_first_source", [False, True])
++def test_source_wise_attention_matches_dense_gqa(empty_first_source):
++    """Global/raw/local merging must equal one dense masked softmax."""
++    generator = torch.Generator().manual_seed(23)
++    query = torch.randn(2, 4, 7, 8, generator=generator, dtype=torch.float64)
++    keys = torch.randn(2, 2, 30, 8, generator=generator, dtype=torch.float64)
++    values = torch.randn(2, 2, 30, 8, generator=generator, dtype=torch.float64)
++    mask = torch.rand(2, 7, 30, generator=generator) > 0.25
++    if empty_first_source:
++        mask[:, :, :16] = False
++    parts = []
++    for start, end in ((0, 16), (16, 23), (23, 30)):
++        stats = attention_statistics_from_4d(
++            query=query,
++            keys=keys[:, :, start:end],
++            values=values[:, :, start:end],
++            attention_mask=mask[:, :, start:end],
++        )
++        lse = (
++            stats.max_logits
++            + stats.normalizer.clamp_min(torch.finfo(torch.float64).tiny).log()
++        )
++        parts.append(
++            (stats.output(), lse.masked_fill(stats.normalizer == 0, -torch.inf))
++        )
++    output, _ = merge_normalized_attention(parts)
++    expected = F.scaled_dot_product_attention(
++        query,
++        keys.repeat_interleave(2, dim=1),
++        values.repeat_interleave(2, dim=1),
++        attn_mask=mask[:, None],
++    )
++    torch.testing.assert_close(output, expected, rtol=1e-12, atol=1e-12)
++
++
++def test_all_masked_attention_is_zero_and_has_negative_infinite_lse():
++    query = torch.ones(1, 2, 7, 8)
++    keys = torch.ones(1, 1, 16, 8)
++    stats = attention_statistics_from_4d(
++        query=query,
++        keys=keys,
++        values=keys,
++        attention_mask=torch.zeros(1, 7, 16, dtype=torch.bool),
++    )
++    part = (stats.output(), torch.full_like(stats.normalizer, -torch.inf))
++    output, lse = merge_normalized_attention((part, part))
++    assert torch.equal(output, torch.zeros_like(output))
++    assert torch.isneginf(lse).all()
+diff --git a/tests/v1/spec_decode/test_longspark_state.py b/tests/v1/spec_decode/test_longspark_state.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..5a1726cfac8615ab46aabcfed7a4e10242000e1a
+--- /dev/null
++++ b/tests/v1/spec_decode/test_longspark_state.py
+@@ -0,0 +1,149 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++"""Accepted-prefix state contracts, independent of a target checkpoint."""
++
++import copy
++from types import SimpleNamespace
++
++import pytest
++import torch
++from torch import nn
++
++from vllm.platforms import current_platform
++from vllm.v1.worker.gpu.spec_decode.longspark.state import LongSparkState
++
++from .test_longspark_model import make_model
++
++
++@pytest.fixture(params=["cpu", "cuda"])
++def state(request):
++    if request.param == "cuda" and not current_platform.is_cuda():
++        pytest.skip("CUDA store and graph tests require NVIDIA GPUs")
++    device = torch.device("cuda:0" if request.param == "cuda" else "cpu")
++    draft_model = make_model()
++    draft_model.load_weights(
++        (name, torch.randn_like(weight))
++        for name, weight in draft_model.named_parameters()
++    )
++    draft_model.to(device=device, dtype=torch.bfloat16)
++    target = SimpleNamespace(
++        model=SimpleNamespace(
++            embed_tokens=nn.Embedding(32, 16, device=device, dtype=torch.bfloat16),
++            norm=nn.RMSNorm(16, device=device, dtype=torch.bfloat16),
++        ),
++        lm_head=nn.Linear(16, 32, bias=False, device=device, dtype=torch.bfloat16),
++    )
++    hf_config = SimpleNamespace(
++        model_type="qwen3",
++        hidden_size=16,
++        vocab_size=32,
++        num_key_value_heads=1,
++        num_attention_heads=2,
++        head_dim=8,
++        num_hidden_layers=3,
++        rms_norm_eps=1e-6,
++        rope_theta=1_000_000.0,
++    )
++    return LongSparkState(draft_model, target, hf_config, 4, device)
++
++
++def rows(state, width):
++    keys = torch.randn(2, 2, width, 1, 8, dtype=torch.bfloat16, device=state.device)
++    values = torch.randn_like(keys)
++    hidden = torch.randn(2, width, 2, 16, dtype=torch.bfloat16, device=state.device)
++    return keys, values, hidden
++
++
++def assert_bitwise(left, right):
++    for expected, actual in zip(left.mutable_state(), right.mutable_state()):
++        assert torch.equal(expected.view(torch.uint8), actual.view(torch.uint8))
++
++
++def test_only_accepted_rows_enter_recent_memory_and_zero_count_is_inert(state):
++    keys, values, hidden = rows(state, 300)
++    slots = torch.tensor([2, 0], device=state.device)
++    starts = torch.zeros(2, dtype=torch.long, device=state.device)
++    counts = torch.tensor([300, 0], device=state.device)
++    for tensor in (keys, values, hidden):
++        tensor[1].fill_(float("nan"))
++    state.update(slots, keys, values, hidden, starts, counts)
++    positions = torch.arange(44, 300, device=state.device)
++    torch.testing.assert_close(
++        state.keys[2, :, positions % 256], keys[0, :, positions], rtol=0, atol=0
++    )
++    torch.testing.assert_close(state.hidden[2], hidden[0, 299], rtol=0, atol=0)
++    assert state.lengths.tolist() == [0, 0, 300, 0, 0]
++    assert torch.isfinite(state.global_output).all()
++    before = copy.deepcopy(state)
++    counts.zero_()
++    starts.fill_(999)
++    state.update(slots, keys, values, hidden, starts, counts)
++    assert_bitwise(before, state)
++
++
++def test_reused_request_slot_resets_global_summary_and_hidden_boundary(state):
++    keys, values, hidden = rows(state, 8)
++    slots = torch.tensor([2, 0], device=state.device)
++    starts = torch.zeros(2, dtype=torch.long, device=state.device)
++    counts = torch.tensor([8, 7], device=state.device)
++    state.update(slots, keys, values, hidden, starts, counts)
++    fresh = copy.deepcopy(state)
++    fresh.reset()
++    keys, values, hidden = rows(state, 8)
++    counts.copy_(torch.tensor([3, 1], device=state.device))
++    for row, count in enumerate((3, 1)):
++        keys[row, :, count:] = float("nan")
++        values[row, :, count:] = float("nan")
++        hidden[row, count:] = float("nan")
++    for current in (state, fresh):
++        current.update(slots, keys, values, hidden, starts, counts)
++    for name in ("global_output", "global_lse", "hidden", "lengths"):
++        torch.testing.assert_close(
++            getattr(state, name), getattr(fresh, name), rtol=0, atol=0
++        )
++    for row, slot, count in ((0, 2, 3), (1, 0, 1)):
++        torch.testing.assert_close(
++            state.keys[slot, :, :count], keys[row, :, :count], rtol=0, atol=0
++        )
++
++
++@pytest.mark.parametrize("width,boundary", [(8, True), (512, False)])
++def test_fused_commit_graph_handles_dynamic_counts_reordering_and_padding(
++    state, width, boundary
++):
++    if state.device.type != "cuda":
++        pytest.skip("CUDA graph contract")
++    reference = copy.deepcopy(state)
++    reference.use_fused_commit = False
++    keys, values, hidden = rows(state, width)
++    if boundary:
++        hidden = hidden[:, 0].contiguous()
++    slots = torch.tensor([2, 0], device=state.device)
++    starts = torch.zeros(2, dtype=torch.long, device=state.device)
++    counts = torch.tensor([width, 1], device=state.device)
++
++    def update(current):
++        current.update(slots, keys, values, hidden, starts, counts)
++
++    stream = torch.cuda.Stream()
++    stream.wait_stream(torch.cuda.current_stream())
++    with torch.cuda.stream(stream):
++        update(state)
++    torch.cuda.current_stream().wait_stream(stream)
++    graph = torch.cuda.CUDAGraph()
++    with torch.cuda.graph(graph):
++        update(state)
++    update(reference)
++    assert_bitwise(reference, state)
++    for ordering, accepted in (
++        ([0, 2], [3, 0]),
++        ([2, 0], [0, 7]),
++        ([-1, -1], [width, width]),
++    ):
++        slots.copy_(torch.tensor(ordering, device=state.device))
++        starts.copy_(reference.lengths.index_select(0, slots.clamp_min(0)))
++        counts.copy_(torch.tensor(accepted, device=state.device))
++        graph.replay()
++        update(reference)
++        torch.accelerator.synchronize()
++        assert_bitwise(reference, state)
+diff --git a/tests/v1/streaming_input/test_async_llm_streaming.py b/tests/v1/streaming_input/test_async_llm_streaming.py
+index 21a49024ce3bbe4b652273d042efe411d9fa79e7..fe107dcb1fe5e3e38466f280d8e8146e3b8b5984 100644
+--- a/tests/v1/streaming_input/test_async_llm_streaming.py
++++ b/tests/v1/streaming_input/test_async_llm_streaming.py
+@@ -3,11 +3,13 @@
+ 
+ import asyncio
+ from collections.abc import AsyncGenerator
++from types import SimpleNamespace
+ from unittest.mock import AsyncMock, MagicMock
+ 
+ import pytest
+ 
+ from vllm.engine.protocol import StreamingInput
++from vllm.exceptions import VLLMValidationError
+ from vllm.outputs import STREAM_FINISHED, RequestOutput
+ from vllm.sampling_params import RequestOutputKind, SamplingParams
+ from vllm.v1.engine.async_llm import AsyncLLM
+@@ -173,8 +175,12 @@ async def test_generate_with_async_generator():
+ 
+ 
+ @pytest.mark.asyncio
+-async def test_empty_input_stream_finishes_without_engine_request():
++@pytest.mark.parametrize("method", [None, "ngram", "longspark"])
++async def test_empty_input_stream_finishes_without_engine_request(method):
+     llm = AsyncLLM.__new__(AsyncLLM)
++    llm.vllm_config = SimpleNamespace(
++        speculative_config=SimpleNamespace(method=method) if method else None
++    )
+     llm._validate_streaming_input_sampling_params = MagicMock()
+     llm.get_supported_tasks = AsyncMock(return_value=("generate",))
+     llm._run_output_handler = MagicMock()
+@@ -189,6 +195,15 @@ async def test_empty_input_stream_finishes_without_engine_request():
+         return
+         yield  # pragma: no cover
+ 
++    if method == "longspark":
++        with pytest.raises(VLLMValidationError, match="LongSpark.*input streaming"):
++            await llm._add_streaming_input_request(
++                "request", empty_stream(), SamplingParams(temperature=0, max_tokens=4)
++            )
++        llm._run_output_handler.assert_not_called()
++        llm._add_request.assert_not_awaited()
++        return
++
+     queue = await llm._add_streaming_input_request(
+         "request", empty_stream(), SamplingParams(max_tokens=4)
+     )
+diff --git a/vllm/config/longspark.py b/vllm/config/longspark.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..ef0eaabec0412ed08ffd5280f2d66f202a774658
+--- /dev/null
++++ b/vllm/config/longspark.py
+@@ -0,0 +1,221 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++
++import math
++from typing import TYPE_CHECKING
++
++import torch
++
++from vllm.exceptions import VLLMValidationError
++
++if TYPE_CHECKING:
++    from vllm.config import SpeculativeConfig, VllmConfig
++    from vllm.sampling_params import SamplingParams
++
++
++def validate_longspark_speculative_config(config: "SpeculativeConfig") -> None:
++    """Validate the checkpoint/target contract before loading weights."""
++    draft = config.draft_model_config.hf_config
++    target = config.target_model_config.hf_text_config
++    if draft.model_type != "draftfreekv":
++        raise ValueError("LongSpark requires a draftfreekv checkpoint.")
++    if target.model_type != "qwen3":
++        raise ValueError("LongSpark currently supports dense Qwen3 targets only.")
++    if config.num_speculative_tokens != 7:
++        raise ValueError("LongSpark requires num_speculative_tokens=7.")
++    unsupported = []
++    for name in (
++        "enable_adaptive_verification",
++        "use_local_argmax_reduction",
++        "disable_padded_drafter_batch",
++        "num_speculative_tokens_per_batch_size",
++        "use_heterogeneous_vocab",
++        "quantization",
++    ):
++        if getattr(config, name):
++            unsupported.append(name)
++    if config.draft_sample_method != "greedy":
++        unsupported.append("non-greedy drafting")
++    if config.rejection_sample_method != "standard":
++        unsupported.append("non-standard rejection sampling")
++    if config.kv_cache_dtype not in (None, "auto"):
++        unsupported.append("quantized draft KV cache")
++    if unsupported:
++        raise ValueError("LongSpark does not support " + ", ".join(unsupported) + ".")
++
++    fixed = {
++        "draft_mode": "parallel_shifted_qwen",
++        "global16_raw256_enabled": True,
++        "block_size": 7,
++        "global_memory_slots": 16,
++        "raw_target_rows": 256,
++        "local_draft_rows": 7,
++        "max_accepted_tokens": 8,
++        "parallel_markov_head_type": "vanilla",
++    }
++    for name, expected in fixed.items():
++        if getattr(draft, name, None) != expected:
++            raise ValueError(f"LongSpark requires draft {name}={expected!r}.")
++    for name, expected in {
++        "target_kv_memory_layout": "direct",
++        "global_memory_source_window": "full",
++        "global_checkpoint_compatibility": "retrain_required",
++    }.items():
++        if getattr(draft, name, expected) != expected:
++            raise ValueError(f"LongSpark requires draft {name}={expected!r}.")
++    for name in (
++        "target_kv_window_size",
++        "memory_output_slots",
++        "memory_source_window",
++    ):
++        if getattr(draft, name, None) is not None:
++            raise ValueError(f"LongSpark does not support draft {name}.")
++    if draft.global_query_mode not in ("learned", "fixed_equicorrelated"):
++        raise ValueError("Unsupported LongSpark global_query_mode.")
++    if not -1 / 15 < draft.global_query_equicorrelation < 1:
++        raise ValueError(
++            "LongSpark global_query_equicorrelation must be in (-1/15, 1)."
++        )
++    if draft.global_query_slot_mass_mode not in ("system", "baseline16"):
++        raise ValueError("Unsupported LongSpark global_query_slot_mass_mode.")
++
++    layers = draft.target_layer_ids
++    if (
++        not layers
++        or any(
++            type(i) is not int or not 0 <= i < target.num_hidden_layers for i in layers
++        )
++        or sorted(set(layers)) != layers
++    ):
++        raise ValueError(
++            "LongSpark target_layer_ids must be unique, ascending target layers."
++        )
++    if draft.parallel_mixer_layers != len(layers):
++        raise ValueError(
++            "LongSpark requires one mixer layer per selected target layer."
++        )
++    aux_layers = [i + 1 for i in layers if i != target.num_hidden_layers - 1]
++    if not aux_layers:
++        raise ValueError("LongSpark requires at least one non-final target layer.")
++    draft.eagle_aux_hidden_state_layer_ids = aux_layers
++
++    target_head_dim = getattr(target, "head_dim", None) or (
++        target.hidden_size // target.num_attention_heads
++    )
++    for name, expected in {
++        "hidden_size": target.hidden_size,
++        "vocab_size": target.vocab_size,
++        "num_key_value_heads": target.num_key_value_heads,
++        "head_dim": target_head_dim,
++        "qwen_num_attention_heads": target.num_attention_heads,
++    }.items():
++        if getattr(draft, name) != expected:
++            raise ValueError(
++                f"LongSpark draft {name} must match the target ({expected})."
++            )
++    if (
++        not isinstance(draft.mask_token_id, int)
++        or not 0 <= draft.mask_token_id < draft.vocab_size
++    ):
++        raise ValueError(
++            "LongSpark mask_token_id must be inside the target vocabulary."
++        )
++    if draft.parallel_markov_rank < 0 or draft.qwen_intermediate_size <= 0:
++        raise ValueError("Invalid LongSpark draft dimensions.")
++    if draft.head_dim % 2 or draft.qwen_num_attention_heads % draft.num_key_value_heads:
++        raise ValueError(
++            "LongSpark requires even head_dim and integral grouped attention."
++        )
++    if getattr(target, "use_sliding_window", False):
++        raise ValueError("LongSpark requires full target attention.")
++    for rope in (
++        getattr(target, "rope_scaling", None),
++        getattr(target, "rope_parameters", None),
++    ):
++        if rope and (
++            not isinstance(rope, dict)
++            or rope.get("rope_type", rope.get("type", "default")) != "default"
++            or any(key in rope for key in ("factor", "long_factor", "short_factor"))
++        ):
++            raise ValueError("LongSpark requires native, unscaled target RoPE.")
++    rope = getattr(target, "rope_parameters", None) or {}
++    theta = rope.get("rope_theta", getattr(target, "rope_theta", 1_000_000.0))
++    if (
++        not math.isfinite(theta)
++        or theta <= 0
++        or not math.isclose(draft.qwen_rope_theta, theta, rel_tol=1e-9)
++    ):
++        raise ValueError("LongSpark draft RoPE theta must match the target.")
++
++
++def validate_longspark_config(config: "VllmConfig") -> None:
++    """Validate serving capabilities only for the LongSpark method."""
++    from vllm.platforms import current_platform
++    from vllm.v1.attention.backends.registry import AttentionBackendEnum
++
++    if not current_platform.is_cuda():
++        raise ValueError("LongSpark currently requires a CUDA device.")
++    if not config.use_v2_model_runner:
++        raise ValueError("LongSpark requires Model Runner V2.")
++    model = config.model_config
++    if (
++        model.model_impl not in ("auto", "vllm")
++        or model.runner_type != "generate"
++        or "Qwen3ForCausalLM" not in model.architectures
++    ):
++        raise ValueError("LongSpark requires vLLM's native Qwen3ForCausalLM generator.")
++    if model.dtype != torch.bfloat16 or model.quantization:
++        raise ValueError("LongSpark requires an unquantized BF16 target.")
++    if config.cache_config.cache_dtype != "auto":
++        raise ValueError("LongSpark requires unquantized BF16 target KV cache.")
++    if config.cache_config.enable_prefix_caching:
++        raise ValueError("LongSpark requires --no-enable-prefix-caching.")
++    for name in (
++        "tensor_parallel_size",
++        "pipeline_parallel_size",
++        "data_parallel_size",
++        "decode_context_parallel_size",
++        "prefill_context_parallel_size",
++    ):
++        if getattr(config.parallel_config, name) != 1:
++            raise ValueError("LongSpark currently requires TP=PP=DP=DCP=PCP=1.")
++    for name in ("lora_config", "kv_transfer_config", "watermark_config"):
++        if getattr(config, name, None) is not None:
++            raise ValueError(f"LongSpark does not support {name}.")
++    if model.logits_processors:
++        raise ValueError("LongSpark does not support custom logits processors.")
++    if config.attention_config.backend not in (None, AttentionBackendEnum.FLASH_ATTN):
++        raise ValueError("LongSpark currently requires the FlashAttention backend.")
++    config.attention_config.backend = AttentionBackendEnum.FLASH_ATTN
++
++
++def validate_longspark_sampling_params(params: "SamplingParams") -> None:
++    """Reject unsupported requests before dispatch to a GPU worker."""
++    defaults = {
++        "temperature": 0.0,
++        "presence_penalty": 0.0,
++        "frequency_penalty": 0.0,
++        "repetition_penalty": 1.0,
++    }
++    for name, expected in defaults.items():
++        if getattr(params, name) != expected:
++            raise VLLMValidationError(
++                f"LongSpark currently requires {name}={expected}.", parameter=name
++            )
++    for name in (
++        "structured_outputs",
++        "allowed_token_ids",
++        "bad_words",
++        "logits_processors",
++        "extra_args",
++        "watermarking",
++    ):
++        if getattr(params, name, None):
++            raise VLLMValidationError(
++                f"LongSpark currently does not support {name}.", parameter=name
++            )
++    if params.thinking_token_budget is not None:
++        raise VLLMValidationError(
++            "LongSpark currently does not support thinking_token_budget.",
++            parameter="thinking_token_budget",
++        )
+diff --git a/vllm/config/speculative.py b/vllm/config/speculative.py
+index 4c61ead82dabdddef79eea4d77558fd260cd7b8d..12fb2cda5d72d6e4ed774349e5b488bb64ce6b73 100644
+--- a/vllm/config/speculative.py
++++ b/vllm/config/speculative.py
+@@ -77,6 +77,7 @@ SpeculativeMethod = Literal[
+     "draft_model",
+     "suffix",
+     "custom_class",
++    "longspark",
+     EagleModelTypes,
+     NgramGPUTypes,
+     DSparkModelTypes,
+@@ -628,6 +629,7 @@ class SpeculativeConfig:
+             "extract_hidden_states",
+             "dflash",
+             "dspark",
++            "longspark",
+         )
+         factors.append(uses_aux_hidden_states)
+         if self.method == "dspark":
+@@ -1120,6 +1122,12 @@ class SpeculativeConfig:
+         # can not be detected, it will be considered as the "draft_model" by
+         # default.
+ 
++        if self.method == "longspark":
++            if self.model is None:
++                raise ValueError("method='longspark' requires a draft checkpoint.")
++            if self.num_speculative_tokens is None:
++                self.num_speculative_tokens = 7
++
+         # infer method from user args
+         if self.method is None and SpeculativeConfig._is_custom_proposer_path(
+             self.model
+@@ -1305,6 +1313,14 @@ class SpeculativeConfig:
+                     config_format=self.target_model_config.config_format,
+                 )
+ 
++                if (
++                    self.draft_model_config.hf_config.model_type == "draftfreekv"
++                    and self.method != "longspark"
++                ):
++                    raise ValueError(
++                        "LongSpark checkpoints require method='longspark'."
++                    )
++
+                 # Old-format Medusa checkpoints (e.g. FasterDecoding/medusa-*)
+                 # omit vocab_size in config.json, so MedusaConfig falls back to
+                 # its default (32001). Align with the target model's vocab size
+@@ -1317,7 +1333,7 @@ class SpeculativeConfig:
+                         draft_hf.truncated_vocab_size = target_vocab
+ 
+                 # Automatically detect the method
+-                if self.method in ("eagle", "eagle3", "dflash", "dspark"):
++                if self.method in ("eagle", "eagle3", "dflash", "dspark", "longspark"):
+                     pass
+                 # examples:
+                 # yuhuili/EAGLE-LLaMA3-Instruct-8B
+@@ -1458,7 +1474,7 @@ class SpeculativeConfig:
+                     ):
+                         hf.dspark_target_layer_ids = hf.target_layer_ids
+ 
+-                if self.method in ("dflash", "dspark"):
++                if self.method in ("dflash", "dspark", "longspark"):
+                     self.parallel_drafting = True
+ 
+                 if self.num_speculative_tokens is not None and hasattr(
+@@ -1564,6 +1580,11 @@ class SpeculativeConfig:
+                     )
+                 )
+ 
++        if self.method == "longspark":
++            from vllm.config.longspark import validate_longspark_speculative_config
++
++            validate_longspark_speculative_config(self)
++
+         if self.index_share_for_mtp_iteration is not None:
+             if self.method != "mtp" or self.draft_model_config is None:
+                 raise ValueError(
+@@ -1891,6 +1912,7 @@ class SpeculativeConfig:
+         P-EAGLE              eagle3        Yes      K - 1
+         DFlash               dflash        Yes      K
+         DSpark               dspark        Yes      K - 1
++        LongSpark            longspark     Yes      K - 1
+         MTP                  mtp           No       0
+         N-gram               ngram         No       0
+         Draft model          draft_model   No       1
+@@ -1938,7 +1960,14 @@ class SpeculativeConfig:
+         # NOTE: This method is usually a stand-in for "speculative decoding using
+         # target model hidden states"
+         # TODO(ben): Refactor this so the naming is clearer
+-        return self.method in ("eagle", "eagle3", "mtp", "dflash", "dspark")
++        return self.method in (
++            "eagle",
++            "eagle3",
++            "mtp",
++            "dflash",
++            "dspark",
++            "longspark",
++        )
+ 
+     def use_eagle_block_drop(self) -> bool:
+         """Whether volatile trailing cache blocks should be discarded."""
+diff --git a/vllm/config/vllm.py b/vllm/config/vllm.py
+index bbda00af40bb12e23b1810b3617a43d3f814c367..1801819b3a740f05a98f0f8b2f28b456398a0bd7 100644
+--- a/vllm/config/vllm.py
++++ b/vllm/config/vllm.py
+@@ -1597,10 +1597,11 @@ class VllmConfig:
+                     and self.speculative_config.method != "draft_model"
+                     and self.speculative_config.method != "dspark"
+                     and self.speculative_config.method != "dflash"
++                    and self.speculative_config.method != "longspark"
+                 ):
+                     raise ValueError(
+                         "Currently, async scheduling is only supported "
+-                        "with EAGLE/MTP/Draft Model/NGram GPU/DSpark/DFlash "
++                        "with EAGLE/MTP/Draft Model/NGram GPU/DSpark/DFlash/LongSpark "
+                         "kind of speculative decoding"
+                     )
+                 if self.speculative_config.disable_padded_drafter_batch:
+@@ -1631,6 +1632,7 @@ class VllmConfig:
+                 and self.speculative_config.method != "draft_model"
+                 and self.speculative_config.method != "dspark"
+                 and self.speculative_config.method != "dflash"
++                and self.speculative_config.method != "longspark"
+             ):
+                 logger.warning_once(
+                     "Async scheduling not supported with %s-based "
+@@ -2054,6 +2056,10 @@ class VllmConfig:
+         self._validate_profiler_config()
+         self._validate_batch_sharded_sampling()
+         self._validate_adaptive_verification()
++        if self.speculative_config and self.speculative_config.method == "longspark":
++            from vllm.config.longspark import validate_longspark_config
++
++            validate_longspark_config(self)
+ 
+         # Re-compute compile ranges after platform-specific config updates
+         # (e.g., XPU may lower max_num_batched_tokens when MLA is enabled)
+@@ -2989,11 +2995,10 @@ class VllmConfig:
+                 unsupported.append(f"speculative method '{speculative_config.method}'")
+ 
+             # V2 EagleSpeculator does not support parallel_drafting (for P-Eagle).
+-            # DFlash and DSpark use parallel drafting natively in V2 via their
+-            # own speculators.
++            # DFlash, DSpark, and LongSpark use their own parallel speculators.
+             if (
+                 speculative_config.parallel_drafting
+-                and speculative_config.method not in ("dflash", "dspark")
++                and speculative_config.method not in ("dflash", "dspark", "longspark")
+             ):
+                 unsupported.append("parallel drafting for EAGLE speculative decoding")
+ 
+@@ -3028,10 +3033,12 @@ class VllmConfig:
+         ):
+             unsupported.append("pipeline parallelism with async scheduling")
+ 
+-        # DSpark is implemented only by the V2 GPU model runner.
++        # These drafters are implemented only by the V2 GPU model runner.
+         if self.speculative_config:
+-            if self.speculative_config.method == "dspark":
+-                unsupported.append("dspark speculative decoding")
++            if self.speculative_config.method in ("dspark", "longspark"):
++                unsupported.append(
++                    f"{self.speculative_config.method} speculative decoding"
++                )
+             if self.speculative_config.enable_adaptive_verification:
+                 unsupported.append("adaptive draft verification")
+ 
+diff --git a/vllm/model_executor/models/longspark.py b/vllm/model_executor/models/longspark.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..5113720f8511101c016f58bce48ecebbb01f0a85
+--- /dev/null
++++ b/vllm/model_executor/models/longspark.py
+@@ -0,0 +1,407 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2025 sgl-project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark's SpecForge DraftFreeKV inference model.
++# Original license: vllm/v1/worker/gpu/spec_decode/longspark/LICENSE.
++#
++# MIT License
++# Permission is hereby granted, free of charge, to any person obtaining a copy
++# of this software and associated documentation files (the "Software"), to deal
++# in the Software without restriction, including without limitation the rights
++# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++# copies of the Software, and to permit persons to whom the Software is
++# furnished to do so, subject to the following conditions:
++#
++# The above copyright notice and this permission notice shall be included in all
++# copies or substantial portions of the Software.
++#
++# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++# SOFTWARE.
++"""LongSpark Global16/Raw256/Local7 draft, with the original checkpoint keys.
++
++Only the inference path is included. The ModelRunner V2 speculator supplies
++confirmed target context and shared target embedding, final norm and LM head.
++"""
++
++import math
++import weakref
++from collections.abc import Iterable
++from types import SimpleNamespace
++from typing import TYPE_CHECKING
++
++import torch
++from torch import nn
++from torch.nn import functional as F
++
++if TYPE_CHECKING:
++    from vllm.config import VllmConfig
++
++
++class _RMSNorm(nn.Module):
++    def __init__(self, hidden_size: int, eps: float = 1e-6):
++        super().__init__()
++        self.weight = nn.Parameter(torch.ones(hidden_size))
++        self.eps = eps
++
++    def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
++        variance = hidden_states.float().pow(2).mean(dim=-1, keepdim=True)
++        normalized = hidden_states.float() * torch.rsqrt(variance + self.eps)
++        return normalized.to(hidden_states.dtype) * self.weight.to(hidden_states.dtype)
++
++
++class _FeedForward(nn.Module):
++    def __init__(self, in_features: int, hidden_size: int):
++        super().__init__()
++        self.net = nn.Sequential(
++            nn.Linear(in_features, hidden_size, bias=False),
++            nn.SiLU(),
++            nn.Linear(hidden_size, hidden_size, bias=False),
++        )
++
++    def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
++        return self.net(hidden_states)
++
++
++class _DraftStateEncoder(nn.Module):
++    def __init__(self, num_layers: int, hidden_size: int):
++        super().__init__()
++        self.proj = _FeedForward(num_layers * hidden_size, hidden_size)
++        self.norm = _RMSNorm(hidden_size)
++
++    def forward(self, selected_layer_hidden: torch.Tensor) -> torch.Tensor:
++        return self.norm(self.proj(selected_layer_hidden.flatten(start_dim=1)))
++
++
++class _ParallelShiftedInput(nn.Module):
++    def __init__(self, hidden_size: int, block_size: int, mask_token_id: int):
++        super().__init__()
++        self.block_size = block_size
++        self.mask_token_id = mask_token_id
++        self.position_embedding = nn.Embedding(block_size, hidden_size)
++        self.proj = _FeedForward(2 * hidden_size, hidden_size)
++        self.norm = _RMSNorm(hidden_size)
++
++    def forward(
++        self,
++        current_token_ids: torch.Tensor,
++        latest_target_state: torch.Tensor,
++        target_embed_tokens: nn.Module,
++    ) -> torch.Tensor:
++        token_ids = torch.full(
++            (current_token_ids.shape[0], self.block_size),
++            self.mask_token_id,
++            dtype=torch.long,
++            device=latest_target_state.device,
++        )
++        token_ids[:, 0] = current_token_ids.long()
++        token_states = target_embed_tokens(token_ids).to(latest_target_state.dtype)
++        positions = torch.arange(self.block_size, device=latest_target_state.device)
++        token_states = (
++            token_states
++            + self.position_embedding(positions).to(latest_target_state.dtype)[
++                None, :, :
++            ]
++        )
++        latest = latest_target_state[:, None, :].expand(-1, self.block_size, -1)
++        return self.norm(self.proj(torch.cat([token_states, latest], dim=-1)))
++
++
++class _LongSparkAttention(nn.Module):
++    def __init__(self, config):
++        super().__init__()
++        self.num_attention_heads = config.qwen_num_attention_heads
++        self.num_key_value_heads = config.num_key_value_heads
++        self.head_dim = config.head_dim
++        self.q_proj = nn.Linear(
++            config.hidden_size, self.num_attention_heads * self.head_dim, bias=False
++        )
++        self.k_proj = nn.Linear(
++            config.hidden_size, self.num_key_value_heads * self.head_dim, bias=False
++        )
++        self.v_proj = nn.Linear(
++            config.hidden_size, self.num_key_value_heads * self.head_dim, bias=False
++        )
++        self.o_proj = nn.Linear(
++            self.num_attention_heads * self.head_dim, config.hidden_size, bias=False
++        )
++        self.q_norm = _RMSNorm(self.head_dim, config.qwen_rms_norm_eps)
++        self.k_norm = _RMSNorm(self.head_dim, config.qwen_rms_norm_eps)
++        inv_freq = 1.0 / (
++            config.qwen_rope_theta
++            ** (torch.arange(0, self.head_dim, 2, dtype=torch.float32) / self.head_dim)
++        )
++        self.register_buffer("inv_freq", inv_freq, persistent=False)
++
++    def forward(
++        self,
++        hidden_states: torch.Tensor,
++        position_ids: torch.Tensor,
++        context,
++        layer_index: int,
++    ) -> torch.Tensor:
++        batch, block_size, _ = hidden_states.shape
++        query = self.q_proj(hidden_states).view(
++            batch, block_size, self.num_attention_heads, self.head_dim
++        )
++        keys = self.k_proj(hidden_states).view(
++            batch, block_size, self.num_key_value_heads, self.head_dim
++        )
++        values = self.v_proj(hidden_states).view(
++            batch, block_size, self.num_key_value_heads, self.head_dim
++        )
++        query = self.q_norm(query).transpose(1, 2)
++        keys = self.k_norm(keys).transpose(1, 2)
++        values = values.transpose(1, 2)
++        frequencies = (
++            position_ids.to(device=self.inv_freq.device, dtype=torch.float32)[..., None]
++            * self.inv_freq[None, None, :]
++        )
++        embeddings = torch.cat([frequencies, frequencies], dim=-1)
++        cos = embeddings.cos().to(query.dtype)[:, None, :, :]
++        sin = embeddings.sin().to(query.dtype)[:, None, :, :]
++
++        def rotate_half(tensor):
++            first, second = tensor.chunk(2, dim=-1)
++            return torch.cat((-second, first), dim=-1)
++
++        query = query * cos + rotate_half(query) * sin
++        keys = keys * cos + rotate_half(keys) * sin
++        local_mask = torch.ones(
++            (batch, block_size, block_size),
++            dtype=torch.bool,
++            device=hidden_states.device,
++        )
++        attended = context.attend(
++            layer_index=layer_index,
++            query=query,
++            local_keys=keys,
++            local_values=values,
++            local_attention_mask=local_mask,
++        )
++        attended = (
++            attended.transpose(1, 2)
++            .contiguous()
++            .view(batch, block_size, self.num_attention_heads * self.head_dim)
++        )
++        return self.o_proj(attended)
++
++
++class _SwiGLUMLP(nn.Module):
++    def __init__(self, hidden_size: int, intermediate_size: int):
++        super().__init__()
++        self.gate_proj = nn.Linear(hidden_size, intermediate_size, bias=False)
++        self.up_proj = nn.Linear(hidden_size, intermediate_size, bias=False)
++        self.down_proj = nn.Linear(intermediate_size, hidden_size, bias=False)
++
++    def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
++        return self.down_proj(
++            F.silu(self.gate_proj(hidden_states)) * self.up_proj(hidden_states)
++        )
++
++
++class _LongSparkDecoderLayer(nn.Module):
++    def __init__(self, config):
++        super().__init__()
++        self.self_attn = _LongSparkAttention(config)
++        self.mlp = _SwiGLUMLP(config.hidden_size, config.qwen_intermediate_size)
++        self.input_layernorm = _RMSNorm(config.hidden_size, config.qwen_rms_norm_eps)
++        self.post_attention_layernorm = _RMSNorm(
++            config.hidden_size, config.qwen_rms_norm_eps
++        )
++
++    def forward(self, hidden_states, position_ids, context, layer_index):
++        residual = hidden_states
++        hidden_states = self.self_attn(
++            self.input_layernorm(hidden_states), position_ids, context, layer_index
++        )
++        hidden_states = residual + hidden_states
++        return hidden_states + self.mlp(self.post_attention_layernorm(hidden_states))
++
++
++class _MarkovHead(nn.Module):
++    def __init__(self, vocab_size: int, markov_rank: int):
++        super().__init__()
++        self.markov_w1 = nn.Embedding(vocab_size, markov_rank)
++        self.markov_w2 = nn.Linear(markov_rank, vocab_size, bias=False)
++
++    def compute_bias(self, previous_token_ids: torch.Tensor) -> torch.Tensor:
++        return self.markov_w2(self.markov_w1(previous_token_ids.long()))
++
++
++class _GlobalQueryGenerator(nn.Module):
++    def __init__(self, config):
++        super().__init__()
++        self.learned_query = nn.Parameter(
++            torch.empty(
++                len(config.target_layer_ids),
++                config.qwen_num_attention_heads,
++                config.global_memory_slots,
++                config.head_dim,
++            ),
++            requires_grad=False,
++        )
++
++
++class _GlobalReference(nn.Module):
++    def __init__(self, config):
++        super().__init__()
++        self.config = SimpleNamespace(
++            num_attention_heads=config.qwen_num_attention_heads,
++            global_memory_slots=config.global_memory_slots,
++            raw_target_rows=config.raw_target_rows,
++            local_draft_rows=config.local_draft_rows,
++            max_accepted_tokens=config.max_accepted_tokens,
++        )
++        self.global_query_generator = _GlobalQueryGenerator(config)
++
++    def global_queries(self, *, batch_size, device, dtype):
++        return (
++            self.global_query_generator.learned_query[None]
++            .expand(batch_size, -1, -1, -1, -1)
++            .to(device=device, dtype=dtype)
++        )
++
++
++class LongSparkDraftModel(nn.Module):
++    """Inference-only draft loaded by the standard vLLM checkpoint loader."""
++
++    def __init__(self, *, vllm_config: "VllmConfig", prefix: str = ""):
++        super().__init__()
++        del prefix  # Plain torch layers do not register vLLM attention operators.
++        speculative_config = vllm_config.speculative_config
++        if speculative_config is None or speculative_config.method != "longspark":
++            raise ValueError("LongSparkDraftModel requires method='longspark'")
++        self.config = config = speculative_config.draft_model_config.hf_config
++        if (
++            config.draft_mode != "parallel_shifted_qwen"
++            or not config.global16_raw256_enabled
++            or config.block_size != 7
++            or config.parallel_mixer_layers != len(config.target_layer_ids)
++        ):
++            raise ValueError("LongSpark requires a Global16/Raw256/Local7 checkpoint")
++        self.num_layers = len(config.target_layer_ids)
++        self.draft_state_encoder = _DraftStateEncoder(
++            self.num_layers, config.hidden_size
++        )
++        self.parallel_shifted_input = _ParallelShiftedInput(
++            config.hidden_size, config.block_size, config.mask_token_id
++        )
++        self.parallel_qwen_layers = nn.ModuleList(
++            _LongSparkDecoderLayer(config) for _ in range(self.num_layers)
++        )
++        self.parallel_markov_head = (
++            _MarkovHead(config.vocab_size, config.parallel_markov_rank)
++            if config.parallel_markov_rank > 0
++            else None
++        )
++        self.global16_raw256_reference = _GlobalReference(config)
++        self._target_embedding: weakref.ReferenceType[nn.Module] | None = None
++
++    def bind_target_embedding(self, embedding: nn.Module) -> None:
++        self._target_embedding = weakref.ref(embedding)
++
++    def embed_input_ids(self, input_ids: torch.Tensor) -> torch.Tensor:
++        embedding = self._target_embedding() if self._target_embedding else None
++        if embedding is None:
++            raise RuntimeError("LongSpark target embedding has not been bound")
++        return embedding(input_ids)
++
++    def forward(
++        self,
++        input_ids: torch.Tensor | None = None,
++        positions: torch.Tensor | None = None,
++        *,
++        current_hidden_states: torch.Tensor,
++        current_token_ids: torch.Tensor | None = None,
++        current_position_ids: torch.Tensor | None = None,
++        target_final_norm: nn.Module,
++        target_embed_tokens: nn.Module,
++        target_lm_head: nn.Module,
++        global16_paged_context,
++        apply_markov_correction: bool = False,
++    ) -> torch.Tensor:
++        if apply_markov_correction:
++            raise ValueError("The speculator applies sequential Markov correction")
++        if current_token_ids is None:
++            current_token_ids = input_ids
++        if current_position_ids is None:
++            current_position_ids = positions
++        if current_token_ids is None or current_position_ids is None:
++            raise ValueError("LongSpark requires input tokens and their positions")
++        latest = self.draft_state_encoder(current_hidden_states)
++        hidden = self.parallel_shifted_input(
++            current_token_ids, latest, target_embed_tokens
++        )
++        positions = (
++            current_position_ids[:, None]
++            + torch.arange(
++                self.config.block_size,
++                dtype=torch.long,
++                device=current_position_ids.device,
++            )[None, :]
++        )
++        for layer_index, layer in enumerate(self.parallel_qwen_layers):
++            hidden = layer(hidden, positions, global16_paged_context, layer_index)
++        # Match the checkpoint implementation's flattened target RMSNorm and
++        # BF16 vocabulary contraction before promoting logits to FP32.
++        shape = hidden.shape
++        norm_weight = target_final_norm.weight
++        hidden = (
++            F.rms_norm(
++                hidden.reshape(-1, shape[-1]).to(norm_weight.dtype),
++                (shape[-1],),
++                norm_weight,
++                target_final_norm.variance_epsilon,
++            )
++            .reshape(shape)
++            .to(hidden.dtype)
++        )
++        return F.linear(
++            hidden.to(target_lm_head.weight.dtype), target_lm_head.weight
++        ).float()
++
++    def compute_logits(self, logits: torch.Tensor) -> torch.Tensor:
++        """Forward already applies the shared target norm and vocabulary head."""
++        return logits
++
++    def load_weights(self, weights: Iterable[tuple[str, torch.Tensor]]) -> set[str]:
++        from vllm.model_executor.model_loader.weight_utils import default_weight_loader
++
++        parameters = dict(self.named_parameters())
++        loaded: set[str] = set()
++        for name, weight in weights:
++            if name not in parameters:
++                raise ValueError(f"Unexpected LongSpark checkpoint weight: {name}")
++            if name in loaded:
++                raise ValueError(f"Duplicate LongSpark checkpoint weight: {name}")
++            default_weight_loader(parameters[name], weight)
++            loaded.add(name)
++        missing = parameters.keys() - loaded
++        if missing:
++            raise ValueError(f"Missing LongSpark checkpoint weights: {sorted(missing)}")
++        if self.config.global_query_mode == "fixed_equicorrelated":
++            self._validate_fixed_queries()
++        return loaded
++
++    def _validate_fixed_queries(self) -> None:
++        generator = self.global16_raw256_reference.global_query_generator
++        query = generator.learned_query.detach().float()
++        norms = query.norm(dim=-1, keepdim=True)
++        if bool(torch.any(norms <= torch.finfo(query.dtype).eps).item()):
++            raise ValueError("Fixed LongSpark query checkpoint contains a zero row")
++        normalized = query / norms
++        gram = torch.einsum("lhsd,lhtd->lhst", normalized, normalized)
++        slots = self.config.global_memory_slots
++        correlation = self.config.global_query_equicorrelation
++        expected = (1.0 - correlation) * torch.eye(
++            slots, device=gram.device
++        ) + correlation * torch.ones((slots, slots), device=gram.device)
++        error = float((gram - expected).abs().max().item())
++        if not math.isfinite(error) or error > 5e-3:
++            raise ValueError("Fixed LongSpark query checkpoint has invalid geometry")
+diff --git a/vllm/model_executor/models/registry.py b/vllm/model_executor/models/registry.py
+index e019d674f502a731095abfc7fe4d778d49438b25..98e115705f8a06fdc3e2f37aec55b1b4f6088877 100644
+--- a/vllm/model_executor/models/registry.py
++++ b/vllm/model_executor/models/registry.py
+@@ -625,6 +625,8 @@ _SPECULATIVE_DECODING_MODELS = {
+     "EagleLlama4ForCausalLM": ("llama4_eagle", "EagleLlama4ForCausalLM"),
+     "EagleMiniCPMForCausalLM": ("minicpm_eagle", "EagleMiniCPMForCausalLM"),
+     "DFlashDraftModel": ("qwen3_dflash", "DFlashQwen3ForCausalLM"),
++    "DraftFreeKVModel": ("longspark", "LongSparkDraftModel"),
++    "LongSparkDraftModel": ("longspark", "LongSparkDraftModel"),
+     "LiLiCorrDraftModel": ("lilicorr", "LiLiCorrForCausalLM"),
+     "DFlash2DraftModel": ("qwen3_dflash2", "DFlash2Qwen3ForCausalLM"),
+     # Muse Glimmer's DFlash draft head, reusing the generic qwen3_dflash
+diff --git a/vllm/sampling_params.py b/vllm/sampling_params.py
+index 8331a1707b7db57bc8a70c59de4cc190ae222aca..7d87f3525702b63c10080524c955f7cad173aeaf 100644
+--- a/vllm/sampling_params.py
++++ b/vllm/sampling_params.py
+@@ -1186,6 +1186,11 @@ class SamplingParams(
+         if speculative_config is None:
+             return
+ 
++        if speculative_config.method == "longspark":
++            from vllm.config.longspark import validate_longspark_sampling_params
++
++            validate_longspark_sampling_params(self)
++
+         # Some sampling parameters are not yet compatible with spec decoding.
+         if self.min_p > _SAMPLING_EPS or self.logit_bias:
+             raise VLLMValidationError(
+diff --git a/vllm/transformers_utils/config.py b/vllm/transformers_utils/config.py
+index e046c301d23a13cba9ba0b33a3f36ef3b2739b3d..ed5826ca7940240b9650a4339617a4ab60188f2a 100644
+--- a/vllm/transformers_utils/config.py
++++ b/vllm/transformers_utils/config.py
+@@ -92,6 +92,7 @@ _CONFIG_REGISTRY: dict[str, type[PreTrainedConfig]] = LazyConfigDict(
+     deepseek_v32="DeepseekV3Config",
+     deepseek_v4="DeepseekV4Config",
+     dots3_note="Dots3NoteConfig",
++    draftfreekv="LongSparkConfig",
+     k3_dspark="K3DSparkConfig",
+     funaudiochat="FunAudioChatConfig",
+     hy_v4="HYV4Config",
+diff --git a/vllm/transformers_utils/configs/__init__.py b/vllm/transformers_utils/configs/__init__.py
+index 336b96c1a316b33cb66d3825c66e5856cd606f73..1fa1fe54e6752ae7acc751ae25a9d739685d46d0 100644
+--- a/vllm/transformers_utils/configs/__init__.py
++++ b/vllm/transformers_utils/configs/__init__.py
+@@ -44,6 +44,7 @@ _CLASS_TO_MODULE: dict[str, str] = {
+     # `FalconConfig` class from the official HuggingFace transformers library.
+     "RWConfig": "vllm.transformers_utils.configs.falcon",
+     "MedusaConfig": "vllm.transformers_utils.configs.medusa",
++    "LongSparkConfig": "vllm.transformers_utils.configs.longspark",
+     "MiDashengLMConfig": "vllm.transformers_utils.configs.midashenglm",
+     "MiniMaxM3Config": "vllm.transformers_utils.configs.minimax_m3",
+     "MiniMaxM3MTPConfig": "vllm.transformers_utils.configs.minimax_m3",
+@@ -89,6 +90,7 @@ _CLASS_TO_MODULE: dict[str, str] = {
+ }
+ 
+ __all__ = [
++    "LongSparkConfig",
+     "BagelConfig",
+     "BailingMoeV3TextConfig",
+     "BailingMoeV3VisionConfig",
+diff --git a/vllm/transformers_utils/configs/longspark.py b/vllm/transformers_utils/configs/longspark.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..9f0eac8933e3466ba0a45bd638e274fa17aa47bd
+--- /dev/null
++++ b/vllm/transformers_utils/configs/longspark.py
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++
++from transformers import PreTrainedConfig
++
++
++class LongSparkConfig(PreTrainedConfig):
++    """Inference configuration for Global16/Raw256/Local7 checkpoints."""
++
++    model_type = "draftfreekv"
++    has_no_defaults_at_init = True
++
++    def __init__(
++        self,
++        target_layer_ids: list[int] | None = None,
++        hidden_size: int = 4096,
++        vocab_size: int = 32000,
++        num_key_value_heads: int = 32,
++        head_dim: int = 128,
++        qwen_num_attention_heads: int | None = None,
++        qwen_intermediate_size: int | None = None,
++        qwen_rope_theta: float = 1_000_000.0,
++        qwen_rms_norm_eps: float = 1e-6,
++        block_size: int = 7,
++        draft_mode: str = "parallel_shifted_qwen",
++        global16_raw256_enabled: bool = True,
++        parallel_mixer_layers: int | None = None,
++        parallel_markov_rank: int = 0,
++        parallel_markov_head_type: str = "vanilla",
++        mask_token_id: int | None = None,
++        global_memory_slots: int = 16,
++        raw_target_rows: int = 256,
++        local_draft_rows: int = 7,
++        max_accepted_tokens: int = 8,
++        global_query_mode: str = "learned",
++        global_query_equicorrelation: float = 0.4,
++        global_query_slot_mass_mode: str = "system",
++        **kwargs,
++    ) -> None:
++        # Existing checkpoints use DraftFreeKVModel and training-only metadata.
++        kwargs.pop("architectures", None)
++        super().__init__(architectures=["LongSparkDraftModel"], **kwargs)
++        self.target_layer_ids = list(target_layer_ids or [])
++        self.hidden_size = hidden_size
++        self.vocab_size = vocab_size
++        self.num_key_value_heads = num_key_value_heads
++        self.head_dim = head_dim
++        self.qwen_num_attention_heads = (
++            qwen_num_attention_heads or hidden_size // head_dim
++        )
++        self.qwen_intermediate_size = qwen_intermediate_size or hidden_size * 4
++        self.qwen_rope_theta = qwen_rope_theta
++        self.qwen_rms_norm_eps = qwen_rms_norm_eps
++        self.block_size = block_size
++        self.draft_mode = draft_mode
++        self.global16_raw256_enabled = global16_raw256_enabled
++        self.parallel_mixer_layers = (
++            len(self.target_layer_ids)
++            if parallel_mixer_layers is None
++            else parallel_mixer_layers
++        )
++        self.parallel_markov_rank = parallel_markov_rank
++        self.parallel_markov_head_type = parallel_markov_head_type
++        self.mask_token_id = mask_token_id
++        self.global_memory_slots = global_memory_slots
++        self.raw_target_rows = raw_target_rows
++        self.local_draft_rows = local_draft_rows
++        self.max_accepted_tokens = max_accepted_tokens
++        self.global_query_mode = global_query_mode
++        self.global_query_equicorrelation = global_query_equicorrelation
++        self.global_query_slot_mass_mode = global_query_slot_mass_mode
++        self.num_attention_heads = self.qwen_num_attention_heads
++        self.num_hidden_layers = self.parallel_mixer_layers
++        self.intermediate_size = self.qwen_intermediate_size
++        self.rope_theta = qwen_rope_theta
++        self.rope_parameters = {"rope_type": "default", "rope_theta": qwen_rope_theta}
+diff --git a/vllm/v1/engine/async_llm.py b/vllm/v1/engine/async_llm.py
+index 7e50aa045123da700359d5e964c60a4823a30ca1..021929a2f0fb97e092acd3932a5dd81e6141738a 100644
+--- a/vllm/v1/engine/async_llm.py
++++ b/vllm/v1/engine/async_llm.py
+@@ -581,6 +581,12 @@ class AsyncLLM(EngineClient):
+         session_id: str | None = None,
+         kv_hints: KvHintsEnvelope | None = None,
+     ) -> RequestOutputCollector:
++        spec_config = self.vllm_config.speculative_config
++        if spec_config is not None and spec_config.method == "longspark":
++            raise VLLMValidationError(
++                "LongSpark does not support input streaming. "
++                "Output streaming is supported."
++            )
+         self._validate_streaming_input_sampling_params(sampling_params)
+ 
+         inputs = dict(
+diff --git a/vllm/v1/worker/gpu/model_runner.py b/vllm/v1/worker/gpu/model_runner.py
+index f39fd0a6e6a7b8cc2d8c0bc5ebb59af08209ca81..b8aeea1a90639318bd3dbd3c94245a8fd56539f8 100644
+--- a/vllm/v1/worker/gpu/model_runner.py
++++ b/vllm/v1/worker/gpu/model_runner.py
+@@ -299,6 +299,7 @@ class GPUModelRunner(LoRAModelRunnerMixin):
+                 "eagle3",
+                 "dflash",
+                 "dspark",
++                "longspark",
+                 "extract_hidden_states",
+             ):
+                 # Drafting may require auxiliary hidden states from target model outputs
+diff --git a/vllm/v1/worker/gpu/spec_decode/__init__.py b/vllm/v1/worker/gpu/spec_decode/__init__.py
+index fc028941cf0d60d02ada589db5e250f0ea19de69..eda230fd36a1adbcb9de8dbb3027667754c99599 100644
+--- a/vllm/v1/worker/gpu/spec_decode/__init__.py
++++ b/vllm/v1/worker/gpu/spec_decode/__init__.py
+@@ -48,6 +48,12 @@ def init_speculator(
+         )
+ 
+         return DSparkSpeculator(vllm_config, device)
++    elif speculative_config.method == "longspark":
++        from vllm.v1.worker.gpu.spec_decode.longspark.speculator import (
++            LongSparkSpeculator,
++        )
++
++        return LongSparkSpeculator(vllm_config, device)
+     elif speculative_config.use_gemma4_mtp():
+         from vllm.v1.worker.gpu.spec_decode.gemma4.speculator import (
+             Gemma4Speculator,
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/LICENSE b/vllm/v1/worker/gpu/spec_decode/longspark/LICENSE
+new file mode 100644
+index 0000000000000000000000000000000000000000..29cd21495f9bfbe37aa8898bd48e88d54f84d70f
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/LICENSE
+@@ -0,0 +1,22 @@
++MIT License
++
++Copyright (c) 2025 sgl-project
++Copyright (c) 2026 The LongSpark Authors
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/__init__.py b/vllm/v1/worker/gpu/spec_decode/longspark/__init__.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..208f01a7cb5ee04c88d276fec2082cd4e830884b
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/__init__.py
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/attention.py b/vllm/v1/worker/gpu/spec_decode/longspark/attention.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..d6dd497e14537e30c1d894c0f16701c3f03d7d26
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/attention.py
+@@ -0,0 +1,148 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2025 sgl-project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark's SpecForge Global16/Raw256 implementation.
++# See LICENSE in this directory for the original license.
++"""Source-wise attention statistics for LongSpark's bounded target memory."""
++
++from collections.abc import Sequence
++from dataclasses import dataclass
++
++import torch
++
++
++@dataclass
++class AttentionStatistics:
++    max_logits: torch.Tensor
++    normalizer: torch.Tensor
++    weighted_values: torch.Tensor
++
++    def output(self) -> torch.Tensor:
++        return (
++            self.weighted_values
++            / self.normalizer.clamp_min(torch.finfo(self.weighted_values.dtype).tiny)[
++                ..., None
++            ]
++        )
++
++
++def attention_statistics_from_4d(
++    *,
++    query: torch.Tensor,
++    keys: torch.Tensor,
++    values: torch.Tensor,
++    attention_mask: torch.Tensor,
++) -> AttentionStatistics:
++    """Compute statistics for one layer: Q [B,Hq,Q,D], K/V [B,Hkv,K,D]."""
++    if query.ndim != 4 or keys.ndim != 4 or values.shape != keys.shape:
++        raise ValueError("4-D query/K/V tensors are required")
++    statistics = _attention_statistics(
++        query=query[:, None],
++        keys=keys[:, None],
++        values=values[:, None],
++        attention_mask=attention_mask,
++    )
++    return AttentionStatistics(
++        statistics.max_logits[:, 0],
++        statistics.normalizer[:, 0],
++        statistics.weighted_values[:, 0],
++    )
++
++
++def merge_normalized_attention(
++    parts: Sequence[tuple[torch.Tensor, torch.Tensor]],
++) -> tuple[torch.Tensor, torch.Tensor]:
++    """Merge outputs and log normalizers, giving masked sources zero weight."""
++    if not parts:
++        raise ValueError("at least one normalized attention part is required")
++    first_output, first_lse = parts[0]
++    if first_output.shape[:-1] != first_lse.shape:
++        raise ValueError("normalized output and logsumexp shapes do not align")
++    for output, lse in parts[1:]:
++        if output.shape != first_output.shape or lse.shape != first_lse.shape:
++            raise ValueError("all normalized attention parts must have matching shapes")
++    accumulator_dtype = (
++        torch.float64
++        if any(
++            output.dtype == torch.float64 or lse.dtype == torch.float64
++            for output, lse in parts
++        )
++        else torch.float32
++    )
++    lse_stack = torch.stack([lse.to(accumulator_dtype) for _, lse in parts], dim=0)
++    merged_lse = torch.logsumexp(lse_stack, dim=0)
++    safe_lse = torch.where(
++        torch.isfinite(merged_lse), merged_lse, torch.zeros_like(merged_lse)
++    )
++    merged_output = torch.zeros_like(first_output, dtype=accumulator_dtype)
++    for output, lse in parts:
++        contribution = torch.where(
++            torch.isfinite(lse),
++            torch.exp(lse.to(accumulator_dtype) - safe_lse),
++            torch.zeros_like(safe_lse),
++        )
++        merged_output = merged_output + contribution[..., None] * output.to(
++            accumulator_dtype
++        )
++    return merged_output.to(first_output.dtype), merged_lse
++
++
++def _attention_statistics(
++    *,
++    query: torch.Tensor,
++    keys: torch.Tensor,
++    values: torch.Tensor,
++    attention_mask: torch.Tensor,
++) -> AttentionStatistics:
++    """Compute GQA statistics without expanding or concatenating K/V.
++
++    K/V contractions retain the checkpoint dtype; scores and accumulators use
++    FP32. Changing that order alters the BF16 checkpoint's proposal logits.
++    """
++    if query.ndim != 5 or keys.ndim != 5 or values.shape != keys.shape:
++        raise ValueError("query and matching K/V tensors must be rank 5")
++    batch, layers, query_heads, query_rows, head_dim = query.shape
++    key_batch, key_layers, kv_heads, key_rows, key_head_dim = keys.shape
++    if (key_batch, key_layers, key_head_dim) != (batch, layers, head_dim):
++        raise ValueError("query and K/V batch/layer/head dimensions must align")
++    if query_heads % kv_heads:
++        raise ValueError("query heads must be divisible by KV heads")
++    if attention_mask.dtype != torch.bool or attention_mask.shape != (
++        batch,
++        query_rows,
++        key_rows,
++    ):
++        raise ValueError("attention_mask must be boolean [batch, queries, keys]")
++    query_for_scores = query if query.dtype == keys.dtype else query.to(keys.dtype)
++    groups = query_heads // kv_heads
++    grouped_query = query_for_scores.reshape(
++        batch, layers, kv_heads, groups, query_rows, head_dim
++    )
++    scores = torch.einsum("blhgrd,blhtd->blhgrt", grouped_query, keys).reshape(
++        batch, layers, query_heads, query_rows, key_rows
++    )
++    accumulator_dtype = (
++        torch.float64
++        if keys.dtype == torch.float64 or query.dtype == torch.float64
++        else torch.float32
++    )
++    scores = scores.to(accumulator_dtype) * (head_dim**-0.5)
++    expanded_mask = attention_mask[:, None, None, :, :]
++    has_visible_key = attention_mask.any(dim=-1)[:, None, None, :]
++    masked_scores = scores.masked_fill(~expanded_mask, float("-inf"))
++    max_logits = masked_scores.max(dim=-1).values
++    safe_max = torch.where(has_visible_key, max_logits, torch.zeros_like(max_logits))
++    weights = torch.exp(scores - safe_max[..., None]).masked_fill(~expanded_mask, 0)
++    normalizer = weights.sum(dim=-1)
++    grouped_weights = weights.to(values.dtype).reshape(
++        batch, layers, kv_heads, groups, query_rows, key_rows
++    )
++    weighted_values = torch.einsum(
++        "blhgrt,blhtd->blhgrd", grouped_weights, values
++    ).reshape(batch, layers, query_heads, query_rows, head_dim)
++    return AttentionStatistics(
++        torch.where(has_visible_key, max_logits, torch.zeros_like(max_logits)),
++        normalizer,
++        weighted_values.to(accumulator_dtype),
++    )
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/commit_kernel.py b/vllm/v1/worker/gpu/spec_decode/longspark/commit_kernel.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..3f7b1bff0ed7a244f02c17846f8040c48fc730b2
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/commit_kernel.py
+@@ -0,0 +1,189 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark. See LICENSE in this directory for the original license.
++"""Exact fused state stores after the unchanged reference attention arithmetic.
++
++The kernel only selects and copies values. It never computes attention or
++changes accumulator precision. Zero-count and padding rows issue no stores.
++"""
++
++from vllm.triton_utils import tl, triton
++
++
++@triton.jit(
++    do_not_specialize=["KEY_STRIDES", "VALUE_STRIDES", "HIDDEN_STRIDES", "KEEP"]
++)
++def _commit_state_kernel(
++    slots,
++    starts,
++    counts,
++    keys,
++    values,
++    hidden,
++    output,
++    lse,
++    state_keys,
++    state_values,
++    state_hidden,
++    state_output,
++    state_lse,
++    state_lengths,
++    KEY_STRIDES,
++    VALUE_STRIDES,
++    HIDDEN_STRIDES,
++    OUTPUT_STRIDES: tl.constexpr,
++    LSE_STRIDES: tl.constexpr,
++    SLOT_STRIDE: tl.constexpr,
++    START_STRIDE: tl.constexpr,
++    COUNT_STRIDE: tl.constexpr,
++    LAYERS: tl.constexpr,
++    KEEP,
++    KV_HEADS: tl.constexpr,
++    HEAD_DIM: tl.constexpr,
++    HIDDEN_SIZE: tl.constexpr,
++    QUERY_HEADS: tl.constexpr,
++    BOUNDARY_HIDDEN: tl.constexpr,
++    BLOCK: tl.constexpr,
++):
++    tile, batch, layer = tl.program_id(0), tl.program_id(1), tl.program_id(2)
++    slot = tl.load(slots + batch * SLOT_STRIDE).to(tl.int64)
++    count = tl.load(counts + batch * COUNT_STRIDE).to(tl.int64)
++    start = tl.load(starts + batch * START_STRIDE).to(tl.int64)
++    changed = count > 0
++    flat = tile * BLOCK + tl.arange(0, BLOCK)
++
++    # Each live row has a unique physical ring destination, even for T > 256.
++    row = flat // (KV_HEADS * HEAD_DIM)
++    head = (flat // HEAD_DIM) % KV_HEADS
++    dim = flat % HEAD_DIM
++    source_row = tl.maximum(count - KEEP, 0) + row
++    valid_raw = changed & (row < KEEP) & (source_row < count)
++    destination_row = (start + source_row) % 256
++    source_key = (
++        batch * KEY_STRIDES[0]
++        + layer * KEY_STRIDES[1]
++        + source_row * KEY_STRIDES[2]
++        + head * KEY_STRIDES[3]
++        + dim * KEY_STRIDES[4]
++    )
++    source_value = (
++        batch * VALUE_STRIDES[0]
++        + layer * VALUE_STRIDES[1]
++        + source_row * VALUE_STRIDES[2]
++        + head * VALUE_STRIDES[3]
++        + dim * VALUE_STRIDES[4]
++    )
++    destination = (
++        ((slot * LAYERS + layer) * 256 + destination_row) * KV_HEADS + head
++    ) * HEAD_DIM + dim
++    key = tl.load(keys + source_key, mask=valid_raw, other=0)
++    value = tl.load(values + source_value, mask=valid_raw, other=0)
++    tl.store(state_keys + destination, key, mask=valid_raw)
++    tl.store(state_values + destination, value, mask=valid_raw)
++
++    valid_hidden = changed & (flat < HIDDEN_SIZE)
++    if BOUNDARY_HIDDEN:
++        hidden_offset = (
++            batch * HIDDEN_STRIDES[0]
++            + layer * HIDDEN_STRIDES[1]
++            + flat * HIDDEN_STRIDES[2]
++        )
++    else:
++        hidden_offset = (
++            batch * HIDDEN_STRIDES[0]
++            + (count - 1) * HIDDEN_STRIDES[1]
++            + layer * HIDDEN_STRIDES[2]
++            + flat * HIDDEN_STRIDES[3]
++        )
++    boundary = tl.load(hidden + hidden_offset, mask=valid_hidden, other=0)
++    tl.store(
++        state_hidden + (slot * LAYERS + layer) * HIDDEN_SIZE + flat,
++        boundary,
++        mask=valid_hidden,
++    )
++
++    # These are already-normalized FP32 results of the original PyTorch math.
++    query = (flat // HEAD_DIM) % 16
++    query_head = flat // (16 * HEAD_DIM)
++    valid_output = changed & (flat < QUERY_HEADS * 16 * HEAD_DIM)
++    output_offset = (
++        batch * OUTPUT_STRIDES[0]
++        + layer * OUTPUT_STRIDES[1]
++        + query_head * OUTPUT_STRIDES[2]
++        + query * OUTPUT_STRIDES[3]
++        + dim * OUTPUT_STRIDES[4]
++    )
++    merged = tl.load(output + output_offset, mask=valid_output, other=0)
++    tl.store(
++        state_output + (slot * LAYERS + layer) * QUERY_HEADS * 16 * HEAD_DIM + flat,
++        merged,
++        mask=valid_output,
++    )
++    valid_lse = changed & (flat < QUERY_HEADS * 16)
++    lse_offset = (
++        batch * LSE_STRIDES[0]
++        + layer * LSE_STRIDES[1]
++        + (flat // 16) * LSE_STRIDES[2]
++        + (flat % 16) * LSE_STRIDES[3]
++    )
++    merged_lse = tl.load(lse + lse_offset, mask=valid_lse, other=0)
++    tl.store(
++        state_lse + (slot * LAYERS + layer) * QUERY_HEADS * 16 + flat,
++        merged_lse,
++        mask=valid_lse,
++    )
++    if (tile == 0) & (layer == 0):
++        tl.store(state_lengths + slot, start + count, mask=changed)
++
++
++def fused_commit_state(state, slots, keys, values, hidden, starts, counts, output, lse):
++    """Commit validated inputs; mutable state buffers are contiguous by construction.
++
++    Prefill width-dependent strides and KEEP stay runtime scalars, so unseen
++    prompt lengths reuse the same compiled kernel instead of triggering JIT.
++    """
++    tokens = keys.shape[2]
++    keep = min(tokens, 256)
++    query_heads = output.shape[2]
++    block = 256
++    extent = max(
++        keep * state.kv_heads * state.head_dim,
++        state.hidden_size,
++        query_heads * 16 * state.head_dim,
++    )
++    _commit_state_kernel[
++        (triton.cdiv(extent, block), slots.shape[0], state.num_layers)
++    ](
++        slots,
++        starts,
++        counts,
++        keys,
++        values,
++        hidden,
++        output,
++        lse,
++        state.keys,
++        state.values,
++        state.hidden,
++        state.global_output,
++        state.global_lse,
++        state.lengths,
++        KEY_STRIDES=keys.stride(),
++        VALUE_STRIDES=values.stride(),
++        HIDDEN_STRIDES=hidden.stride(),
++        OUTPUT_STRIDES=output.stride(),
++        LSE_STRIDES=lse.stride(),
++        SLOT_STRIDE=slots.stride(0),
++        START_STRIDE=starts.stride(0),
++        COUNT_STRIDE=counts.stride(0),
++        LAYERS=state.num_layers,
++        KEEP=keep,
++        KV_HEADS=state.kv_heads,
++        HEAD_DIM=state.head_dim,
++        HIDDEN_SIZE=state.hidden_size,
++        QUERY_HEADS=query_heads,
++        BOUNDARY_HIDDEN=hidden.ndim == 3,
++        BLOCK=block,
++        num_warps=4,
++    )
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/gather_kernel.py b/vllm/v1/worker/gpu/spec_decode/longspark/gather_kernel.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..532972f26f2fa0418d5ac705e44da629f7c89686
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/gather_kernel.py
+@@ -0,0 +1,284 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark. See LICENSE in this directory for the original license.
++"""Fused native target KV/hidden gather; no target execution or state mutation.
++
++The eager implementation in inputs.py remains the reference. This optional
++path performs the same gather with one Triton launch, including GPU rejection
++masking and boundary hidden selection. It deliberately does not read accepted
++counts or positions back to the host.
++"""
++
++from __future__ import annotations
++
++import torch
++
++from vllm.triton_utils import tl, triton
++
++
++@triton.jit
++def _gather_context_kernel(
++    cache_ptrs,
++    slot_ptrs,
++    hidden_ptrs,
++    query_starts,
++    rejected,
++    positions,
++    keys_out,
++    values_out,
++    hidden_out,
++    starts_out,
++    counts_out,
++    CACHE_STRIDES: tl.constexpr,
++    CACHE_PAGES: tl.constexpr,
++    PAGE_SIZES: tl.constexpr,
++    SLOT_STRIDES: tl.constexpr,
++    SLOT_ROWS: tl.constexpr,
++    HIDDEN_STRIDES: tl.constexpr,
++    QUERY_STRIDE: tl.constexpr,
++    REJECTED_STRIDE: tl.constexpr,
++    POSITION_STRIDE: tl.constexpr,
++    POSITION_ROWS: tl.constexpr,
++    HIDDEN_ROWS: tl.constexpr,
++    LAYERS: tl.constexpr,
++    WIDTH: tl.constexpr,
++    INPUT_WIDTH: tl.constexpr,
++    KV_HEADS: tl.constexpr,
++    HEAD_DIM: tl.constexpr,
++    HIDDEN_SIZE: tl.constexpr,
++    BLOCK: tl.constexpr,
++):
++    tile, batch, layer_id = tl.program_id(0), tl.program_id(1), tl.program_id(2)
++    begin = tl.load(query_starts + batch * QUERY_STRIDE).to(tl.int64)
++    end = tl.load(query_starts + (batch + 1) * QUERY_STRIDE).to(tl.int64)
++    reject_count = tl.load(rejected + batch * REJECTED_STRIDE).to(tl.int64)
++    count = end - begin - reject_count
++    valid_range = (
++        (begin >= 0)
++        & (begin < POSITION_ROWS)
++        & (end >= begin)
++        & (end <= POSITION_ROWS)
++        & (reject_count >= 0)
++        & (count >= 0)
++        & (count <= INPUT_WIDTH)
++    )
++    tl.device_assert(valid_range, "Invalid native LongSpark query/rejection range")
++    start = tl.load(positions + begin * POSITION_STRIDE, mask=valid_range, other=0)
++    if (tile == 0) & (layer_id == 0):
++        tl.store(starts_out + batch, start)
++        tl.store(counts_out + batch, count)
++
++    flat = tile * BLOCK + tl.arange(0, BLOCK)
++    dimension = flat % HEAD_DIM
++    head = (flat // HEAD_DIM) % KV_HEADS
++    token = flat // (KV_HEADS * HEAD_DIM)
++    in_output = flat < WIDTH * KV_HEADS * HEAD_DIM
++    accepted = in_output & (token < count) & valid_range
++    row = begin + token
++    boundary = tl.minimum(tl.maximum(begin + count - 1, 0), HIDDEN_ROWS - 1)
++
++    # Each layer has its own storage and physical slot mapping. Compile-time
++    # tuple indexing preserves arbitrary strides without stacking/copying cache.
++    for layer in tl.static_range(LAYERS):
++        if layer_id == layer:
++            slot_row_valid = row < SLOT_ROWS[layer]
++            tl.device_assert(
++                (~accepted) | slot_row_valid,
++                "Accepted LongSpark context has no slot-mapping row",
++            )
++            slot = tl.load(
++                slot_ptrs[layer] + row * SLOT_STRIDES[layer],
++                mask=accepted & slot_row_valid,
++                other=-1,
++            ).to(tl.int64)
++            resident = (slot >= 0) & (slot < CACHE_PAGES[layer] * PAGE_SIZES[layer])
++            tl.device_assert(
++                (~accepted) | resident,
++                "Accepted LongSpark context has no resident target KV slot",
++            )
++            page = slot // PAGE_SIZES[layer]
++            page_offset = slot % PAGE_SIZES[layer]
++            offset = (
++                page * CACHE_STRIDES[layer][0]
++                + head * CACHE_STRIDES[layer][1]
++                + page_offset * CACHE_STRIDES[layer][2]
++                + dimension * CACHE_STRIDES[layer][3]
++            )
++            key = tl.load(cache_ptrs[layer] + offset, mask=accepted & resident, other=0)
++            value = tl.load(
++                cache_ptrs[layer] + offset + HEAD_DIM * CACHE_STRIDES[layer][3],
++                mask=accepted & resident,
++                other=0,
++            )
++            destination = (batch * LAYERS + layer) * WIDTH * KV_HEADS * HEAD_DIM + flat
++            tl.store(keys_out + destination, key, mask=in_output)
++            tl.store(values_out + destination, value, mask=in_output)
++            # Extra tiles are launched when hidden width exceeds the KV width.
++            hidden = tl.load(
++                hidden_ptrs[layer]
++                + boundary * HIDDEN_STRIDES[layer][0]
++                + flat * HIDDEN_STRIDES[layer][1],
++                mask=flat < HIDDEN_SIZE,
++                other=0,
++            )
++            tl.store(
++                hidden_out + (batch * LAYERS + layer) * HIDDEN_SIZE + flat,
++                hidden,
++                mask=flat < HIDDEN_SIZE,
++            )
++
++
++def fused_gather_target_context(
++    owner,
++    input_batch,
++    slot_mappings,
++    last_hidden_states,
++    aux_hidden_states,
++    num_rejected,
++    *,
++    output_buffers=None,
++):
++    """Return ``keys, values, hidden, starts, counts, width`` as in inputs.py.
++
++    Without output_buffers, outputs own their storage. Optional validated decode
++    buffers write directly into the fixed-width CUDA-graph inputs. All input
++    cache/hidden/index strides are passed to the
++    kernel; no contiguous copy or CPU accepted-length synchronization occurs.
++    ``width`` alone comes from the native scheduler's CPU upper bound.
++    Device assertions are explicitly enabled, independent of TRITON_DEBUG.
++    """
++    batch = input_batch.num_reqs
++    width = int(input_batch.num_scheduled_tokens.max())
++    if batch < 1 or width < 1:
++        raise ValueError("Native LongSpark gather requires a nonempty scheduled batch")
++    if aux_hidden_states is None or len(aux_hidden_states) != len(owner.aux_layer_ids):
++        raise RuntimeError(
++            "Native target did not provide the requested LongSpark auxiliary layers"
++        )
++    selected = dict(zip(owner.aux_layer_ids, aux_hidden_states))
++    selected[owner.target_depth - 1] = last_hidden_states
++    hidden_inputs = tuple(selected[layer] for layer in owner.layer_ids)
++    caches = tuple(attention.kv_cache for attention in owner._target_attention)
++    slots = tuple(
++        slot_mappings[attention.layer_name] for attention in owner._target_attention
++    )
++    if not caches or len(caches) != len(hidden_inputs):
++        raise ValueError("Selected target layers and KV caches do not align")
++    if any(
++        cache.ndim != 4 or cache.shape[-1] != 2 * owner.head_dim for cache in caches
++    ):
++        raise ValueError("Native LongSpark requires FlashAttention packed KV layout")
++    device, dtype = caches[0].device, caches[0].dtype
++    kv_heads, hidden_size = caches[0].shape[1], last_hidden_states.shape[1]
++    if device.type != "cuda":
++        raise ValueError("Fused native LongSpark gather requires CUDA")
++    if any(
++        cache.device != device
++        or cache.dtype != dtype
++        or cache.shape[1] != kv_heads
++        or cache.shape[0] < 1
++        or cache.shape[2] < 1
++        for cache in caches
++    ):
++        raise ValueError(
++            "Selected native KV caches must have matching heads, dtype and device"
++        )
++    if any(
++        hidden.device != device
++        or hidden.dtype != last_hidden_states.dtype
++        or hidden.ndim != 2
++        or hidden.shape[1] != hidden_size
++        or hidden.shape[0] < last_hidden_states.shape[0]
++        for hidden in hidden_inputs
++    ):
++        raise ValueError(
++            "Selected native hidden states must have matching rows, dtype and device"
++        )
++    indexes = (input_batch.query_start_loc, input_batch.positions, num_rejected, *slots)
++    if any(
++        index.device != device
++        or index.ndim != 1
++        or index.dtype not in (torch.int32, torch.int64)
++        for index in indexes
++    ):
++        raise ValueError("Native gather indexes must be CUDA int32/int64 vectors")
++    if (
++        input_batch.query_start_loc.numel() < batch + 1
++        or num_rejected.numel() < batch
++        or input_batch.positions.numel() < 1
++        or last_hidden_states.shape[0] < 1
++    ):
++        raise ValueError("Native gather index buffers are too short")
++    layers = len(caches)
++    output_width = width
++    if output_buffers is None:
++        shape = (batch, layers, width, kv_heads, owner.head_dim)
++        keys = torch.empty(shape, dtype=dtype, device=device)
++        values = torch.empty_like(keys)
++        hidden = torch.empty(
++            (batch, layers, hidden_size), dtype=last_hidden_states.dtype, device=device
++        )
++        starts = torch.empty(batch, dtype=torch.int64, device=device)
++        counts = torch.empty_like(starts)
++    else:
++        if width > 8 or len(output_buffers) != 5:
++            raise ValueError(
++                "Direct LongSpark gather requires five fixed-width decode buffers"
++            )
++        keys, values, hidden, starts, counts = output_buffers
++        output_width = 8
++        shapes = ((batch, layers, 8, kv_heads, owner.head_dim),) * 2 + (
++            (batch, layers, hidden_size),
++            (batch,),
++            (batch,),
++        )
++        dtypes = (dtype, dtype, last_hidden_states.dtype, torch.int64, torch.int64)
++        if any(
++            t.shape != shape
++            or t.dtype != expected_dtype
++            or t.device != device
++            or not t.is_contiguous()
++            for t, shape, expected_dtype in zip(output_buffers, shapes, dtypes)
++        ):
++            raise ValueError(
++                "Direct LongSpark gather buffer shape, dtype, device or layout differs"
++            )
++    block = 256
++    tiles = triton.cdiv(
++        max(output_width * kv_heads * owner.head_dim, hidden_size), block
++    )
++    _gather_context_kernel[(tiles, batch, layers)](
++        caches,
++        slots,
++        hidden_inputs,
++        input_batch.query_start_loc,
++        num_rejected,
++        input_batch.positions,
++        keys,
++        values,
++        hidden,
++        starts,
++        counts,
++        CACHE_STRIDES=tuple(cache.stride() for cache in caches),
++        CACHE_PAGES=tuple(cache.shape[0] for cache in caches),
++        PAGE_SIZES=tuple(cache.shape[2] for cache in caches),
++        SLOT_STRIDES=tuple(slot.stride(0) for slot in slots),
++        SLOT_ROWS=tuple(slot.numel() for slot in slots),
++        HIDDEN_STRIDES=tuple(state.stride() for state in hidden_inputs),
++        QUERY_STRIDE=input_batch.query_start_loc.stride(0),
++        REJECTED_STRIDE=num_rejected.stride(0),
++        POSITION_STRIDE=input_batch.positions.stride(0),
++        POSITION_ROWS=input_batch.positions.numel(),
++        HIDDEN_ROWS=last_hidden_states.shape[0],
++        LAYERS=layers,
++        WIDTH=output_width,
++        INPUT_WIDTH=width,
++        KV_HEADS=kv_heads,
++        HEAD_DIM=owner.head_dim,
++        HIDDEN_SIZE=hidden_size,
++        BLOCK=block,
++        num_warps=4,
++        debug=True,
++    )
++    return keys, values, hidden, starts, counts, width
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/inputs.py b/vllm/v1/worker/gpu/spec_decode/longspark/inputs.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..adb6291dddacba9bce3ed929ab3ff9014db5d1d2
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/inputs.py
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark. See LICENSE in this directory for the original license.
++"""GPU-only gather from native ModelRunner V2 input and paged-KV buffers."""
++
++import torch
++
++
++def gather_target_context(
++    owner,
++    input_batch,
++    slot_mappings,
++    last_hidden_states,
++    aux_hidden_states,
++    num_rejected,
++):
++    """Gather only from native buffers; accepted counts never leave the GPU."""
++    batch = input_batch.num_reqs
++    width = int(input_batch.num_scheduled_tokens.max())
++    # Upper-bound query width is scheduler-owned CPU metadata. The actual
++    # number accepted remains GPU-resident, including under async scheduling.
++    begin = input_batch.query_start_loc[:batch].long()
++    counts = (
++        input_batch.query_start_loc[1 : batch + 1].long() - begin - num_rejected.long()
++    )
++    offsets = owner._token_offsets[:width]
++    rows = begin[:, None] + offsets[None, :]
++    safe_rows = rows.clamp(0, input_batch.positions.shape[0] - 1)
++    valid = offsets[None, :] < counts[:, None]
++    starts = input_batch.positions[begin]
++    boundary = (begin + counts - 1).clamp(0, last_hidden_states.shape[0] - 1)
++    if aux_hidden_states is None or len(aux_hidden_states) != len(owner.aux_layer_ids):
++        raise RuntimeError(
++            "Native target did not provide the requested LongSpark auxiliary layers"
++        )
++    selected = dict(zip(owner.aux_layer_ids, aux_hidden_states))
++    selected[owner.target_depth - 1] = last_hidden_states
++    hidden = torch.stack([selected[i][boundary] for i in owner.layer_ids], dim=1)
++    key_parts, value_parts = [], []
++    for attention in owner._target_attention:
++        cache = attention.kv_cache
++        if cache.ndim != 4 or cache.shape[-1] != 2 * owner.head_dim:
++            raise ValueError(
++                "Native LongSpark requires FlashAttention packed KV layout"
++            )
++        slots = slot_mappings[attention.layer_name][safe_rows].long()
++        torch._assert_async(
++            ((~valid) | (slots >= 0)).all(),
++            "Accepted LongSpark context has no resident target KV slot",
++        )
++        resident = valid & (slots >= 0)
++        safe_slots = slots.clamp_min(0)
++        page_size = cache.shape[2]
++        packed = cache[safe_slots // page_size, :, safe_slots % page_size, :]
++        packed = packed.masked_fill(~resident[..., None, None], 0)
++        keys, values = packed.split(owner.head_dim, dim=-1)
++        key_parts.append(keys)
++        value_parts.append(values)
++    return (
++        torch.stack(key_parts, dim=1),
++        torch.stack(value_parts, dim=1),
++        hidden,
++        starts,
++        counts,
++        width,
++    )
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/speculator.py b/vllm/v1/worker/gpu/spec_decode/longspark/speculator.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..7eeee167e0cc73a601687b674836ab7c7d2ad7f5
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/speculator.py
+@@ -0,0 +1,247 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark. See LICENSE in this directory for the original license.
++"""LongSpark parallel drafting using confirmed target KV and bounded state."""
++
++from typing import Any
++
++import torch
++
++from vllm.config import VllmConfig, replace
++from vllm.config.compilation import CUDAGraphMode
++from vllm.model_executor.model_loader.utils import get_draft_load_config
++from vllm.v1.worker.gpu.cudagraph_utils import CudaGraphManager
++from vllm.v1.worker.gpu.dp_utils import DPSyncState
++from vllm.v1.worker.gpu.input_batch import InputBatch
++from vllm.v1.worker.gpu.spec_decode.speculator import DraftModelSpeculator
++from vllm.v1.worker.gpu.spec_decode.utils import get_pp_safe_draft_load_config
++
++from .gather_kernel import fused_gather_target_context
++from .inputs import gather_target_context
++from .startup import prefill_workspace_budget
++from .state import LongSparkState
++
++
++class LongSparkSpeculator(DraftModelSpeculator):
++    """Anchor-first Local7 proposals with persistent GPU request slots.
++
++    Like DSpark, the draft network and sequential Markov sampling share a full
++    CUDA graph. Only verified target rows enter the Global16/Raw256 state, so
++    rejected suffixes never require rolling back an attention accumulator.
++    """
++
++    num_query_per_req = 7
++
++    def __init__(self, vllm_config: VllmConfig, device: torch.device):
++        super().__init__(vllm_config, device)
++        self.layer_ids = self.draft_model_config.hf_config.target_layer_ids
++        self.hf_config = vllm_config.model_config.hf_config
++        self.target_depth = self.hf_config.num_hidden_layers
++        self.head_dim = vllm_config.model_config.get_head_size()
++        self.aux_layer_ids = [i for i in self.layer_ids if i != self.target_depth - 1]
++        self._graph_manager: CudaGraphManager | None = None
++        # Each padded row has its own slot, avoiding concurrent indexed stores
++        # to a shared sentinel when a captured batch is larger than the input.
++        self._padding_slots = (
++            torch.arange(self.max_num_reqs, device=device, dtype=torch.long)
++            + self.max_num_reqs
++        )
++        self._idx = self._padding_slots.clone()
++        self._anchors = torch.zeros(self.max_num_reqs, dtype=torch.long, device=device)
++        self._starts = torch.ones_like(self._anchors)
++        self._counts = torch.zeros_like(self._anchors)
++        self._token_offsets = torch.arange(
++            self.max_num_tokens, device=device, dtype=torch.long
++        )
++        self._prefill_workspace_bytes = prefill_workspace_budget(
++            max_num_reqs=self.max_num_reqs,
++            max_num_tokens=self.max_num_tokens,
++            max_model_len=self.max_model_len,
++            num_layers=len(self.layer_ids),
++            kv_heads=self.hf_config.num_key_value_heads,
++            query_heads=self.hf_config.num_attention_heads,
++            head_dim=self.head_dim,
++            hidden_size=self.hidden_size,
++        )["bytes"]
++
++    def load_draft_model(
++        self, target_model: torch.nn.Module, target_attn_layer_names: set[str]
++    ) -> torch.nn.Module:
++        from vllm.compilation.backends import set_model_tag
++        from vllm.model_executor.model_loader import get_model
++
++        draft_config = replace(
++            self.vllm_config,
++            load_config=get_pp_safe_draft_load_config(
++                get_draft_load_config(self.vllm_config)
++            ),
++        )
++        with set_model_tag("longspark_head"):
++            model = get_model(
++                vllm_config=draft_config, model_config=self.draft_model_config
++            )
++        self.state = LongSparkState(
++            model,
++            target_model,
++            self.hf_config,
++            max_num_reqs=2 * self.max_num_reqs,
++            device=self.device,
++        )
++        self._target_attention = [
++            target_model.model.layers[i].self_attn.attn for i in self.layer_ids
++        ]
++        shape = (
++            self.max_num_reqs,
++            len(self.layer_ids),
++            8,
++            self.hf_config.num_key_value_heads,
++            self.head_dim,
++        )
++        self._keys = torch.zeros(shape, dtype=self.dtype, device=self.device)
++        self._values = torch.zeros_like(self._keys)
++        self._hidden = torch.zeros(
++            self.max_num_reqs,
++            len(self.layer_ids),
++            self.hidden_size,
++            dtype=self.dtype,
++            device=self.device,
++        )
++        return model
++
++    def set_attn(
++        self,
++        model_state,
++        kv_cache_config,
++        block_tables,
++        target_input_buffers,
++        target_attn_groups,
++    ) -> None:
++        # LongSpark consumes target KV; it does not allocate another paged cache.
++        self.model_state = model_state
++        self.kv_cache_config = kv_cache_config
++        self.block_tables = block_tables
++        self.target_input_buffers = target_input_buffers
++        self.target_attn_groups = target_attn_groups
++        self.attn_groups = []
++
++    def init_cudagraph_manager(self, cudagraph_mode: CUDAGraphMode) -> None:
++        mode = (
++            CUDAGraphMode.FULL_DECODE_ONLY
++            if cudagraph_mode.decode_mode() == CUDAGraphMode.FULL
++            else CUDAGraphMode.NONE
++        )
++        self._graph_manager = CudaGraphManager(
++            self.vllm_config, self.device, mode, decode_query_len=7
++        )
++
++    @torch.inference_mode()
++    def _generate_draft(self, batch: int) -> None:
++        self.state.update(
++            self._idx[:batch],
++            self._keys[:batch],
++            self._values[:batch],
++            self._hidden[:batch],
++            self._starts[:batch],
++            self._counts[:batch],
++        )
++        self.draft_tokens[:batch].copy_(
++            self.state.propose(self._idx[:batch], self._anchors[:batch])
++        )
++
++    def capture(self) -> None:
++        assert self._graph_manager is not None
++        self._idx.copy_(self._padding_slots)
++        self._starts.fill_(1)
++        self._counts.zero_()
++        self._anchors.zero_()
++
++        def prepare(desc, warmup):
++            batch = desc.num_reqs or desc.num_tokens // 7
++            return lambda _mode: self._generate_draft(batch)
++
++        self._graph_manager.capture(prepare, "Capturing LongSpark CUDA graphs")
++
++    @torch.inference_mode()
++    def propose(
++        self,
++        input_batch: InputBatch,
++        attn_metadata: dict[str, Any],
++        slot_mappings: dict[str, torch.Tensor],
++        last_hidden_states: torch.Tensor,
++        aux_hidden_states: list[torch.Tensor] | None,
++        num_sampled: torch.Tensor,
++        num_rejected: torch.Tensor,
++        last_sampled: torch.Tensor,
++        next_prefill_tokens: torch.Tensor,
++        temperature: torch.Tensor,
++        seeds: torch.Tensor,
++        dp_sync_state: DPSyncState | None = None,
++        dummy_run: bool = False,
++        skip_attn_for_dummy_run: bool = False,
++        mm_inputs: tuple[list[torch.Tensor], torch.Tensor] | None = None,
++        is_profile: bool = False,
++        num_speculative_tokens: int | None = None,
++    ) -> torch.Tensor:
++        batch = input_batch.num_reqs
++        self._idx.copy_(self._padding_slots)
++        self._starts.fill_(1)
++        self._counts.zero_()
++        self._anchors.zero_()
++        if dummy_run or skip_attn_for_dummy_run:
++            # Profile the actual network together with its largest prefill
++            # workspace, before target KV has been allocated. Dummy slots do
++            # not overlap live request state.
++            scratch = None
++            if is_profile:
++                scratch = torch.empty(
++                    self._prefill_workspace_bytes, dtype=torch.uint8, device=self.device
++                )
++            self._generate_draft(batch)
++            del scratch
++            return self.draft_tokens[:batch]
++
++        idx = input_batch.idx_mapping.long()
++        # The width is scheduler-owned CPU metadata; accepted lengths remain
++        # on the GPU. Fixed decode widths write directly into graph buffers.
++        if int(input_batch.num_scheduled_tokens.max()) <= 8:
++            fused_gather_target_context(
++                self,
++                input_batch,
++                slot_mappings,
++                last_hidden_states,
++                aux_hidden_states,
++                num_rejected,
++                output_buffers=(
++                    self._keys[:batch],
++                    self._values[:batch],
++                    self._hidden[:batch],
++                    self._starts[:batch],
++                    self._counts[:batch],
++                ),
++            )
++        else:
++            keys, values, hidden, starts, counts, _ = gather_target_context(
++                self,
++                input_batch,
++                slot_mappings,
++                last_hidden_states,
++                aux_hidden_states,
++                num_rejected,
++            )
++            # Variable-width prefill ingestion precedes the fixed Local7 graph.
++            self.state.update(idx, keys, values, hidden, starts, counts)
++        self._idx[:batch].copy_(idx)
++        anchors = last_sampled.reshape(self.max_num_reqs, -1)[idx, 0]
++        # Partial-prefill drafts are discarded by the scheduler.
++        self._anchors[:batch].copy_(torch.where(num_sampled > 0, anchors, 0))
++
++        assert self._graph_manager is not None
++        desc = self._graph_manager.dispatch(
++            batch, batch * 7, uniform_token_count=7, num_active_loras=0
++        )
++        if desc.cg_mode == CUDAGraphMode.FULL and not is_profile:
++            self._graph_manager.run_fullgraph(desc)
++        else:
++            self._generate_draft(batch)
++        return self.draft_tokens[:batch]
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/startup.py b/vllm/v1/worker/gpu/spec_decode/longspark/startup.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2b2b4bb7920f56ace689ad5c0bee7d45fb27434e
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/startup.py
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark. See LICENSE in this directory for the original license.
++"""Budget transient prefill workspace during native memory profiling."""
++
++
++def prefill_workspace_budget(
++    *,
++    max_num_reqs,
++    max_num_tokens,
++    max_model_len,
++    num_layers,
++    kv_heads,
++    query_heads,
++    head_dim,
++    hidden_size,
++):
++    """Conservative BF16 gather/update scratch, excluding persistent state.
++
++    The gathered rectangle is B * max(query_length), not the total scheduled
++    tokens. With T scheduled tokens and nonempty requests, its largest width
++    is min(max_model_len, T-B+1). Check every legal B, including unbalanced
++    mixed prefill/decode batches.
++
++    Tensor liveness follows inputs.gather_target_context, LongSparkState.update,
++    and LongSpark's _attention_statistics / merge_normalized_attention:
++      * Gather: packed K/V views plus both stacks (4 single-KV BF16 buffers),
++        boundary hidden list/stack, and row/slot/index/mask intermediates.
++      * Update: input K/V plus sanitized K/V (4), four FP32 score-sized
++        intermediates, six FP32 Global16 output-sized intermediates during
++        normalization/merge, three Raw256 gather/where temporaries, four
++        boundary hidden buffers and scalar/index/mask scratch.
++    Some of these peaks are sequential; retaining their sum is conservative.
++    A separately reported 32 MiB margin covers allocator rounding and library
++    scratch. The real draft network is profiled while this reservation is live.
++    This is a startup budget for this implementation, not a general guarantee
++    for arbitrary attention kernels or external allocations.
++    """
++    dimensions = dict(
++        max_num_reqs=max_num_reqs,
++        max_num_tokens=max_num_tokens,
++        max_model_len=max_model_len,
++        num_layers=num_layers,
++        kv_heads=kv_heads,
++        query_heads=query_heads,
++        head_dim=head_dim,
++        hidden_size=hidden_size,
++    )
++    if any(type(value) is not int or value <= 0 for value in dimensions.values()):
++        raise ValueError("Prefill budget dimensions must be positive integers")
++    if query_heads % kv_heads:
++        raise ValueError("Query heads must be divisible by KV heads")
++    candidates = []
++    for batch in range(1, min(max_num_reqs, max_num_tokens) + 1):
++        width = min(max_model_len, max_num_tokens - batch + 1)
++        kv = batch * num_layers * width * kv_heads * head_dim * 2
++        hidden = batch * num_layers * hidden_size * 2
++        score = batch * num_layers * query_heads * 16 * width * 4
++        global_output = batch * num_layers * query_heads * 16 * head_dim * 4
++        scalar = batch * num_layers * query_heads * 16 * 4
++        raw = batch * num_layers * min(width, 256) * kv_heads * head_dim * 2
++        # Six int64 row/slot tensors and four masks, plus request vectors.
++        gather_indices = batch * width * (6 * 8 + 4) + batch * 8 * 8
++        gather = 4 * kv + 2 * hidden + gather_indices
++        # Include row offsets, gather addresses and both raw-ring masks.
++        update_indices = (
++            batch * width * (8 * 4 + 4)
++            + batch * num_layers * min(width, 256) * (8 * 4 + 2)
++            + batch * 8 * 12
++        )
++        update_terms = dict(
++            input_and_clean_kv=4 * kv,
++            attention_scores=4 * score,
++            global_outputs=6 * global_output,
++            scalar_statistics=16 * scalar,
++            raw_ring=3 * raw,
++            boundary_hidden=4 * hidden,
++            indices_masks=update_indices,
++        )
++        update = sum(update_terms.values())
++        margin = 32 * 1024**2
++        candidates.append(
++            dict(
++                bytes=max(gather, update) + margin,
++                max_batch=batch,
++                padded_width=width,
++                gather_bytes=gather,
++                update_bytes=update,
++                update_terms=update_terms,
++                allocator_library_margin_bytes=margin,
++            )
++        )
++    result = max(candidates, key=lambda item: item["bytes"])
++    result["policy"] = "bf16_rectangular_gather_and_fp32_global16_update_v1"
++    return result
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/state.py b/vllm/v1/worker/gpu/spec_decode/longspark/state.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..c3e22f0db6f329496ce8ecf443026e8308a587c8
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/state.py
+@@ -0,0 +1,469 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark. See LICENSE in this directory for the original license.
++"""Batched, graph-safe LongSpark state indexed by persistent V2 request slots.
++
++Only confirmed target rows are committed. Proposal does not modify state, so
++rejected draft suffixes never require undoing an online-softmax update. The
++caller supplies post-RoPE target K, target V, and the selected target layer
++outputs (the last target layer uses the *final-normalized* hidden state).
++"""
++
++from __future__ import annotations
++
++import math
++from types import SimpleNamespace
++
++import torch
++
++from .target_modules import _normalized, _target_modules
++
++
++class _BatchContext:
++    position_ids_are_scheduler_owned = True
++    cuda_graph_static_inputs = True
++
++    def __init__(self, owner, slots):
++        self.owner = owner
++        self.lengths = owner.lengths.index_select(0, slots)
++        self.keys = owner.keys.index_select(0, slots)
++        self.values = owner.values.index_select(0, slots)
++        self.global_output = owner.global_output.index_select(0, slots)
++        self.batch_size = slots.shape[0]
++
++    def attend(
++        self, *, layer_index, query, local_keys, local_values, local_attention_mask
++    ):
++        from .attention import (
++            attention_statistics_from_4d,
++            merge_normalized_attention,
++        )
++
++        owner = self.owner
++        global_keys = owner.query[:, layer_index].expand(self.batch_size, -1, -1, -1)
++        raw_mask = (owner.raw_offsets[None, :] < self.lengths[:, None])[:, None, :]
++        global_mask = (self.lengths > 0)[:, None, None].expand(-1, 7, 16)
++        sources = (
++            (
++                global_keys,
++                self.global_output[:, layer_index].to(owner.dtype),
++                global_mask,
++            ),
++            (
++                self.keys[:, layer_index].transpose(1, 2),
++                self.values[:, layer_index].transpose(1, 2),
++                raw_mask.expand(-1, 7, -1),
++            ),
++            (local_keys, local_values, local_attention_mask),
++        )
++        parts = [
++            _normalized(
++                attention_statistics_from_4d(
++                    query=query,
++                    keys=keys,
++                    values=values,
++                    attention_mask=mask,
++                )
++            )
++            for keys, values, mask in sources
++        ]
++        output, _ = merge_normalized_attention(parts)
++        return output.to(query.dtype)
++
++
++class LongSparkState:
++    """BF16, TP=1, native-RoPE Qwen3 LongSpark execution; greedy Local7 only.
++
++    ``idx_mapping`` is a device int32/int64 vector of distinct active request
++    slots. ``-1`` is a graph-padding row: its updates are inert and its proposal
++    is all zero. Padding uses a private sentinel, never a real request slot.
++    No operation branches on a tensor value or transfers it to the host.
++    """
++
++    raw_rows = 256
++    global_rows = 16
++    block_size = 7
++
++    def __init__(self, draft_model, target_model, hf_config, max_num_reqs, device):
++        self.device = torch.device(device)
++        if self.device.type == "cuda" and self.device.index is None:
++            self.device = torch.device("cuda", torch.accelerator.current_device_index())
++        if (
++            not isinstance(max_num_reqs, int)
++            or isinstance(max_num_reqs, bool)
++            or max_num_reqs < 1
++        ):
++            raise ValueError("max_num_reqs must be a positive integer")
++        self.max_num_reqs = max_num_reqs
++        if getattr(hf_config, "model_type", None) != "qwen3":
++            raise ValueError("Native LongSpark supports dense Qwen3 targets only")
++        if getattr(hf_config, "quantization_config", None):
++            raise ValueError("Native LongSpark requires an unquantized BF16 target")
++        if getattr(hf_config, "use_sliding_window", False):
++            raise ValueError("Native LongSpark requires full target attention")
++        for rope in (
++            getattr(hf_config, "rope_scaling", None),
++            getattr(hf_config, "rope_parameters", None),
++        ):
++            if rope and (
++                not isinstance(rope, dict)
++                or rope.get("rope_type", rope.get("type", "default")) != "default"
++                or any(
++                    name in rope for name in ("factor", "long_factor", "short_factor")
++                )
++            ):
++                raise ValueError("Native LongSpark supports native, unscaled RoPE only")
++        rope_parameters = getattr(hf_config, "rope_parameters", None) or {}
++        self.rope_theta = float(
++            rope_parameters.get(
++                "rope_theta", getattr(hf_config, "rope_theta", 1_000_000.0)
++            )
++        )
++        if not math.isfinite(self.rope_theta) or self.rope_theta <= 0:
++            raise ValueError("Target native rotary theta must be positive and finite")
++        self.embedding, self.head, self.norm = _target_modules(
++            SimpleNamespace(model=target_model, hf_config=hf_config), self.device
++        )
++        self.dtype = self.embedding.weight.dtype
++        if any(
++            module.weight.dtype != torch.bfloat16
++            for module in (self.embedding, self.head, self.norm)
++        ):
++            raise ValueError("Native LongSpark requires BF16 target weights")
++        # Weight shape validation above rejects sharded embeddings/heads. Also
++        # check attention head partitioning when given a real vLLM target.
++        for layer in getattr(target_model.model, "layers", ()):
++            attention = layer.self_attn
++            if (
++                attention.num_heads != hf_config.num_attention_heads
++                or attention.num_kv_heads != hf_config.num_key_value_heads
++            ):
++                raise ValueError(
++                    "Native LongSpark supports tensor_parallel_size=1 only"
++                )
++            if not math.isclose(
++                float(getattr(attention.rotary_emb, "base", self.rope_theta)),
++                self.rope_theta,
++                rel_tol=1e-9,
++            ):
++                raise ValueError("Target attention must use the configured native RoPE")
++
++        self.model = draft_model.eval()
++        self.model.bind_target_embedding(self.embedding)
++        self.model.requires_grad_(False)
++        config = self.model.config
++        self.reference = self.model.global16_raw256_reference
++        if (
++            self.reference is None
++            or not config.global16_raw256_enabled
++            or config.draft_mode != "parallel_shifted_qwen"
++            or config.block_size != 7
++        ):
++            raise ValueError(
++                "Native LongSpark requires the Global16/Raw256/Local7 checkpoint"
++            )
++        ref = self.reference.config
++        if (
++            ref.global_memory_slots,
++            ref.raw_target_rows,
++            ref.local_draft_rows,
++            ref.max_accepted_tokens,
++        ) != (16, 256, 7, 8):
++            raise ValueError(
++                "Native LongSpark requires fixed Global16/Raw256/Local7 geometry"
++            )
++        dim = int(
++            getattr(hf_config, "head_dim", None)
++            or hf_config.hidden_size // hf_config.num_attention_heads
++        )
++        if (
++            config.hidden_size != hf_config.hidden_size
++            or config.vocab_size != hf_config.vocab_size
++            or config.num_key_value_heads != hf_config.num_key_value_heads
++            or config.head_dim != dim
++            or ref.num_attention_heads != hf_config.num_attention_heads
++        ):
++            raise ValueError(
++                "LongSpark checkpoint geometry differs from its Qwen3 target"
++            )
++        if not math.isclose(
++            float(config.qwen_rope_theta), self.rope_theta, rel_tol=1e-9
++        ):
++            raise ValueError(
++                "LongSpark checkpoint and native target rotary theta differ"
++            )
++        self.layer_ids = list(config.target_layer_ids)
++        self.num_layers = len(self.layer_ids)
++        if len(self.layer_ids) != len(set(self.layer_ids)) or any(
++            layer < 0 or layer >= hf_config.num_hidden_layers
++            for layer in self.layer_ids
++        ):
++            raise ValueError("LongSpark selected layers are outside the target")
++        self.hidden_size = int(config.hidden_size)
++        self.kv_heads, self.head_dim = int(config.num_key_value_heads), dim
++        for layer in self.model.parallel_qwen_layers:
++            attention = layer.self_attn
++            attention.inv_freq = 1.0 / (
++                self.rope_theta
++                ** (
++                    torch.arange(0, dim, 2, dtype=torch.float32, device=self.device)
++                    / dim
++                )
++            )
++        self.query = self.reference.global_queries(
++            batch_size=1, device=self.device, dtype=self.dtype
++        ).detach()
++        slots = self.max_num_reqs + 1  # final slot is reserved for graph padding
++        self.keys = torch.zeros(
++            slots,
++            self.num_layers,
++            256,
++            self.kv_heads,
++            dim,
++            dtype=self.dtype,
++            device=self.device,
++        )
++        self.values = torch.zeros_like(self.keys)
++        self.global_output = torch.zeros(
++            (slots, *self.query.shape[1:]), dtype=torch.float32, device=self.device
++        )
++        self.global_lse = torch.full(
++            self.global_output.shape[:-1],
++            float("-inf"),
++            dtype=torch.float32,
++            device=self.device,
++        )
++        self.hidden = torch.zeros(
++            slots,
++            self.num_layers,
++            self.hidden_size,
++            dtype=self.dtype,
++            device=self.device,
++        )
++        self.lengths = torch.zeros(slots, dtype=torch.long, device=self.device)
++        self.raw_offsets = torch.arange(256, dtype=torch.long, device=self.device)
++        self.layer_offsets = torch.arange(
++            self.num_layers, dtype=torch.long, device=self.device
++        )
++
++    def _vector(self, tensor, size, name):
++        if (
++            tensor.shape != (size,)
++            or tensor.dtype not in (torch.int32, torch.int64)
++            or tensor.device != self.device
++        ):
++            raise ValueError(
++                f"{name} must be a device int32/int64 vector of length {size}"
++            )
++
++    def _slots(self, idx_mapping):
++        if idx_mapping.ndim != 1:
++            raise ValueError("idx_mapping must be one-dimensional")
++        self._vector(idx_mapping, idx_mapping.shape[0], "idx_mapping")
++        torch._assert_async(
++            ((idx_mapping >= -1) & (idx_mapping < self.max_num_reqs)).all(),
++            "LongSpark request slot is out of range",
++        )
++        active = idx_mapping >= 0
++        slots = torch.where(active, idx_mapping, self.max_num_reqs).long()
++        return slots, active
++
++    @property
++    def state_bytes(self):
++        return sum(
++            value.numel() * value.element_size() for value in self.mutable_state()
++        )
++
++    def mutable_state(self):
++        return (
++            self.keys,
++            self.values,
++            self.global_output,
++            self.global_lse,
++            self.hidden,
++            self.lengths,
++        )
++
++    @torch.inference_mode()
++    def reset(self):
++        """Clear state, including the private padding slot, before graph warmup."""
++        for tensor in (
++            self.keys,
++            self.values,
++            self.global_output,
++            self.hidden,
++            self.lengths,
++        ):
++            tensor.zero_()
++        self.global_lse.fill_(float("-inf"))
++
++    @torch.inference_mode()
++    def update(self, idx_mapping, keys, values, hidden, start_positions, valid_counts):
++        """Commit a padded batch of accepted deltas, including chunked prefill.
++
++        K/V: [B,L,T,KVH,D], hidden: [B,T,L,H] or boundary [B,L,H].
++        A nonempty update with ``start_positions==0`` resets that request slot.
++        Otherwise start must equal its committed length. Zero-count rows are
++        exact no-ops even when their start position is zero or a placeholder.
++        Rejected rows may contain arbitrary values,
++        including NaN: they are zeroed before any attention contraction.
++        """
++        from .attention import (
++            _attention_statistics,
++            merge_normalized_attention,
++        )
++
++        slots, active = self._slots(idx_mapping)
++        batch = slots.shape[0]
++        if (
++            keys.ndim != 5
++            or keys.shape != values.shape
++            or keys.shape[:2] != (batch, self.num_layers)
++            or keys.shape[3:] != (self.kv_heads, self.head_dim)
++            or keys.shape[2] < 1
++        ):
++            raise ValueError(
++                "Target K/V must be [B,selected_layers,T,kv_heads,head_dim], T>=1"
++            )
++        tokens = keys.shape[2]
++        for name, tensor in (("keys", keys), ("values", values), ("hidden", hidden)):
++            if tensor.dtype != self.dtype or tensor.device != self.device:
++                raise ValueError(f"{name} must use the state's BF16 dtype and device")
++        if hidden.shape not in (
++            (batch, tokens, self.num_layers, self.hidden_size),
++            (batch, self.num_layers, self.hidden_size),
++        ):
++            raise ValueError("Hidden must be [B,T,L,H] or gathered boundary [B,L,H]")
++        self._vector(start_positions, batch, "start_positions")
++        self._vector(valid_counts, batch, "valid_counts")
++        torch._assert_async(
++            ((valid_counts >= 0) & (valid_counts <= tokens)).all(),
++            "LongSpark valid_counts must lie within padded input width",
++        )
++        starts = torch.where(active, start_positions, 0).long()
++        counts = torch.where(active, valid_counts, 0).long()
++        previous_length = self.lengths.index_select(0, slots)
++        changed = counts > 0
++        torch._assert_async(
++            ((~changed) | (starts == 0) | (starts == previous_length)).all(),
++            "LongSpark update must extend its confirmed prefix or reset at zero",
++        )
++        reset = (starts == 0) & changed
++        valid = torch.arange(tokens, device=self.device)[None, :] < counts[:, None]
++        keep_shape = valid[:, None, :, None, None]
++        clean_keys = torch.where(keep_shape, keys, 0)
++        clean_values = torch.where(keep_shape, values, 0)
++        statistics = _attention_statistics(
++            query=self.query.expand(batch, -1, -1, -1, -1),
++            keys=clean_keys.transpose(2, 3),
++            values=clean_values.transpose(2, 3),
++            attention_mask=valid[:, None, :].expand(-1, 16, -1),
++        )
++        old_output = self.global_output.index_select(0, slots)
++        old_lse = self.global_lse.index_select(0, slots)
++        old_output = torch.where(reset[:, None, None, None, None], 0, old_output)
++        old_lse = torch.where(reset[:, None, None, None], float("-inf"), old_lse)
++        output, lse = merge_normalized_attention(
++            ((old_output, old_lse), _normalized(statistics))
++        )
++        # Keep the attention contractions and normalization above unchanged.
++        # Fuse only the final indexed stores; this removes staging allocations
++        # and preserves every committed BF16/FP32 bit. The reference switch is
++        # useful for GPU regression tests and paired performance measurements.
++        if self.device.type == "cuda" and getattr(self, "use_fused_commit", True):
++            from .commit_kernel import fused_commit_state
++
++            fused_commit_state(
++                self, slots, keys, values, hidden, starts, counts, output, lse
++            )
++            return
++        self.global_output.index_copy_(
++            0,
++            slots,
++            torch.where(changed[:, None, None, None, None], output, old_output),
++        )
++        self.global_lse.index_copy_(
++            0, slots, torch.where(changed[:, None, None, None], lse, old_lse)
++        )
++
++        # Exactly min(T,256) distinct physical destinations per request. Select
++        # the last accepted rows *before* wrapping, so T>256 cannot introduce
++        # duplicate scatter indices or let a rejected suffix erase live rows.
++        keep = min(tokens, self.raw_rows)
++        offsets = (counts - keep).clamp_min(0)[:, None] + self.raw_offsets[None, :keep]
++        raw_valid = offsets < counts[:, None]
++        physical = (starts[:, None] + offsets).remainder(self.raw_rows)
++        source = offsets.clamp_max(tokens - 1)[:, None, :, None, None].expand(
++            -1, self.num_layers, -1, self.kv_heads, self.head_dim
++        )
++        address = (
++            slots[:, None, None],
++            self.layer_offsets[None, :, None],
++            physical[:, None, :],
++        )
++        raw_mask = raw_valid[:, None, :, None, None]
++        self.keys[address] = torch.where(
++            raw_mask, keys.gather(2, source), self.keys[address]
++        )
++        self.values[address] = torch.where(
++            raw_mask, values.gather(2, source), self.values[address]
++        )
++        if hidden.ndim == 4:
++            boundary_index = (
++                (counts - 1)
++                .clamp_min(0)[:, None, None, None]
++                .expand(-1, 1, self.num_layers, self.hidden_size)
++            )
++            boundary = hidden.gather(1, boundary_index).squeeze(1)
++        else:
++            boundary = hidden
++        old_hidden = torch.where(
++            reset[:, None, None], 0, self.hidden.index_select(0, slots)
++        )
++        self.hidden.index_copy_(
++            0, slots, torch.where((counts > 0)[:, None, None], boundary, old_hidden)
++        )
++        self.lengths.index_copy_(
++            0, slots, torch.where(changed, starts + counts, previous_length)
++        )
++
++    @torch.inference_mode()
++    def propose(self, idx_mapping, anchors):
++        """Return device [B,7] greedy proposals without mutating committed state.
++
++        Empty positive slots are also legal for native profiling/capture. Their
++        Global/Raw sources are masked; the caller keeps those dummy slots
++        separate from live requests whose prefix must already be committed.
++        """
++        slots, active = self._slots(idx_mapping)
++        self._vector(anchors, slots.shape[0], "anchors")
++        anchors = torch.where(active, anchors, 0).long()
++        lengths = self.lengths.index_select(0, slots)
++        torch._assert_async(
++            ((anchors >= 0) & (anchors < self.head.weight.shape[0])).all(),
++            "LongSpark anchor must be a valid vocabulary token",
++        )
++        logits = self.model(
++            current_hidden_states=self.hidden.index_select(0, slots),
++            current_token_ids=anchors,
++            current_position_ids=lengths,
++            target_final_norm=self.norm,
++            target_embed_tokens=self.embedding,
++            target_lm_head=self.head,
++            global16_paged_context=_BatchContext(self, slots),
++            apply_markov_correction=False,
++        )
++        markov = self.model.parallel_markov_head
++        previous = anchors
++        sampled = []
++        for step in range(self.block_size):
++            corrected = logits[:, step]
++            if markov is not None:
++                corrected = corrected + markov.compute_bias(previous).to(
++                    corrected.dtype
++                )
++            previous = corrected.argmax(-1)
++            sampled.append(previous)
++        tokens = torch.stack(sampled, dim=1)
++        return torch.where(active[:, None], tokens, 0)
+diff --git a/vllm/v1/worker/gpu/spec_decode/longspark/target_modules.py b/vllm/v1/worker/gpu/spec_decode/longspark/target_modules.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..5c4ba4aa7f3f8150597b2d3c323db82e73880b08
+--- /dev/null
++++ b/vllm/v1/worker/gpu/spec_decode/longspark/target_modules.py
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: Apache-2.0
++# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
++# SPDX-FileCopyrightText: Copyright (c) 2026 The LongSpark Authors
++# Adapted from LongSpark. See LICENSE in this directory for the original license.
++"""Target weight sharing and attention normalization for ModelRunner V2."""
++
++import torch
++from torch import nn
++
++
++def _normalized(statistics):
++    """Convert online-softmax statistics to output and logsumexp."""
++    visible = statistics.normalizer > 0
++    lse = (
++        statistics.max_logits
++        + statistics.normalizer.clamp_min(
++            torch.finfo(statistics.normalizer.dtype).tiny
++        ).log()
++    )
++    return statistics.output(), lse.masked_fill(~visible, float("-inf"))
++
++
++class _RMSNorm(nn.Module):
++    def __init__(self, weight, epsilon):
++        super().__init__()
++        self.weight = nn.Parameter(weight, requires_grad=False)
++        self.variance_epsilon = float(epsilon)
++
++    def forward(self, hidden):
++        dtype = hidden.dtype
++        values = hidden.float()
++        values = values * torch.rsqrt(
++            values.square().mean(dim=-1, keepdim=True) + self.variance_epsilon
++        )
++        return values.to(dtype=dtype) * self.weight
++
++
++def _target_modules(target, device):
++    """Share TP=1 weights locally; copy only three modules across devices.
++
++    PyTorch wrappers deliberately avoid calling vLLM's distributed embedding
++    implementation from the draft device.  Padded vocabulary rows are excluded
++    from both sampling and the rejection-sampling distribution.
++    """
++    model = target.model
++    hf = target.hf_config
++    vocab_size = int(hf.vocab_size)
++    hidden_size = int(hf.hidden_size)
++
++    def weight(module, shape):
++        value = module.weight.detach()
++        if not value.is_floating_point() or value.ndim != len(shape):
++            raise ValueError("LongSpark requires unquantized target module weights")
++        if tuple(value.shape[1:]) != tuple(shape[1:]) or value.shape[0] < shape[0]:
++            raise ValueError(
++                "LongSpark requires complete, unsharded target weights (TP=1)"
++            )
++        # Tensor.to aliases storage on the same device and copies across devices.
++        return value[: shape[0]].to(device=device)
++
++    embed_weight = weight(model.model.embed_tokens, (vocab_size, hidden_size))
++    head_weight = weight(model.lm_head, (vocab_size, hidden_size))
++    norm_weight = weight(model.model.norm, (hidden_size,))
++    embedding = nn.Embedding.from_pretrained(embed_weight, freeze=True)
++    head = nn.Linear(hidden_size, vocab_size, bias=False, device="meta")
++    head.weight = nn.Parameter(head_weight, requires_grad=False)
++    norm = _RMSNorm(norm_weight, hf.rms_norm_eps)
++    return embedding, head, norm

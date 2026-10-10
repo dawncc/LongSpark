@@ -30,6 +30,15 @@ records verification of the V2-only tree.
 Run commands below from the LongSpark repository root. The package name is
 `longspark_vllm`; it does not shadow the installed upstream `vllm` package.
 
+## Upstream contribution
+
+The [main-branch contribution bundle](upstream-contribution/README.md) provides
+an independent `method="longspark"` implementation for vLLM Model Runner V2,
+a cleanly applicable patch, native API/GSM8K regression evidence, and a PR
+description. Its isolated checkout is `vendor/vllm/upstream/`; the base is
+`10cc2f6ae2c9ba7cc5841ece95e27d0562aef1bf`. Human review, relevant test reruns
+and DCO sign-off are required before publishing to vLLM.
+
 ## Installation
 
 Use an isolated Linux environment. The existing SGLang launchers use a separate

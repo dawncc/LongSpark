@@ -1,0 +1,30 @@
+Resolved 47 packages in 1.04s
+Downloading pyarrow (51.4MiB)
+Downloading pandas (10.3MiB)
+Downloading scipy (33.7MiB)
+ Downloaded pandas
+ Downloaded scipy
+ Downloaded pyarrow
+Prepared 15 packages in 3.01s
+Uninstalled 2 packages in 399ms
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Installed 15 packages in 16.43s
+ + coverage==7.16.2
+ + datasets==3.6.0
+ - dill==0.4.1
+ + dill==0.3.8
+ - fsspec==2026.9.0
+ + fsspec==2025.3.0
+ + multiprocess==0.70.16
+ + pandas==3.0.6
+ + pyarrow==26.0.0
+ + pytest-cov==7.1.0
+ + pytest-forked==1.7.5
+ + pytest-rerunfailures==16.7
+ + pytest-timeout==2.4.0
+ + python-dateutil==2.9.0.post0
+ + scipy==1.18.1
+ + tblib==3.2.2
+ + xxhash==4.0.1

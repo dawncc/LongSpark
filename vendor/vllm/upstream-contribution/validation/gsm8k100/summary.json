@@ -1,0 +1,25 @@
+{
+  "exact_output_id_matches": 100,
+  "requests": 100,
+  "accuracy": {
+    "ar": 0.96,
+    "longspark": 0.96
+  },
+  "output_tokens": 21339,
+  "ar_wall_seconds": 98.12842380255461,
+  "longspark_wall_seconds": 21.664889462292194,
+  "ar_wall_tps": 217.45992825622534,
+  "longspark_wall_tps": 984.9577140534501,
+  "wall_speedup": 4.529375696716451,
+  "draft_acceptance_length": 4.725410940447318,
+  "acceptance_length_including_bonus": 5.725410940447318,
+  "acceptance_rate": 0.6750587057781884,
+  "draft_rounds": 3711,
+  "accepted_draft_tokens": 17536,
+  "drafted_tokens": 25977,
+  "finish_reasons": [
+    "stop"
+  ],
+  "input_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "timing": "Sum of generate() wall times at batch size 4, excluding model load and 3 warmup prompts; one paired run, no repeated-trial confidence interval."
+}

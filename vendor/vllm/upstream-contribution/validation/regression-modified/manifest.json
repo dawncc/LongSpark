@@ -1,0 +1,59 @@
+{
+  "base_commit": "10cc2f6ae2c9ba7cc5841ece95e27d0562aef1bf",
+  "cwd": "/data/chenchen/codex/vllm-longspark-upstream",
+  "runtime_environment": {
+    "CUDA_VISIBLE_DEVICES": "5",
+    "VLLM_USE_RUST_FRONTEND": "0"
+  },
+  "test_groups": {
+    "config.txt": {
+      "command": ".venv/bin/python -m pytest tests/test_config.py -k \"v2_model_runner or speculative or dspark or eagle or longspark\" --deselect=tests/test_config.py::test_eagle_draft_model_config -q --timeout=120",
+      "passed": 95,
+      "seconds": 29.21
+    },
+    "worker-sampling.txt": {
+      "command": ".venv/bin/python -m pytest tests/config/test_longspark.py tests/test_sampling_params.py tests/config/test_speculative_draft_hf_overrides.py tests/config/test_speculative_draft_max_position_embeddings.py tests/v1/worker/test_gpu_model_runner_v2.py tests/v1/worker/test_gpu_sampler_flags.py tests/v1/spec_decode/test_dspark_topk.py tests/v1/spec_decode/test_eagle_step_kernel.py tests/v1/spec_decode/test_ngram_gpu.py tests/v1/streaming_input/test_async_llm_streaming.py -q --timeout=120",
+      "passed": 184,
+      "seconds": 49.91
+    },
+    "config-native-gate.txt": {
+      "command": ".venv/bin/python -m pytest tests/config/test_longspark.py tests/v1/streaming_input/test_async_llm_streaming.py -q --timeout=120",
+      "passed": 34,
+      "seconds": 5.98,
+      "note": "Rerun after native model and pooling capability guards were added; overlaps the 184-test group."
+    },
+    "model-registry.txt": {
+      "command": ".venv/bin/python -m pytest tests/models/test_registry.py -k \"DraftFreeKVModel or LongSparkDraftModel\" -q --timeout=120",
+      "passed": 2,
+      "seconds": 3.94
+    },
+    "model-initialization.txt": {
+      "command": ".venv/bin/python -m pytest \"tests/models/test_initialization.py::test_can_initialize_large_subset[LongSparkDraftModel]\" -q --timeout=300",
+      "passed": 1,
+      "seconds": 28.71,
+      "additional_environment": {
+        "VLLM_USE_V2_MODEL_RUNNER": "1",
+        "VLLM_USE_FLASHINFER_SAMPLER": "0"
+      },
+      "note": "Existing upstream GPU initialization test with public Qwen3/LongSpark configs and load_format=dummy."
+    }
+  },
+  "baseline_limitation": "Unmodified-main test_eagle_draft_model_config returns gated Meta-Llama-3-8B-Instruct HTTP403. That single case was deselected in modified run; other baseline cases all passed.",
+  "precommit_results": {
+    "precommit-final.txt": {
+      "exit_code": 0,
+      "modified_files": [],
+      "files": "See precommit-final.json source_sha256"
+    },
+    "precommit-final-docs.txt": {
+      "exit_code": 0,
+      "modified_files": [],
+      "files": [
+        "docs/models/supported_models.md",
+        "docs/features/speculative_decoding/longspark.md",
+        "tests/models/registry.py",
+        "tests/models/test_initialization.py"
+      ]
+    }
+  }
+}

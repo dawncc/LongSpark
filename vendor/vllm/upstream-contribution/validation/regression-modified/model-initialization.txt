@@ -1,0 +1,12 @@
+.                                                                        [100%]
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 14 warnings
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/models/test_initialization.py::test_can_initialize_large_subset[LongSparkDraftModel]
+  /data/chenchen/codex/vllm-longspark-upstream/tests/utils.py:1776: DeprecationWarning: This process (pid=3307036) is multi-threaded, use of fork() may lead to deadlocks in the child.
+    pid = os.fork()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 15 warnings in 28.71s

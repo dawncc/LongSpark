@@ -1,0 +1,622 @@
+.........................................................F.............. [ 80%]
+..................                                                       [100%]
+=================================== FAILURES ===================================
+________________________ test_eagle_draft_model_config _________________________
+httpx2.HTTPStatusError: Client error '403 Forbidden' for url 'https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/resolve/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/config.json'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403
+
+The above exception was the direct cause of the following exception:
+
+path_or_repo_id = 'meta-llama/Meta-Llama-3-8B-Instruct'
+filenames = ['config.json'], cache_dir = '/root/.cache/huggingface/hub'
+force_download = False, proxies = None, token = None
+revision = ResolvedRevision(initial=None, resolved='8afb486c1db24fe5011ec46dfbe5b5dccdb575c2')
+local_files_only = False, subfolder = '', repo_type = None
+user_agent = 'transformers/5.19.0; python/3.12.3; session_id/c9e719e2ab5d4fc1af729f041a4c4c81; torch/2.13.0+cu129; file_type/config; from_auto_class/False'
+_raise_exceptions_for_gated_repo = True
+_raise_exceptions_for_missing_entries = True
+_raise_exceptions_for_connection_errors = True, tqdm_class = None
+deprecated_kwargs = {}
+
+    def cached_files(
+        path_or_repo_id: str | os.PathLike,
+        filenames: list[str],
+        cache_dir: str | os.PathLike | None = None,
+        force_download: bool = False,
+        proxies: dict[str, str] | None = None,
+        token: bool | str | None = None,
+        revision: str | None = None,
+        local_files_only: bool = False,
+        subfolder: str = "",
+        repo_type: str | None = None,
+        user_agent: str | dict[str, str] | None = None,
+        _raise_exceptions_for_gated_repo: bool = True,
+        _raise_exceptions_for_missing_entries: bool = True,
+        _raise_exceptions_for_connection_errors: bool = True,
+        tqdm_class: type | None = None,
+        **deprecated_kwargs,
+    ) -> list[str] | None:
+        """
+        Tries to locate several files in a local folder and repo, downloads and cache them if necessary.
+    
+        Args:
+            path_or_repo_id (`str` or `os.PathLike`):
+                This can be either:
+                - a string, the *model id* of a model repo on huggingface.co.
+                - a path to a *directory* potentially containing the file.
+            filenames (`list[str]`):
+                The name of all the files to locate in `path_or_repo`.
+            cache_dir (`str` or `os.PathLike`, *optional*):
+                Path to a directory in which a downloaded pretrained model configuration should be cached if the standard
+                cache should not be used.
+            force_download (`bool`, *optional*, defaults to `False`):
+                Whether or not to force to (re-)download the configuration files and override the cached versions if they
+                exist.
+            proxies (`dict[str, str]`, *optional*):
+                A dictionary of proxy servers to use by protocol or endpoint, e.g., `{'http': 'foo.bar:3128',
+                'http://hostname': 'foo.bar:4012'}.` The proxies are used on each request.
+            token (`str` or *bool*, *optional*):
+                The token to use as HTTP bearer authorization for remote files. If `True`, will use the token generated
+                when running `hf auth login` (stored in `~/.huggingface`).
+            revision (`str`, *optional*, defaults to `"main"`):
+                The specific model version to use. It can be a branch name, a tag name, or a commit id, since we use a
+                git-based system for storing models and other artifacts on huggingface.co, so `revision` can be any
+                identifier allowed by git. When it pins an immutable commit - a commit hash, or a revision resolved by
+                [`~utils.hub.resolve_revision`] - the local cache is trusted (including the "this file does not exist"
+                cache) and no call is made to the Hub for files that are already known.
+            local_files_only (`bool`, *optional*, defaults to `False`):
+                If `True`, will only try to load the tokenizer configuration from local files.
+            subfolder (`str`, *optional*, defaults to `""`):
+                In case the relevant files are located inside a subfolder of the model repo on huggingface.co, you can
+                specify the folder name here.
+            repo_type (`str`, *optional*):
+                Specify the repo type (useful when downloading from a space for instance).
+    
+        Private args:
+            _raise_exceptions_for_gated_repo (`bool`):
+                if False, do not raise an exception for gated repo error but return None.
+            _raise_exceptions_for_missing_entries (`bool`):
+                if False, do not raise an exception for missing entries but return None.
+            _raise_exceptions_for_connection_errors (`bool`):
+                if False, do not raise an exception for connection errors but return None.
+    
+        <Tip>
+    
+        Passing `token=True` is required when you want to use a private model.
+    
+        </Tip>
+    
+        Returns:
+            `Optional[str]`: Returns the resolved file (to the cache folder if downloaded from a repo).
+    
+        Examples:
+    
+        ```python
+        # Download a model weight from the Hub and cache it.
+        model_weights_file = cached_file("google-bert/bert-base-uncased", "pytorch_model.bin")
+        ```
+        """
+        if is_offline_mode() and not local_files_only:
+            logger.info("Offline mode: forcing local_files_only=True")
+            local_files_only = True
+        if subfolder is None:
+            subfolder = ""
+    
+        # Add folder to filenames
+        full_filenames = [os.path.join(subfolder, file) for file in filenames]
+    
+        path_or_repo_id = str(path_or_repo_id)
+        existing_files = []
+        for filename in full_filenames:
+            if os.path.isdir(path_or_repo_id):
+                resolved_file = os.path.join(path_or_repo_id, filename)
+                if not os.path.isfile(resolved_file):
+                    if _raise_exceptions_for_missing_entries and filename != os.path.join(subfolder, "config.json"):
+                        revision_ = "main" if revision is None else revision
+                        raise OSError(
+                            f"{path_or_repo_id} does not appear to have a file named {filename}. Checkout "
+                            f"'https://huggingface.co/{path_or_repo_id}/tree/{revision_}' for available files."
+                        )
+                    else:
+                        continue
+                existing_files.append(resolved_file)
+    
+        if os.path.isdir(path_or_repo_id):
+            return existing_files if existing_files else None
+    
+        if cache_dir is None:
+            cache_dir = constants.HF_HUB_CACHE
+        if isinstance(cache_dir, Path):
+            cache_dir = str(cache_dir)
+    
+        def finalize(resolved_files: list[str | None]) -> list[str] | None:
+            # If there are any missing file and the flag is active, raise
+            if any(file is None for file in resolved_files) and _raise_exceptions_for_missing_entries:
+                missing_entries = [
+                    original for original, resolved in zip(full_filenames, resolved_files) if resolved is None
+                ]
+                # Last escape
+                if len(resolved_files) == 1 and missing_entries[0] == os.path.join(subfolder, "config.json"):
+                    return None
+                # Now we raise for missing entries
+                revision_ = "main" if revision is None else revision
+                msg = (
+                    f"a file named {missing_entries[0]}"
+                    if len(missing_entries) == 1
+                    else f"files named {(*missing_entries,)}"
+                )
+                raise OSError(
+                    f"{path_or_repo_id} does not appear to have {msg}. Checkout 'https://huggingface.co/{path_or_repo_id}/tree/{revision_}'"
+                    " for available files."
+                )
+    
+            # Remove potential missing entries (we can silently remove them at this point based on the flags)
+            resolved_files = [file for file in resolved_files if file is not None]
+            # Return `None` if the list is empty, coherent with other Exception when the flag is not active
+            resolved_files = None if len(resolved_files) == 0 else resolved_files
+    
+            return resolved_files
+    
+        # When `revision` pins an immutable commit, the cache is authoritative for it: every file we already know about at
+        # that commit - either downloaded, or recorded as missing - can be served without a single call to the Hub.
+        commit_hash = _pinned_commit_hash(revision)
+        existing_files = []
+        file_counter = 0
+        if commit_hash is not None and not force_download:
+            for filename in full_filenames:
+                resolved_file = try_to_load_from_cache(
+                    path_or_repo_id, filename, cache_dir=cache_dir, revision=commit_hash, repo_type=repo_type
+                )
+                if resolved_file is not None:
+                    file_counter += 1
+                    existing_files.append(None if resolved_file is _CACHED_NO_EXIST else resolved_file)
+    
+        # Return cached files when all entries are known, including missing entries.
+        if file_counter == len(full_filenames):
+            return finalize(existing_files)
+    
+        user_agent = http_user_agent(user_agent)
+        # download the files if needed
+        try:
+            if len(full_filenames) == 1:
+                # This is slightly better for only 1 file
+>               hf_hub_download(
+                    path_or_repo_id,
+                    filenames[0],
+                    subfolder=None if len(subfolder) == 0 else subfolder,
+                    repo_type=repo_type,
+                    revision=revision,
+                    cache_dir=cache_dir,
+                    user_agent=user_agent,
+                    force_download=force_download,
+                    proxies=proxies,
+                    token=token,
+                    local_files_only=local_files_only,
+                    tqdm_class=tqdm_class,
+                )
+
+.venv/lib/python3.12/site-packages/transformers/utils/hub.py:537: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py:89: in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/huggingface_hub/utils/_http.py:276: in _inner
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py:1047: in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py:1194: in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+head_call_error = GatedRepoError('403 Client Error. (Request ID: Root=1-6ac9afd4-25db515034c5ec926e269b7d;8574f2d5-218e-481f-8244-329eea...u are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct to ask for access.')
+force_download = False, local_files_only = False
+
+    def _raise_on_head_call_error(head_call_error: Exception, force_download: bool, local_files_only: bool) -> NoReturn:
+        """Raise an appropriate error when the HEAD call failed and we cannot locate a local file."""
+        # No head call => we cannot force download.
+        if force_download:
+            if local_files_only:
+                raise ValueError("Cannot pass 'force_download=True' and 'local_files_only=True' at the same time.")
+            elif isinstance(head_call_error, OfflineModeIsEnabled):
+                raise ValueError("Cannot pass 'force_download=True' when offline mode is enabled.") from head_call_error
+            else:
+                raise ValueError("Force download failed due to the above error.") from head_call_error
+    
+        # No head call + couldn't find an appropriate file on disk => raise an error.
+        if local_files_only:
+            raise LocalEntryNotFoundError(
+                "Cannot find the requested files in the disk cache and outgoing traffic has been disabled. To enable"
+                " hf.co look-ups and downloads online, set 'local_files_only' to False."
+            )
+        elif isinstance(head_call_error, (RepositoryNotFoundError, GatedRepoError)) or (
+            isinstance(head_call_error, HfHubHTTPError) and head_call_error.response.status_code == 401
+        ):
+            # Repo not found or gated => let's raise the actual error
+            # Unauthorized => likely a token issue => let's raise the actual error
+>           raise head_call_error
+E           huggingface_hub.errors.GatedRepoError: 403 Client Error. (Request ID: Root=1-6ac9afd4-25db515034c5ec926e269b7d;8574f2d5-218e-481f-8244-329eeabaf977)
+E           
+E           Cannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/resolve/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/config.json.
+E           Access to model meta-llama/Meta-Llama-3-8B-Instruct is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct to ask for access.
+
+.venv/lib/python3.12/site-packages/huggingface_hub/file_download.py:1953: GatedRepoError
+
+The above exception was the direct cause of the following exception:
+
+    def test_eagle_draft_model_config():
+        """Test that EagleDraft model config is correctly set."""
+>       target_model_config = ModelConfig(
+            "meta-llama/Meta-Llama-3-8B-Instruct", trust_remote_code=True
+        )
+
+tests/test_config.py:3581: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+vllm/config/model.py:666: in __post_init__
+    hf_config = get_config(
+vllm/transformers_utils/config.py:863: in get_config
+    config_dict, config = with_retry(
+vllm/transformers_utils/repo_utils.py:119: in with_retry
+    return func()
+           ^^^^^^
+vllm/transformers_utils/config.py:864: in <lambda>
+    lambda: config_parser.parse(
+vllm/transformers_utils/config.py:307: in parse
+    config_dict, _ = PreTrainedConfig.get_config_dict(
+.venv/lib/python3.12/site-packages/transformers/configuration_utils.py:792: in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/transformers/configuration_utils.py:844: in _get_config_dict
+    resolved_config_file = cached_file(
+.venv/lib/python3.12/site-packages/transformers/utils/hub.py:370: in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path_or_repo_id = 'meta-llama/Meta-Llama-3-8B-Instruct'
+filenames = ['config.json'], cache_dir = '/root/.cache/huggingface/hub'
+force_download = False, proxies = None, token = None
+revision = ResolvedRevision(initial=None, resolved='8afb486c1db24fe5011ec46dfbe5b5dccdb575c2')
+local_files_only = False, subfolder = '', repo_type = None
+user_agent = 'transformers/5.19.0; python/3.12.3; session_id/c9e719e2ab5d4fc1af729f041a4c4c81; torch/2.13.0+cu129; file_type/config; from_auto_class/False'
+_raise_exceptions_for_gated_repo = True
+_raise_exceptions_for_missing_entries = True
+_raise_exceptions_for_connection_errors = True, tqdm_class = None
+deprecated_kwargs = {}
+
+    def cached_files(
+        path_or_repo_id: str | os.PathLike,
+        filenames: list[str],
+        cache_dir: str | os.PathLike | None = None,
+        force_download: bool = False,
+        proxies: dict[str, str] | None = None,
+        token: bool | str | None = None,
+        revision: str | None = None,
+        local_files_only: bool = False,
+        subfolder: str = "",
+        repo_type: str | None = None,
+        user_agent: str | dict[str, str] | None = None,
+        _raise_exceptions_for_gated_repo: bool = True,
+        _raise_exceptions_for_missing_entries: bool = True,
+        _raise_exceptions_for_connection_errors: bool = True,
+        tqdm_class: type | None = None,
+        **deprecated_kwargs,
+    ) -> list[str] | None:
+        """
+        Tries to locate several files in a local folder and repo, downloads and cache them if necessary.
+    
+        Args:
+            path_or_repo_id (`str` or `os.PathLike`):
+                This can be either:
+                - a string, the *model id* of a model repo on huggingface.co.
+                - a path to a *directory* potentially containing the file.
+            filenames (`list[str]`):
+                The name of all the files to locate in `path_or_repo`.
+            cache_dir (`str` or `os.PathLike`, *optional*):
+                Path to a directory in which a downloaded pretrained model configuration should be cached if the standard
+                cache should not be used.
+            force_download (`bool`, *optional*, defaults to `False`):
+                Whether or not to force to (re-)download the configuration files and override the cached versions if they
+                exist.
+            proxies (`dict[str, str]`, *optional*):
+                A dictionary of proxy servers to use by protocol or endpoint, e.g., `{'http': 'foo.bar:3128',
+                'http://hostname': 'foo.bar:4012'}.` The proxies are used on each request.
+            token (`str` or *bool*, *optional*):
+                The token to use as HTTP bearer authorization for remote files. If `True`, will use the token generated
+                when running `hf auth login` (stored in `~/.huggingface`).
+            revision (`str`, *optional*, defaults to `"main"`):
+                The specific model version to use. It can be a branch name, a tag name, or a commit id, since we use a
+                git-based system for storing models and other artifacts on huggingface.co, so `revision` can be any
+                identifier allowed by git. When it pins an immutable commit - a commit hash, or a revision resolved by
+                [`~utils.hub.resolve_revision`] - the local cache is trusted (including the "this file does not exist"
+                cache) and no call is made to the Hub for files that are already known.
+            local_files_only (`bool`, *optional*, defaults to `False`):
+                If `True`, will only try to load the tokenizer configuration from local files.
+            subfolder (`str`, *optional*, defaults to `""`):
+                In case the relevant files are located inside a subfolder of the model repo on huggingface.co, you can
+                specify the folder name here.
+            repo_type (`str`, *optional*):
+                Specify the repo type (useful when downloading from a space for instance).
+    
+        Private args:
+            _raise_exceptions_for_gated_repo (`bool`):
+                if False, do not raise an exception for gated repo error but return None.
+            _raise_exceptions_for_missing_entries (`bool`):
+                if False, do not raise an exception for missing entries but return None.
+            _raise_exceptions_for_connection_errors (`bool`):
+                if False, do not raise an exception for connection errors but return None.
+    
+        <Tip>
+    
+        Passing `token=True` is required when you want to use a private model.
+    
+        </Tip>
+    
+        Returns:
+            `Optional[str]`: Returns the resolved file (to the cache folder if downloaded from a repo).
+    
+        Examples:
+    
+        ```python
+        # Download a model weight from the Hub and cache it.
+        model_weights_file = cached_file("google-bert/bert-base-uncased", "pytorch_model.bin")
+        ```
+        """
+        if is_offline_mode() and not local_files_only:
+            logger.info("Offline mode: forcing local_files_only=True")
+            local_files_only = True
+        if subfolder is None:
+            subfolder = ""
+    
+        # Add folder to filenames
+        full_filenames = [os.path.join(subfolder, file) for file in filenames]
+    
+        path_or_repo_id = str(path_or_repo_id)
+        existing_files = []
+        for filename in full_filenames:
+            if os.path.isdir(path_or_repo_id):
+                resolved_file = os.path.join(path_or_repo_id, filename)
+                if not os.path.isfile(resolved_file):
+                    if _raise_exceptions_for_missing_entries and filename != os.path.join(subfolder, "config.json"):
+                        revision_ = "main" if revision is None else revision
+                        raise OSError(
+                            f"{path_or_repo_id} does not appear to have a file named {filename}. Checkout "
+                            f"'https://huggingface.co/{path_or_repo_id}/tree/{revision_}' for available files."
+                        )
+                    else:
+                        continue
+                existing_files.append(resolved_file)
+    
+        if os.path.isdir(path_or_repo_id):
+            return existing_files if existing_files else None
+    
+        if cache_dir is None:
+            cache_dir = constants.HF_HUB_CACHE
+        if isinstance(cache_dir, Path):
+            cache_dir = str(cache_dir)
+    
+        def finalize(resolved_files: list[str | None]) -> list[str] | None:
+            # If there are any missing file and the flag is active, raise
+            if any(file is None for file in resolved_files) and _raise_exceptions_for_missing_entries:
+                missing_entries = [
+                    original for original, resolved in zip(full_filenames, resolved_files) if resolved is None
+                ]
+                # Last escape
+                if len(resolved_files) == 1 and missing_entries[0] == os.path.join(subfolder, "config.json"):
+                    return None
+                # Now we raise for missing entries
+                revision_ = "main" if revision is None else revision
+                msg = (
+                    f"a file named {missing_entries[0]}"
+                    if len(missing_entries) == 1
+                    else f"files named {(*missing_entries,)}"
+                )
+                raise OSError(
+                    f"{path_or_repo_id} does not appear to have {msg}. Checkout 'https://huggingface.co/{path_or_repo_id}/tree/{revision_}'"
+                    " for available files."
+                )
+    
+            # Remove potential missing entries (we can silently remove them at this point based on the flags)
+            resolved_files = [file for file in resolved_files if file is not None]
+            # Return `None` if the list is empty, coherent with other Exception when the flag is not active
+            resolved_files = None if len(resolved_files) == 0 else resolved_files
+    
+            return resolved_files
+    
+        # When `revision` pins an immutable commit, the cache is authoritative for it: every file we already know about at
+        # that commit - either downloaded, or recorded as missing - can be served without a single call to the Hub.
+        commit_hash = _pinned_commit_hash(revision)
+        existing_files = []
+        file_counter = 0
+        if commit_hash is not None and not force_download:
+            for filename in full_filenames:
+                resolved_file = try_to_load_from_cache(
+                    path_or_repo_id, filename, cache_dir=cache_dir, revision=commit_hash, repo_type=repo_type
+                )
+                if resolved_file is not None:
+                    file_counter += 1
+                    existing_files.append(None if resolved_file is _CACHED_NO_EXIST else resolved_file)
+    
+        # Return cached files when all entries are known, including missing entries.
+        if file_counter == len(full_filenames):
+            return finalize(existing_files)
+    
+        user_agent = http_user_agent(user_agent)
+        # download the files if needed
+        try:
+            if len(full_filenames) == 1:
+                # This is slightly better for only 1 file
+                hf_hub_download(
+                    path_or_repo_id,
+                    filenames[0],
+                    subfolder=None if len(subfolder) == 0 else subfolder,
+                    repo_type=repo_type,
+                    revision=revision,
+                    cache_dir=cache_dir,
+                    user_agent=user_agent,
+                    force_download=force_download,
+                    proxies=proxies,
+                    token=token,
+                    local_files_only=local_files_only,
+                    tqdm_class=tqdm_class,
+                )
+            else:
+                snapshot_download(
+                    path_or_repo_id,
+                    allow_patterns=full_filenames,
+                    repo_type=repo_type,
+                    revision=revision,
+                    cache_dir=cache_dir,
+                    user_agent=user_agent,
+                    force_download=force_download,
+                    proxies=proxies,
+                    token=token,
+                    local_files_only=local_files_only,
+                    tqdm_class=tqdm_class,
+                )
+    
+        except Exception as e:
+            # We cannot recover from them
+            if isinstance(e, RepositoryNotFoundError) and not isinstance(e, GatedRepoError):
+                raise OSError(
+                    f"{path_or_repo_id} is not a local folder and is not a valid model identifier "
+                    "listed on 'https://huggingface.co/models'\nIf this is a private repository, make sure to pass a token "
+                    "having permission to this repo either by logging in with `hf auth login` or by passing "
+                    "`token=<your_token>`"
+                ) from e
+            elif isinstance(e, RevisionNotFoundError):
+                raise OSError(
+                    f"{revision} is not a valid git identifier (branch name, tag name or commit id) that exists "
+                    "for this model name. Check the model page at "
+                    f"'https://huggingface.co/{path_or_repo_id}' for available revisions."
+                ) from e
+            elif isinstance(e, PermissionError):
+                raise OSError(
+                    f"PermissionError at {e.filename} when downloading {path_or_repo_id}. "
+                    "Check cache directory permissions. Common causes: 1) another user is downloading the same model (please wait); "
+                    "2) a previous download was canceled and the lock file needs manual removal."
+                ) from e
+            elif isinstance(e, OSError) and e.errno == errno.EROFS:
+                # Unlike EACCES (errno 13), which Python maps to PermissionError,
+                # EROFS (errno 30) is a plain OSError that does NOT match `isinstance(e, PermissionError)`.
+                # Without this guard it would fall through to the stale-cache recovery block below,
+                # silently returning an old cached file even when a newer revision exists on the Hub.
+                # Re-raise so callers can detect the read-only condition and retry with a writable path.
+                raise
+            elif isinstance(e, ValueError):
+                raise OSError(f"{e}") from e
+    
+            # Now we try to recover if we can find all files correctly in the cache
+            resolved_files = [
+                _get_cache_file_to_return(path_or_repo_id, filename, cache_dir, commit_hash or revision, repo_type)
+                for filename in full_filenames
+            ]
+            if all(file is not None for file in resolved_files):
+                return resolved_files
+    
+            # Raise based on the flags. Note that we will raise for missing entries at the very end, even when
+            # not entering this Except block, as it may also happen when `snapshot_download` does not raise
+            if isinstance(e, GatedRepoError):
+                if not _raise_exceptions_for_gated_repo:
+                    return None
+>               raise OSError(
+                    "You are trying to access a gated repo.\nMake sure to have access to it at "
+                    f"https://huggingface.co/{path_or_repo_id}.\n{str(e)}"
+E                   OSError: You are trying to access a gated repo.
+E                   Make sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct.
+E                   403 Client Error. (Request ID: Root=1-6ac9afd4-25db515034c5ec926e269b7d;8574f2d5-218e-481f-8244-329eeabaf977)
+E                   
+E                   Cannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/resolve/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/config.json.
+E                   Access to model meta-llama/Meta-Llama-3-8B-Instruct is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct to ask for access.
+
+.venv/lib/python3.12/site-packages/transformers/utils/hub.py:610: OSError
+------------------------------ Captured log call -------------------------------
+ERROR    vllm.transformers_utils.repo_utils:repo_utils.py:126 Error parsing config for meta-llama/Meta-Llama-3-8B-Instruct: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct.
+403 Client Error. (Request ID: Root=1-6ac9afd2-68d45d2c400b269648ee6044;2f5662ad-2890-4388-85b2-361ba9efc93b)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/resolve/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/config.json.
+Access to model meta-llama/Meta-Llama-3-8B-Instruct is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct to ask for access., retrying 1 of 2
+ERROR    vllm.transformers_utils.repo_utils:repo_utils.py:124 Error parsing config for meta-llama/Meta-Llama-3-8B-Instruct: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct.
+403 Client Error. (Request ID: Root=1-6ac9afd4-25db515034c5ec926e269b7d;8574f2d5-218e-481f-8244-329eeabaf977)
+
+Cannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/resolve/8afb486c1db24fe5011ec46dfbe5b5dccdb575c2/config.json.
+Access to model meta-llama/Meta-Llama-3-8B-Instruct is restricted and you are not in the authorized list. Visit https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct to ask for access.
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: 14 warnings
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/blackwell/blockscaled_contiguous_gather_grouped_gemm_act_fusion.py:3446
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/blackwell/blockscaled_contiguous_gather_grouped_gemm_act_fusion.py:3446: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/blackwell/moe_w4a16_kernel.py:2326
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/blackwell/moe_w4a16_kernel.py:2326: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:29
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:29: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    a_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:31
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:31: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    b_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:34
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/utils.py:34: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/contiguous_grouped_gemm_finalize_fusion.py:903
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/contiguous_grouped_gemm_finalize_fusion.py:903: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    a_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/contiguous_grouped_gemm_finalize_fusion.py:905
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/fused_moe/cute_dsl/hopper/contiguous_grouped_gemm_finalize_fusion.py:905: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    b_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:427
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:427: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    epi_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2391
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_blackwell.py:2391: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/cute_dsl/low_latency_blockscaled_gemm.py:102
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/cute_dsl/low_latency_blockscaled_gemm.py:102: DeprecationWarning: cutlass.utils.smem_allocator.get_smem_capacity_in_bytes is deprecated; use cutlass.memory.get_smem_capacity_in_bytes instead. It will be removed in a future release.
+    _SMEM_CAPACITY_BYTES = cutlass.utils.get_smem_capacity_in_bytes("sm_100")
+
+.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_rubin.py:215
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/gemm/kernels/grouped_gemm_masked_rubin.py:215: DeprecationWarning: cutlass.utils.LayoutEnum is deprecated; use cutlass.tensor_utils.LayoutEnum instead. It will be removed in a future release.
+    c_layout: utils.LayoutEnum,
+
+.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_chunked.py:95
+.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_chunked.py:95
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_chunked.py:95: DeprecationWarning: cutlass.utils.TensorMapUpdateMode is deprecated; use cutlass.tensor_utils.TensorMapUpdateMode instead. It will be removed in a future release.
+    from cutlass.utils import TensorMapManager, TensorMapUpdateMode
+
+.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/delta_rule_dsl/collective_store_tma.py:6
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/delta_rule_dsl/collective_store_tma.py:6: DeprecationWarning: cutlass.utils.tensormap_manager.TensorMapUpdateMode is deprecated; use cutlass.tensor_utils.TensorMapUpdateMode instead. It will be removed in a future release.
+    from cutlass.utils.tensormap_manager import TensorMapManager, TensorMapUpdateMode
+
+.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_cp_prefill.py:55
+.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_cp_prefill.py:55
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/gdn_kernels/blackwell/gated_delta_net_cp_prefill.py:55: DeprecationWarning: cutlass.utils.TensorMapUpdateMode is deprecated; use cutlass.tensor_utils.TensorMapUpdateMode instead. It will be removed in a future release.
+    from cutlass.utils import TensorMapManager, TensorMapUpdateMode
+
+.venv/lib/python3.12/site-packages/flashinfer/cute_dsl/availability.py:136
+  /data/chenchen/codex/vllm-longspark-upstream/.venv/lib/python3.12/site-packages/flashinfer/cute_dsl/availability.py:136: DeprecationWarning: Arch from arch.py is deprecated. Use Arch from enums.py instead.
+    from cutlass.base_dsl.arch import Arch
+
+<frozen importlib._bootstrap_external>:1297
+  <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+
+<frozen importlib._bootstrap_external>:1297
+  <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_config.py::test_eagle_draft_model_config - OSError: You are...
+1 failed, 89 passed, 350 deselected, 33 warnings in 160.12s (0:02:40)

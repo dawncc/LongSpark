@@ -1,0 +1,64 @@
+{
+  "all_assertions_passed": true,
+  "requests": 100,
+  "exact_output_token_ids_and_text": 100,
+  "fixture_sha256": "ba6199428e423c9ff69b18bfe64efb4bdeb09509797d3b3d2c4738b8aebd89ef",
+  "methods": {
+    "ar": {
+      "correct": 96,
+      "accuracy": 0.96,
+      "output_tokens": 21339,
+      "wall_seconds": 98.12842380255461,
+      "wall_tokens_per_second": 217.45992825622534,
+      "natural_eos_count": 100,
+      "max_length_capped_count": 0,
+      "output_token_length_min": 82,
+      "output_token_length_max": 428
+    },
+    "longspark": {
+      "correct": 96,
+      "accuracy": 0.96,
+      "output_tokens": 21339,
+      "wall_seconds": 21.664889462292194,
+      "wall_tokens_per_second": 984.9577140534501,
+      "natural_eos_count": 100,
+      "max_length_capped_count": 0,
+      "output_token_length_min": 82,
+      "output_token_length_max": 428
+    }
+  },
+  "draft_rounds": 3711,
+  "accepted_draft_tokens": 17536,
+  "drafted_tokens": 25977,
+  "acceptance_histogram": [
+    341,
+    319,
+    324,
+    290,
+    240,
+    215,
+    210,
+    1772
+  ],
+  "draft_acceptance_length": 4.725410940447318,
+  "acceptance_length_including_bonus": 5.725410940447318,
+  "draft_acceptance_rate": 0.6750587057781884,
+  "emitted_decode_tokens_per_draft_round": 5.723255187281056,
+  "end_of_sequence_bonus_tokens_not_emitted": 8,
+  "affected_requests": [
+    "gsm8k-test-0002",
+    "gsm8k-test-0009",
+    "gsm8k-test-0017",
+    "gsm8k-test-0029",
+    "gsm8k-test-0058",
+    "gsm8k-test-0062",
+    "gsm8k-test-0086",
+    "gsm8k-test-0088"
+  ],
+  "eos_accounting": "Upstream scheduler records per-request spec metrics before _update_request_with_output/check_stop removes tokens after EOS. Eight final bonus tokens were removed after EOS. The vLLM mean acceptance length includes those bonus tokens; delivered-output TPS uses only actually emitted tokens.",
+  "accuracy_parser": "Independent stdlib parser from vendor/vllm/scripts/audit_native_v2_gsm8k.py: exact numeric first line after final #### marker.",
+  "limitations": [
+    "One paired C4 measurement; no repeated-run confidence interval.",
+    "Benchmark JSON records git base and input hash, but not an atomic inference-source hash snapshot. Source linkage is corroborated by pre-measurement precommit/model-parity hash manifests and post-measurement source hashes."
+  ]
+}

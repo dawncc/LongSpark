@@ -1,0 +1,23 @@
+{
+  "checked_at": {
+    "current_time": "2026-10-10 03:34:05 UTC"
+  },
+  "repository": "vllm-project/vllm",
+  "queries": [
+    {
+      "kind": "open PR",
+      "query": "LongSpark",
+      "results": {
+        "issues": []
+      }
+    },
+    {
+      "kind": "issue",
+      "query": "LongSpark",
+      "results": {
+        "issues": []
+      }
+    }
+  ],
+  "note": "No issue was referenced by the request. No LongSpark issue or open PR was found. Existing DSpark is reused as the lifecycle reference; LongSpark keeps bounded confirmed-target memory rather than the DSpark context KV implementation."
+}

@@ -1,0 +1,54 @@
+{
+  "created_utc": "2026-10-10T03:18:26.021974+00:00",
+  "checkout_base_commit": "10cc2f6ae2c9ba7cc5841ece95e27d0562aef1bf",
+  "precompiled_wheel_commit": "8cbd5d03006c33185f402249ff2b448efd594986",
+  "precompiled_wheel_variant": "cu129",
+  "environment": "/data/chenchen/codex/vllm-longspark-upstream/.venv",
+  "install_environment": {
+    "VLLM_USE_PRECOMPILED": "1",
+    "VLLM_PRECOMPILED_WHEEL_COMMIT": "8cbd5d03006c33185f402249ff2b448efd594986",
+    "VLLM_PRECOMPILED_WHEEL_VARIANT": "cu129",
+    "UV_LINK_MODE": "copy"
+  },
+  "torch_backend": "cu129",
+  "changed_compiled_paths": [
+    "csrc/cumem_allocator.cpp"
+  ],
+  "compiled_source_diff_sha256": "0e8b2edd26d0d86cb5224f5fee2c9cae7a4aef3e362bedc840c05844da61a034",
+  "compatibility_basis": "Only compiled-source change deletes 22 lines inside #ifdef USE_ROCM in cumem_allocator.cpp. CUDA compilation path is unchanged. All other csrc, cmake, CMakeLists.txt, pyproject.toml and vllm/_custom_ops.py are identical. Explicit wheel commit bypasses upstream 20-commit guard, only inside this isolated environment.",
+  "validation_runtime_environment": {
+    "VLLM_USE_RUST_FRONTEND": "0"
+  },
+  "limitations": [
+    "Not an exact-commit full source build.",
+    "ROCm behavior and Rust frontend are not validated.",
+    "Wheel Rust components predate current main; Python serving frontend must be selected."
+  ],
+  "installed_packages": {
+    "vllm": "0.1.dev25+g10cc2f6ae.precompiled",
+    "torch": "2.13.0+cu129",
+    "triton": "3.7.1",
+    "transformers": "5.19.0",
+    "pytest": "9.1.1",
+    "pre-commit": "4.6.2",
+    "scipy": "1.18.1",
+    "numpy": "2.3.5"
+  },
+  "extensions": {
+    "vllm/cumem_allocator.abi3.so": "0afd7df95e30629bb8021e535c20e4d2f954232831ab4825b3f331bbcf99e52a",
+    "vllm/_qutlass_C.abi3.so": "027a05deb88f48111f50698ba77cc6bacee0b341f6af57c1152affa078fd7995",
+    "vllm/spinloop.abi3.so": "73a1adafa207006761eec2b1de8134da3a0ec754fc6411b4af9d4627c6b28cfe",
+    "vllm/_flashmla_C.abi3.so": "82aaf95a188a7cbe90c081d7299903099d95ad226407e17d82dfd99971d07f69",
+    "vllm/_flashmla_extension_C.abi3.so": "e8de03d0e1554c5f2102142e3ead295762fad6475a1424698ffa19b55cc42a89",
+    "vllm/_flashkda_C.abi3.so": "125075fa20af659aabcc8ba39aae385c22e58586a679779821f6f5597890150a",
+    "vllm/fs_io_C.abi3.so": "39a140373cde8d423bc3d53ecaa7a128806de86a7fec956f94b280cc4989d69b",
+    "vllm/_C_stable_libtorch.abi3.so": "b14f8e52635ffd27b41276b3878d81e05a9f9f59ccf85013361897c3e92ff3c4",
+    "vllm/_deepselect_C.abi3.so": "3bebaa29c85a1ad7c96b6405200ae4fcbeafb6af79d1f79fb180a83437d79a5a",
+    "vllm/_moe_C_stable_libtorch.abi3.so": "82bcdb30f7a36628e4f5bbbea6e98bdaf75027848018dae5b22f150089af1e38"
+  },
+  "gpu_driver": "570.172.08",
+  "git_base_files_status_before_integration": [],
+  "install_complete": true,
+  "import_check": "2.13.0+cu129 0.1.dev25+g10cc2f6ae /data/chenchen/codex/vllm-longspark-upstream/vllm/__init__.py",
+  "precommit_hooks_installed": true
+}

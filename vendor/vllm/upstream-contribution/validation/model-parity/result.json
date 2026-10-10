@@ -1,0 +1,104 @@
+{
+  "torch_version": "2.13.0+cu129",
+  "gpu": "NVIDIA L20X",
+  "results": [
+    {
+      "label": "prefill-b1-8",
+      "batch": 1,
+      "width": 8,
+      "counts": [
+        8
+      ],
+      "state_equal": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "logits_bitwise_equal": true,
+      "max_abs_logit_error": 0.0,
+      "proposal_equal": true
+    },
+    {
+      "label": "prefill-b4-512-mixed",
+      "batch": 4,
+      "width": 512,
+      "counts": [
+        512,
+        257,
+        1,
+        0
+      ],
+      "state_equal": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "logits_bitwise_equal": true,
+      "max_abs_logit_error": 0.0,
+      "proposal_equal": true
+    },
+    {
+      "label": "decode-reorder-noop-padding",
+      "batch": 4,
+      "width": 8,
+      "counts": [
+        1,
+        8,
+        0,
+        0
+      ],
+      "state_equal": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "logits_bitwise_equal": true,
+      "max_abs_logit_error": 0.0,
+      "proposal_equal": true
+    },
+    {
+      "label": "reset-reuse",
+      "batch": 4,
+      "width": 8,
+      "counts": [
+        7,
+        8,
+        0,
+        5
+      ],
+      "state_equal": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "logits_bitwise_equal": true,
+      "max_abs_logit_error": 0.0,
+      "proposal_equal": true
+    }
+  ],
+  "checkpoint": "/data/chenchen/codex/LongSpark/models/4B/longspark",
+  "source_sha256": {
+    "vllm/model_executor/models/longspark.py": "47f87c3d7739647049d3a95c58c7e8dd77fba087124ff7dad29c5334eabb9744",
+    "vllm/v1/worker/gpu/spec_decode/longspark/__init__.py": "e3c55cbb0d7a8bd47df6f3378835644645f5d3bc89b45793b5d5a02d013e5c58",
+    "vllm/v1/worker/gpu/spec_decode/longspark/attention.py": "b68755905d759f5ce5a52896cc2c6caa087d451164ffa0060f5c3344d5cdd9e1",
+    "vllm/v1/worker/gpu/spec_decode/longspark/commit_kernel.py": "05a90af2ac4660bf477eb0d8a1cc168be5ec1396fb1aadcb3eb69dd80b059cd6",
+    "vllm/v1/worker/gpu/spec_decode/longspark/gather_kernel.py": "ddd00c0dedf549ef95b4833344c8f9686e28116dd43d409333099f0e6b01a431",
+    "vllm/v1/worker/gpu/spec_decode/longspark/inputs.py": "59d6d00854b1f65678b95fe4890d63021921427e1e820fd87bcb1f94bbe979f6",
+    "vllm/v1/worker/gpu/spec_decode/longspark/speculator.py": "5e0ae7b805d080cae6c29df9b19292d02073b9b7d6651848ec87889114724669",
+    "vllm/v1/worker/gpu/spec_decode/longspark/startup.py": "46a46876507eb553a3225cc717ecfa718021027ef2233d98f57d5fa137e41ce3",
+    "vllm/v1/worker/gpu/spec_decode/longspark/state.py": "ec4d4e8976d81adebec6c6e2f126294459c5b147c4842dbb982640a0c93ac1aa",
+    "vllm/v1/worker/gpu/spec_decode/longspark/target_modules.py": "ff37716e190bcd1da0d1946c27bde44321afb2978e3cc8c5e03af630683aa5e8"
+  }
+}

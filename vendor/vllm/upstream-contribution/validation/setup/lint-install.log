@@ -1,0 +1,25 @@
+Resolved 17 packages in 901ms
+Downloading virtualenv (5.2MiB)
+ Downloaded virtualenv
+Prepared 11 packages in 600ms
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Installed 17 packages in 4.17s
+ + cfgv==3.5.0
+ + distlib==0.4.3
+ + filelock==4.1.0
+ + identify==2.6.20
+ + iniconfig==2.3.1
+ + nodeenv==1.11.0
+ + packaging==26.3
+ + platformdirs==4.12.4
+ + pluggy==1.6.0
+ + pre-commit==4.6.2
+ + pygments==2.21.0
+ + pytest==9.1.1
+ + pytest-asyncio==1.4.0
+ + python-discovery==1.6.2
+ + pyyaml==6.0.3
+ + typing-extensions==4.16.0
+ + virtualenv==21.14.6

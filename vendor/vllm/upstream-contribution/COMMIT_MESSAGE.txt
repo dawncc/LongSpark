@@ -1,0 +1,8 @@
+[Spec Decode] Add LongSpark for Model Runner V2
+
+Add an opt-in LongSpark draft model and bounded confirmed-target state for
+native Qwen3 BF16 inference. Reuse native V2 scheduling, rejection sampling,
+CUDA graph management and OpenAI-compatible serving. Validate unsupported
+configurations and requests before worker execution.
+
+Co-authored-by: OpenAI Codex

@@ -1,0 +1,2 @@
+# Preserve the validation evidence bundled for upstream review.
+!validation/**/*.log

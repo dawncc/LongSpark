@@ -1,0 +1,39 @@
+{
+  "git_head": "10cc2f6ae2c9ba7cc5841ece95e27d0562aef1bf",
+  "runtime_environment": {
+    "CUDA_VISIBLE_DEVICES": "5",
+    "VLLM_USE_RUST_FRONTEND": "0"
+  },
+  "tracked_source_sha256": {
+    "vllm/config/speculative.py": "905cdaed23cc3edf22fb34fce29bb2d8284bba1cf9071faf44a2e8e13cb8beb0",
+    "vllm/config/vllm.py": "fc43ea586b83802e4e38f4c25191cbefe19a2aed8519f02cfad4f5fca925fae5",
+    "vllm/sampling_params.py": "88fb3ac6ac3a456be62f5ac2afa7262cec5e00e82c6b425bdefa121cb525cd8a",
+    "vllm/v1/worker/gpu/model_runner.py": "5be06ca1e3aefc20e1b9cc0a993815d6c7b31857f21e2c100362dda0a61f2d63",
+    "vllm/v1/worker/gpu/spec_decode/__init__.py": "9a94048ba5c0d0c29b7e84250fe418b650059c6ca6a410bfa3fc0efa09d932ac",
+    "tests/test_config.py": "3052d55eb8e94893392d691b757735202c18a2c84eb7729a7c7371e53a506252"
+  },
+  "test_results": [
+    {
+      "log": "config.txt",
+      "passed": 89,
+      "failed": 1,
+      "failure": "test_eagle_draft_model_config: gated Meta-Llama-3-8B-Instruct config access returns HTTP 403 on unmodified upstream main",
+      "seconds": 160.12
+    },
+    {
+      "log": "worker-sampling.txt",
+      "passed": 61,
+      "failed": 0,
+      "seconds": 81.11
+    },
+    {
+      "log": "ngram-gpu.txt",
+      "passed": 18,
+      "failed": 0,
+      "seconds": 37.74
+    }
+  ],
+  "total_passed": 168,
+  "total_failed": 1,
+  "note": "No tracked source modified when these baseline test processes ran; isolated LongSpark added model files existed but were not imported by these existing test selections."
+}

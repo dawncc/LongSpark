@@ -1,0 +1,8 @@
+{
+  "requests": 4,
+  "max_tokens": 64,
+  "exact_ar_prefix_matches": 4,
+  "total_output_tokens": 256,
+  "method": "ngram_gpu",
+  "gpu_sync_check": "error"
+}

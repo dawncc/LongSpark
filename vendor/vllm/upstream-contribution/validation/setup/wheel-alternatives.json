@@ -1,0 +1,91 @@
+[
+  {
+    "path": "nightly/cu129/vllm/metadata.json",
+    "metadata": [
+      {
+        "package_name": "vllm",
+        "version": "0.31.1rc1.dev173+g8cbd5d030",
+        "build_tag": null,
+        "python_tag": "cp38",
+        "abi_tag": "abi3",
+        "platform_tag": "manylinux_2_28_aarch64",
+        "variant": "cu129",
+        "filename": "vllm-0.31.1rc1.dev173+g8cbd5d030.cu129-cp38-abi3-manylinux_2_28_aarch64.whl",
+        "path": "../../../8cbd5d03006c33185f402249ff2b448efd594986/vllm-0.31.1rc1.dev173%2Bg8cbd5d030.cu129-cp38-abi3-manylinux_2_28_aarch64.whl"
+      },
+      {
+        "package_name": "vllm",
+        "version": "0.31.1rc1.dev173+g8cbd5d030",
+        "build_tag": null,
+        "python_tag": "cp38",
+        "abi_tag": "abi3",
+        "platform_tag": "manylinux_2_28_x86_64",
+        "variant": "cu129",
+        "filename": "vllm-0.31.1rc1.dev173+g8cbd5d030.cu129-cp38-abi3-manylinux_2_28_x86_64.whl",
+        "path": "../../../8cbd5d03006c33185f402249ff2b448efd594986/vllm-0.31.1rc1.dev173%2Bg8cbd5d030.cu129-cp38-abi3-manylinux_2_28_x86_64.whl"
+      }
+    ]
+  },
+  {
+    "path": "nightly/vllm/metadata.json",
+    "metadata": [
+      {
+        "package_name": "vllm",
+        "version": "0.31.1rc1.dev240+g1dfe9fbda",
+        "build_tag": null,
+        "python_tag": "cp38",
+        "abi_tag": "abi3",
+        "platform_tag": "manylinux_2_28_aarch64",
+        "variant": null,
+        "filename": "vllm-0.31.1rc1.dev240+g1dfe9fbda-cp38-abi3-manylinux_2_28_aarch64.whl",
+        "path": "../../1dfe9fbdae734fc2ee8c0494c543c24d25b563d6/vllm-0.31.1rc1.dev240%2Bg1dfe9fbda-cp38-abi3-manylinux_2_28_aarch64.whl"
+      },
+      {
+        "package_name": "vllm",
+        "version": "0.31.1rc1.dev240+g1dfe9fbda",
+        "build_tag": null,
+        "python_tag": "cp38",
+        "abi_tag": "abi3",
+        "platform_tag": "manylinux_2_28_x86_64",
+        "variant": null,
+        "filename": "vllm-0.31.1rc1.dev240+g1dfe9fbda-cp38-abi3-manylinux_2_28_x86_64.whl",
+        "path": "../../1dfe9fbdae734fc2ee8c0494c543c24d25b563d6/vllm-0.31.1rc1.dev240%2Bg1dfe9fbda-cp38-abi3-manylinux_2_28_x86_64.whl"
+      }
+    ]
+  },
+  {
+    "path": "10cc2f6ae2c9ba7cc5841ece95e27d0562aef1bf/vllm/metadata.json",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "path": "10cc2f6ae2c9ba7cc5841ece95e27d0562aef1bf/cu130/vllm/metadata.json",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "path": "nightly/cu130/vllm/metadata.json",
+    "metadata": [
+      {
+        "package_name": "vllm",
+        "version": "0.31.1rc1.dev240+g1dfe9fbda",
+        "build_tag": null,
+        "python_tag": "cp38",
+        "abi_tag": "abi3",
+        "platform_tag": "manylinux_2_28_aarch64",
+        "variant": null,
+        "filename": "vllm-0.31.1rc1.dev240+g1dfe9fbda-cp38-abi3-manylinux_2_28_aarch64.whl",
+        "path": "../../../1dfe9fbdae734fc2ee8c0494c543c24d25b563d6/vllm-0.31.1rc1.dev240%2Bg1dfe9fbda-cp38-abi3-manylinux_2_28_aarch64.whl"
+      },
+      {
+        "package_name": "vllm",
+        "version": "0.31.1rc1.dev240+g1dfe9fbda",
+        "build_tag": null,
+        "python_tag": "cp38",
+        "abi_tag": "abi3",
+        "platform_tag": "manylinux_2_28_x86_64",
+        "variant": null,
+        "filename": "vllm-0.31.1rc1.dev240+g1dfe9fbda-cp38-abi3-manylinux_2_28_x86_64.whl",
+        "path": "../../../1dfe9fbdae734fc2ee8c0494c543c24d25b563d6/vllm-0.31.1rc1.dev240%2Bg1dfe9fbda-cp38-abi3-manylinux_2_28_x86_64.whl"
+      }
+    ]
+  }
+]

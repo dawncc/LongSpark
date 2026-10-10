@@ -1,0 +1,14 @@
+{
+  "repository": "Hehy/LongSpark-Qwen3-4B",
+  "revision": "241060f1fdefdfe9b49d1a8a2c578670ac5e9d10",
+  "url": "https://huggingface.co/Hehy/LongSpark-Qwen3-4B/resolve/241060f1fdefdfe9b49d1a8a2c578670ac5e9d10/config.json",
+  "public_config_sha256": "1037df065503fcb8998538ddd7086b78e3b553b99368d8f3e7f6c3de64104512",
+  "local_config_sha256": "1037df065503fcb8998538ddd7086b78e3b553b99368d8f3e7f6c3de64104512",
+  "identical_json": true,
+  "inference_fields_equal": true,
+  "architectures": [
+    "DraftFreeKVModel"
+  ],
+  "model_type": "draftfreekv",
+  "differences": {}
+}

@@ -1,0 +1,72 @@
+{
+  "model-parity/result.json": {
+    "recorded_files": 10,
+    "different_files": []
+  },
+  "regression-modified/precommit-final.json": {
+    "recorded_files": 34,
+    "different_files": [
+      {
+        "path": "docs/features/speculative_decoding/longspark.md",
+        "recorded_sha256": "5dd396fdf76ba12500c1971ea7e6be5158d1073c7e51d6d34c9ce5ed2e43d4b3",
+        "final_sha256": "02ce04bb0aede863eb65c9a00d0df543cb2943acc74b29ec4c5ab4fd32e68d57"
+      },
+      {
+        "path": "tests/models/registry.py",
+        "recorded_sha256": "0a2e2540d993539e82833276e55ee29c804784346bd2e3a6a96bbaa6fdb5fcdd",
+        "final_sha256": "7736d6cfd0b6316cd9447c05e10a4e24c195cbe41d05c4a6fbac105c39688013"
+      },
+      {
+        "path": "tests/models/test_initialization.py",
+        "recorded_sha256": "6f016593bd0b0cf070bb6491547c5b692a0aaa89df98cd422c46b6c2c055a31b",
+        "final_sha256": "469bd27d7b318ebef06bdd8c37af8caee1231cb5a1f27848bed368b5f2175794"
+      },
+      {
+        "path": "vllm/config/speculative.py",
+        "recorded_sha256": "d9547b79cab15f773fefacef895dc98daa8170164339c00df8095b257209810c",
+        "final_sha256": "03f429b568e74f83942e093ecc00bd7e7cf57d1187facb16427466d78a57b4dc"
+      },
+      {
+        "path": "vllm/config/vllm.py",
+        "recorded_sha256": "00ff9f07adef638d9498bad91cd60ebf0bf010f67ce96615e6cea825d2e6a850",
+        "final_sha256": "002acda00e3537ef485459cafef9d558cb8d0143736e88cacc6d9ace4dfe24c3"
+      }
+    ]
+  },
+  "regression-modified/current-source-sha256.json": {
+    "recorded_files": 35,
+    "different_files": [
+      {
+        "path": "vllm/config/speculative.py",
+        "recorded_sha256": "d9547b79cab15f773fefacef895dc98daa8170164339c00df8095b257209810c",
+        "final_sha256": "03f429b568e74f83942e093ecc00bd7e7cf57d1187facb16427466d78a57b4dc"
+      },
+      {
+        "path": "vllm/config/vllm.py",
+        "recorded_sha256": "00ff9f07adef638d9498bad91cd60ebf0bf010f67ce96615e6cea825d2e6a850",
+        "final_sha256": "002acda00e3537ef485459cafef9d558cb8d0143736e88cacc6d9ace4dfe24c3"
+      }
+    ]
+  },
+  "late_runtime_files": [
+    {
+      "path": "vllm/config/speculative.py",
+      "executable_ast_equal_after_removing_docstrings": true,
+      "change": "Documentation table row only"
+    },
+    {
+      "path": "vllm/config/vllm.py",
+      "executable_ast_equal_after_removing_docstrings": true,
+      "change": "Two comments only"
+    }
+  ],
+  "semantic_source_drift_detected": false,
+  "timing_evidence": {
+    "model_parity_manifest_mtime_utc": "2026-10-10T03:30:45.399886+00:00",
+    "precommit_final_manifest_mtime_utc": "2026-10-10T03:31:21.473590+00:00",
+    "longspark_first_request_utc": "2026-10-10T03:34:28.975260+00:00",
+    "longspark_last_request_utc": "2026-10-10T03:34:49.740037+00:00",
+    "post_measurement_manifest_mtime_utc": "2026-10-10T03:35:14.883047+00:00"
+  },
+  "later_docs_and_test_changes": "LongSpark guide and model test registry/initialization differ from the earlier full precommit snapshot, but match post-measurement manifest and passed separate precommit-final-docs check. supported_models.md was added to that later check. No inference behavior changed."
+}
